@@ -63,7 +63,7 @@ svg.layer {{ position: absolute; left: 0; top: 0 }}
 
 # ---- the Wrap Halo --------------------------------------------------------
 def halo(cx, cy, logo_w, n, step, stroke, pad=None, growth=0.0, a0=0.95, a1=0.04,
-         c0=AMBER, c1=ORANGE, radius_k=0.46, fade=None, taper=None, gid='r'):
+         c0=AMBER, c1=ORANGE, radius_k=0.46, fade=None, taper=None, gid='r', blend_bg=None):
     """Concentric offset outlines of a rounded 'device' shape hugging the wordmark.
 
     Each ring is a true offset of the one inside it (corner radius grows with the
@@ -71,6 +71,7 @@ def halo(cx, cy, logo_w, n, step, stroke, pad=None, growth=0.0, a0=0.95, a1=0.04
     growth : spacing widens ring by ring for a ripple rhythm.
     fade   : (y0, y1, k) -> below y0 the rings dim to k x their opacity by y1.
     taper  : (w_inner, w_outer) -> stroke width runs inner -> outer instead of opacity
+    blend_bg: garment colour -> the fade is baked into solid ink (no transparency on fabric)
              (used for garment printing, where solid ink beats transparency).
     """
     logo_h = logo_w / LOGO_RATIO
@@ -92,6 +93,8 @@ def halo(cx, cy, logo_w, n, step, stroke, pad=None, growth=0.0, a0=0.95, a1=0.04
             paint = f'stroke="url(#{gid}{k})"'
         else:
             paint = f'stroke="{col}" stroke-opacity="{op:.3f}"' if not taper else f'stroke="{col}"'
+            if blend_bg:
+                paint = f'stroke="{lerp_hex(blend_bg, col, op)}"'
         out.append(f'<rect x="{cx - w / 2:.3f}" y="{cy - h / 2:.3f}" width="{w:.3f}" height="{h:.3f}" '
                    f'rx="{r:.3f}" fill="none" {paint} stroke-width="{sw:.3f}"/>')
         off += step * (1 + growth * k)
@@ -221,38 +224,6 @@ def matpad(tw, th):
     return W, H, page(W, H, INK, svg + fsvg, logo_slot(cx, cy, lw) + fhtml)
 
 
-# ---- T-SHIRT --------------------------------------------------------------
-TEE_BG = '#111113'
-TEE_HALO = dict(n=7, step=6.0, growth=0.06)
-
-
-def tee_back(transparent=True):
-    W, H = 300, 268             # back print, mm (fits a standard 12 x 14 in platen)
-    cx, lw = W / 2, 170
-    pad = lw / LOGO_RATIO * 0.32
-    hw, hh = halo_extent(lw, pad=pad, **TEE_HALO)
-    taper = (1.3, 0.55)
-    cy = hh / 2 + taper[0]
-    svg = halo(cx, cy, lw, stroke=1, pad=pad, taper=taper, **TEE_HALO)
-    top = hh + 16
-    html = logo_slot(cx, cy, lw) + f"""
-<div class="abs" style="left:0;width:{W}mm;top:{top}mm;text-align:center">
-  <div style="font-weight:700;font-size:62pt;line-height:.98;letter-spacing:-.035em;color:{WHITE}">Stay wrapped.</div>
-  <div style="font-weight:700;font-size:62pt;line-height:.98;letter-spacing:-.035em;color:{SIGNAL}">Stay protected.</div>
-</div>
-<div class="abs mono" style="left:3mm;right:3mm;bottom:0;display:flex;justify-content:space-between;font-size:12.5pt;line-height:1;color:{WHITE}">
-  <span>Invisible protection</span><span style="color:{ORANGE}">&#9679;</span><span>Made for your device</span></div>"""
-    bg = 'transparent' if transparent else TEE_BG
-    return W, H, page(W, H, bg, svg, html)
-
-
-def tee_front(transparent=True):
-    W = 90                      # left-chest print, mm
-    H = W / LOGO_RATIO
-    bg = 'transparent' if transparent else TEE_BG
-    return W, H, page(W, H, bg, '', logo_slot(W / 2, H / 2, W))
-
-
 # ---- DESIGN SYSTEM SHEET (A3 landscape) -----------------------------------
 def system_sheet():
     W, H = 420, 297
@@ -356,8 +327,6 @@ def build():
     add('envelope-back', envelope_back(), ENV)
     for tw, th in ((250, 250), (350, 350), (400, 225), (800, 450)):
         add(f'matpad-{tw}x{th}', matpad(tw, th), (tw, th))
-    add('tee-back', tee_back(), cmyk=False)
-    add('tee-front', tee_front(), cmyk=False)
     add('design-system', system_sheet())
     json.dump(jobs, open(os.path.join(HERE, 'jobs.json'), 'w'), indent=1)
     json.dump(TOKENS, open(os.path.join(HERE, 'tokens.json'), 'w'), indent=1)

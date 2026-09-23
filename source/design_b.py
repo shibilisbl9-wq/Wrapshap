@@ -162,39 +162,6 @@ def matpad(tw, th, seed):
     return W, H, page(W, H, svg, html), save_tex(f'b-matpad-{tw}x{th}', P), cell
 
 
-# ---- T-SHIRT --------------------------------------------------------------
-def tee_back():
-    """Garment art: 0.4 mm grain so DTG holds every dot; drips and type stay vector."""
-    W, H = 300, 318
-    cx, lw = W / 2, 196
-    cy = 92
-    P = Paint(W, H, 0.35, 321, k=1.6)
-    P.stroke('amber', [(40, 190), (24, 120), (40, 50), (80, 22)], 26, pressure=0.95)
-    P.stroke('amber', [(226, 196), (272, 150), (274, 70), (246, 26)], 24, pressure=0.95)
-    P.swash('chalk', 22, 278, cy, 132, passes=5, tilt=-0.02)
-    P.spatter('chalk', cx + 40, cy + 10, 70, 70, 0.5, 3.2)
-    brush_y = 262
-    P.dry_brush('orange', (8, brush_y + 4), (292, brush_y - 4), 92, bristles=190, bend=3, dryness=0.45, solid=0.9)
-    svg = swash_drips(P, 40, 260, 12, brush_y - 50, w=(2.2, 5.0), seed=322, scale=1.0)
-    P.fade_edges(14)
-    html = A.logo_slot(cx, cy, lw) + f"""
-<div class="abs" style="left:0;width:{W}mm;top:{brush_y - 31}mm;text-align:center;transform:rotate(-1.4deg)">
-  <div class="st" style="font-size:86pt;color:{C['Ink Text']}">Stay wrapped.</div>
-  <div class="st" style="font-size:86pt;color:{C['Ink Text']};margin-top:1.5mm">Stay protected.</div>
-</div>"""
-    return W, H, page(W, H, svg, html), save_tex('b-tee-back', P), 0.35
-
-
-def tee_front():
-    W, H = 114, 56
-    cx, cy, lw = W / 2, 25, 90
-    P = Paint(W, H, 0.3, 331, k=1.2)
-    P.swash('chalk', 8, 106, cy, 38, passes=3, tilt=-0.02)
-    svg = swash_drips(P, 14, 100, 6, H - 2, w=(1.4, 2.6), seed=332)
-    P.fade_edges(6)
-    return W, H, page(W, H, svg, A.logo_slot(cx, cy, lw)), save_tex('b-tee-front', P), 0.3
-
-
 # ---- DESIGN SHEET ---------------------------------------------------------
 def system_sheet():
     W, H = 420, 297
@@ -281,8 +248,6 @@ def build():
     add('b-envelope-back', envelope_back(), A.ENV)
     for tw, th in ((250, 250), (350, 350), (400, 225), (800, 450)):
         add(f'b-matpad-{tw}x{th}', matpad(tw, th, 400 if tw == th else 420), (tw, th))
-    add('b-tee-back', tee_back(), cmyk=False, bg=None)
-    add('b-tee-front', tee_front(), cmyk=False, bg=None)
     add('b-design-system', system_sheet())
     json.dump(jobs, open(os.path.join(HERE, 'jobs_b.json'), 'w'), indent=1)
     json.dump(TOKENS_B, open(os.path.join(HERE, 'tokens.json'), 'w'), indent=1)

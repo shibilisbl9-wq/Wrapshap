@@ -119,17 +119,6 @@ def export_option(pre, root, title):
         save_ai([(n, f'Mat pad {folder.replace("x", ":")} — {tw} x {th} mm trim + 3 mm bleed')], o('02-mat-pad', folder, base + '.ai'),
                 f'Wrapshap — Mat pad {tw} x {th} mm ({title})')
         made.append(jpg(n, o('02-mat-pad', folder, base + '.jpg'), dpi))
-    # 03 t-shirt
-    bw, bh = size_mm(pre + 'tee-back')
-    fw, fh = size_mm(pre + 'tee-front')
-    save_pdf([pre + 'tee-back', pre + 'tee-front'], o('03-tshirt', 'wrapshap-tee-print.pdf'), f'Wrapshap — Tee print artwork ({title})')
-    save_ai([(pre + 'tee-back', f'Back print — {bw} x {bh} mm  (dark panel = garment colour, not printed)'),
-             (pre + 'tee-front', f'Left chest — {fw} x {fh} mm')],
-            o('03-tshirt', 'wrapshap-tee-print.ai'), f'Wrapshap — Tee print artwork ({title})', cmyk=False,
-            gap=30, garment=(0.067, 0.067, 0.075))
-    made.append(png(pre + 'tee-back', o('03-tshirt', 'wrapshap-tee-back-print-300dpi.png'), 300))
-    made.append(png(pre + 'tee-front', o('03-tshirt', 'wrapshap-tee-front-chest-print-300dpi.png'), 300))
-    shutil.copy(os.path.join(HERE, 'mockup', pre + 'tee-mockup.jpg'), o('03-tshirt', 'wrapshap-tee-mockup.jpg'))
     overview(REPO + '/' + root, os.path.join(REPO, root, 'wrapshap-overview.jpg'))
     return made
 
@@ -138,7 +127,9 @@ def overview(base, path):
     rows = [['01-envelope/wrapshap-envelope-front.jpg', '01-envelope/wrapshap-envelope-back.jpg', '00-design-system/wrapshap-design-system.jpg'],
             ['02-mat-pad/1x1/wrapshap-matpad-1-1-250x250mm.jpg', '02-mat-pad/1x1/wrapshap-matpad-1-1-350x350mm.jpg',
              '02-mat-pad/16x9/wrapshap-matpad-16-9-400x225mm.jpg', '02-mat-pad/16x9/wrapshap-matpad-16-9-800x450mm.jpg'],
-            ['03-tshirt/wrapshap-tee-mockup.jpg']]
+            ['03-polo-shirt/wrapshap-polo-mockup.jpg']]
+    rows = [[f for f in r if os.path.exists(os.path.join(base, f))] for r in rows]
+    rows = [r for r in rows if r]
     W, M, G = 3200, 120, 48
     built = []
     for r in rows:
@@ -157,8 +148,27 @@ def overview(base, path):
     c.save(path, quality=90, optimize=True)
 
 
+def export_polo(root):
+    o = lambda *p: out(root, '03-polo-shirt', *p)
+    bw, bh = size_mm('polo-back')
+    fw, fh = size_mm('polo-front')
+    save_pdf(['polo-back', 'polo-front'], o('wrapshap-polo-print.pdf'), 'Wrapshap — Polo print artwork')
+    save_ai([('polo-back', f'Back print — {bw} x {bh} mm  (dark panel = garment colour, not printed)'),
+             ('polo-front', f'Left chest logo — {fw} x {fh} mm')],
+            o('wrapshap-polo-print.ai'), 'Wrapshap — Polo print artwork', cmyk=False, gap=30, garment=(0.067, 0.067, 0.075))
+    made = [png('polo-back', o('wrapshap-polo-back-print-300dpi.png'), 300),
+            png('polo-front', o('wrapshap-polo-front-chest-print-300dpi.png'), 300)]
+    shutil.copy(os.path.join(HERE, 'mockup', 'polo-mockup.jpg'), o('wrapshap-polo-mockup.jpg'))
+    overview(os.path.join(REPO, root), os.path.join(REPO, root, 'wrapshap-overview.jpg'))
+    return made
+
+
 if __name__ == '__main__':
     opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
+    if opt == 'polo':
+        print(export_polo('option-a-wrap-halo'))
+        overview(os.path.join(REPO, 'option-b-graffiti'), os.path.join(REPO, 'option-b-graffiti', 'wrapshap-overview.jpg'))
+        sys.exit()
     if opt == 'a':
         print(export_option('', 'option-a-wrap-halo', 'Option A: Wrap Halo'))
     else:

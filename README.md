@@ -1,6 +1,7 @@
-# Wrapshap: envelope redesign, mat pads and t-shirt
+# Wrapshap: envelope redesign, mat pads and polo shirt
 
-This repo has two design options. Each one is a complete set: envelope, four mat pads, a t-shirt and a design-system sheet.
+This repo has two design options. Each one is a set of an envelope, four mat pads and a design-system sheet.
+The polo shirt is in Option A, because it uses A's Wrap Halo design.
 Both use the **original Wrapshap logo artwork unchanged**. It was taken as vector straight out of the supplied envelope file.
 
 | | Option A: Wrap Halo | Option B: Graffiti |
@@ -34,9 +35,9 @@ Both options share the same core palette. Option B adds one paint colour, Chalk.
 | `01-envelope/` | 163 × 205 mm, front and back, 3 mm bleed | `.ai` (both sides on one canvas, with crop marks), `-print.pdf` (page 1 front, page 2 back), `.jpg` per side |
 | `02-mat-pad/1x1/` | 250 × 250 mm and 350 × 350 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `02-mat-pad/16x9/` | 400 × 225 mm and 800 × 450 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
-| `03-tshirt/` | Back print and left-chest print (sizes are on the mockup) | `.ai`, `-print.pdf`, transparent 300 dpi `.png` for DTG printing, `wrapshap-tee-mockup.jpg` |
+| `03-polo-shirt/` (Option A only) | Black polo with orange collar and cuffs. Front: logo only, 85 mm, left chest. Back: Wrap Halo, logo and tagline, 282 × 236 mm | `.ai`, `-print.pdf` (page 1 back, page 2 front), transparent 300 dpi `.png` per print, `wrapshap-polo-mockup.jpg` |
 
-**Send the `-print.pdf` files to the printer.** They have exact trim and bleed boxes and are in CMYK. The t-shirt files are
+**Send the `-print.pdf` files to the printer.** They have exact trim and bleed boxes and are in CMYK. The polo files are
 the exception, see below. The `.jpg` files are RGB previews cropped to the trim size.
 
 ## Read before printing or editing
@@ -62,12 +63,15 @@ the exception, see below. The `.jpg` files are RGB previews cropped to the trim 
   texture matters to you.
 - **Mat pads.** These are usually dye-sublimation printed. If the printer wants RGB, give them the `.jpg`
   (150–200 dpi at full size) or let them convert the PDF. The printer cuts the corner radius and stitches the edges.
-- **T-shirt.** The artwork is RGB on a transparent background, which suits DTG printing. It uses solid ink only.
-  A's rings get thinner instead of fading, and B's spray is 1-bit grain in flat colour, because transparency prints badly on fabric.
-  B's grain on the shirt is 0.30–0.35 mm, and the spray fades out before the edge of the print area so no hard cut-off shows.
-  The finest isolated dots may not survive DTG on a black shirt, which again reads as natural spray falloff. B's headline is
-  black ink on the orange stripe; a printer can knock it out to show the shirt instead.
-  For screen printing, the logo's gradient needs a halftone or simulated-process separation, which screen printers handle routinely.
+- **Polo: print.** The artwork is RGB on a transparent background, which suits DTG or DTF printing. The rings fade out
+  as they move away from the logo, but that fade uses solid ink colours rather than transparency, which prints badly on
+  fabric. The rings also get thinner, from 1.2 mm to 0.6 mm. In the `.ai`, the dark panel behind the artwork only shows
+  the shirt colour and is not printed.
+- **Polo: collar and cuffs are part of the garment, not the print.** Order black polos with an orange knit collar and cuffs.
+  Ask the supplier for the colour closest to the brand Orange `#F39200` (roughly Pantone 144 C) and check a physical swatch.
+- **Polo: embroidery.** Polos are often embroidered. The logo's gradient can't be stitched as it is: an embroidery digitiser
+  will turn it into 2–3 thread colours for the chest logo. The thin back rings are too fine to embroider, so print the back
+  (DTF or DTG) even if you embroider the front. For screen printing, the logo gradient needs a halftone separation.
 
 ## Decisions I made that you may want to change
 
@@ -76,6 +80,8 @@ the exception, see below. The `.jpg` files are RGB previews cropped to the trim 
   website or social handles because I don't know them.
 - **Option B's spray is generated from a fixed seed.** Every stroke, swash and brush is built by code (`source/spray.py`)
   from a seed number. Change the seed in `source/design_b.py` to get a different spray in the same style.
+- **Shirts.** At your request, the t-shirts from both options were replaced by the single polo. The old t-shirt files
+  are still in the git history.
 - **Option B changed direction.** The first version used cartoon paint splats. It was replaced with spray-can textures
   after your references. The old version is still in the git history if you want it back.
 
@@ -86,5 +92,6 @@ then the original logo is placed and the colour is converted to CMYK. Option B's
 `spray.py` and placed under the vector artwork as 1-bit masks. You need Python 3 (PyMuPDF, Pillow, NumPy, SciPy),
 Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 
-- Option A: `design.py` → `render.mjs` → `post.py` → `mockup.py` → `export.py <repo> a`
-- Option B: `design_b.py` → `JOBS=jobs_b.json SLOTS=slots_b.json node render.mjs` → the same env vars with `post.py` → `PREFIX=b- mockup.py` → `export.py <repo> b`
+- Option A: `design.py` → `render.mjs` → `post.py` → `export.py <repo> a`
+- Option B: `design_b.py` → `JOBS=jobs_b.json SLOTS=slots_b.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> b`
+- Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`
