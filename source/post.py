@@ -108,6 +108,44 @@ def set_boxes(pg, j):
         doc.xref_set_key(x, 'TrimBox', arr(b, max(y1 - b - th, y1 - H), min(b + tw, W), y1 - b))
 
 
+def compose(j, fg, cmyk):
+    """Page = background + 1-bit spray textures (ImageMasks, one flat colour each) + vector foreground."""
+    import numpy as np
+    W, H = fg[0].rect.width, fg[0].rect.height
+    out = fitz.open()
+    pg = out.new_page(width=W, height=H)
+    data = np.load(os.path.join(HERE, j['tex']))
+    cell = j['cell'] * MM
+
+    def col(token):
+        hexv, spec = tokens[token]
+        if cmyk:
+            return fmt([v / 100 for v in spec]) + ' k'
+        return ' '.join('%.4f' % (int(hexv[i:i + 2], 16) / 255) for i in (1, 3, 5)) + ' rg'
+    ops, xo = [], []
+    if j.get('bg'):
+        ops.append(f'q {col(j["bg"])} 0 0 {W:.4f} {H:.4f} re f Q')
+    for i, (layer, token) in enumerate(j['layers']):
+        m = data[layer]
+        if not m.any():
+            continue
+        ny, nx = m.shape
+        x = out.get_new_xref()
+        out.update_object(x, f'<< /Type /XObject /Subtype /Image /Width {nx} /Height {ny} /ImageMask true '
+                             f'/BitsPerComponent 1 /Decode [1 0] >>')
+        out.update_stream(x, np.packbits(m, axis=1).tobytes())
+        wpt, hpt = nx * cell, ny * cell
+        ops.append(f'q {col(token)} {wpt:.4f} 0 0 {hpt:.4f} 0 {H - hpt:.4f} cm /T{i} Do Q')
+        xo.append(f'/T{i} {x} 0 R')
+    cx = out.get_new_xref()
+    out.update_object(cx, '<<>>')
+    out.update_stream(cx, '\n'.join(ops).encode())
+    out.xref_set_key(pg.xref, 'Contents', f'{cx} 0 R')
+    out.xref_set_key(pg.xref, 'Resources', f'<< /XObject << {" ".join(xo)} >> >>')
+    pg.show_pdf_page(pg.rect, fg, 0)
+    return out
+
+
 def place_logos(pg, name):
     for s in slots[name]:
         r = fitz.Rect(s['x'] * PX, s['y'] * PX, (s['x'] + s['w']) * PX, (s['y'] + s['h']) * PX)
@@ -125,6 +163,9 @@ for j in jobs:
     pg = doc[0]
     assert abs(pg.rect.width - j['w'] * MM) < 1 and abs(pg.rect.height - j['h'] * MM) < 1, name
     # 1) RGB preview master
+    if j.get('tex'):
+        doc = compose(j, doc, cmyk=False)
+        pg = doc[0]
     place_logos(pg, name)
     set_boxes(pg, j)
     placed = os.path.join(HERE, 'placed', name + '.pdf')
@@ -135,6 +176,8 @@ for j in jobs:
         doc = fitz.open(raw)
         doc.select([0])
         stats = to_cmyk(doc)
+        if j.get('tex'):
+            doc = compose(j, doc, cmyk=True)
         place_logos(doc[0], name)                 # original logo is already CMYK
         set_boxes(doc[0], j)
         doc.set_metadata({'title': 'Wrapshap — ' + name, 'creator': 'Wrapshap visual system'})

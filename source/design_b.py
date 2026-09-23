@@ -1,11 +1,18 @@
-"""Option B — Graffiti. Same logo, same pipeline, paint-splatter art direction.
+"""Option B — Graffiti (spray). Same logo, same print pipeline, real spray-can texture.
 
-Poured-paint drips along the top edge, a thrown splat behind the wordmark, stencil
-headlines and a 'HELLO MY NAME IS'-style sticker for the ownership card.
+Three marks, taken from the reference textures:
+  * airbrush strokes — solid core dissolving into grain (Amber)
+  * sprayed swash — overlapping passes + overspray, with running drips (Chalk), behind the logo
+  * dry-brush drag — broken bristle streaks (Orange), under the headline
+Textures are 1-bit stipple fields (spray.py) stored per page in tex/<name>.npz; post.py lays
+them into the PDF as ImageMasks filled with exact CMYK colours. Type, card, drips and the
+logo stay vector on top.
 """
 import json, math, os
+import numpy as np
 import design as A
-from paint import splat, drip_band, splat_drips, spray_specks, g
+from paint import drip, spray_specks, g
+from spray import Paint
 
 HERE = A.HERE
 FONTS = A.FONTS
@@ -13,30 +20,18 @@ BLEED = A.BLEED
 LOGO_RATIO = A.LOGO_RATIO
 
 TOKENS_B = dict(A.TOKENS)
-TOKENS_B.update({
-    'Burnt':   ('#B8480A', (10, 78, 100, 8)),     # shadow paint behind the logo
-    'Chalk':   ('#F2EFE8', (3, 3, 7, 0)),         # off-white paint
-})
+TOKENS_B.update({'Chalk': ('#F2EFE8', (3, 3, 7, 0))})        # off-white spray paint
 C = {k: v[0] for k, v in TOKENS_B.items()}
-INK, AMBER, ORANGE, SIGNAL, WHITE, BURNT, CHALK = (C[k] for k in ('Wrap Black', 'Amber', 'Orange', 'Signal', 'White', 'Burnt', 'Chalk'))
+INK, AMBER, ORANGE, WHITE, CHALK = (C[k] for k in ('Wrap Black', 'Amber', 'Orange', 'White', 'Chalk'))
+LAYERS = [['amber', 'Amber'], ['chalk', 'Chalk'], ['orange', 'Orange']]      # draw order, bottom -> top
 
-STENCIL_CSS = (f"@font-face{{font-family:'Stencil';font-weight:800;src:url('file://{FONTS}/BigShouldersStencil-800.ttf')}}"
-               f"@font-face{{font-family:'Stencil';font-weight:900;src:url('file://{FONTS}/BigShouldersStencil-900.ttf')}}"
+STENCIL_CSS = (f"@font-face{{font-family:'Stencil';font-weight:900;src:url('file://{FONTS}/BigShouldersStencil-900.ttf')}}"
                ".st{font-family:'Stencil';font-weight:900;text-transform:uppercase;line-height:.88;letter-spacing:.01em}")
 
 
-DOT = (f'<svg style="display:inline-block;width:.3em;height:.3em;vertical-align:.2em;margin:0 .3em" viewBox="0 0 10 10">'
-       f'<circle cx="5" cy="5" r="5" fill="{ORANGE}"/></svg>')          # vector dot: the stencil face has no U+25CF
-
-
-def paint_grad(gid, y0, y1):
-    """Vertical amber -> orange, the logo's own gradient, for poured paint."""
-    return (f'<defs><linearGradient id="{gid}" gradientUnits="userSpaceOnUse" x1="0" y1="{y0}" x2="0" y2="{y1}">'
-            f'<stop offset="0" stop-color="{AMBER}"/><stop offset="1" stop-color="{ORANGE}"/></linearGradient></defs>')
-
-
-def mist(cx, cy, rx, ry, color, op, gid):
-    return A.glow(cx, cy, rx, ry, color=color, opacity=op, gid=gid)
+def dot(color):
+    return (f'<svg style="display:inline-block;width:.3em;height:.3em;vertical-align:.2em;margin:0 .3em" viewBox="0 0 10 10">'
+            f'<circle cx="5" cy="5" r="5" fill="{color}"/></svg>')          # vector: the stencil face has no U+25CF
 
 
 def sticker(x, y, w, h, deg, head_pt, lab_pt, head='This device belongs to'):
@@ -55,8 +50,32 @@ def sticker(x, y, w, h, deg, head_pt, lab_pt, head='This device belongs to'):
 </div>"""
 
 
-def page(W, H, bg, svg, html):
-    return A.page(W, H, bg, svg, html, extra_css=STENCIL_CSS)
+def page(W, H, svg, html):
+    """Foreground only (transparent): background + textures are laid underneath in post.py."""
+    return A.page(W, H, 'transparent', svg, html, extra_css=STENCIL_CSS)
+
+
+def swash_drips(P, x0, x1, n, max_to, w=(0.9, 2.2), seed=0, scale=1.0):
+    """Drips hanging from the bottom edge of the chalk swash, never past y = max_to."""
+    r = np.random.default_rng(seed)
+    out = []
+    for x in np.sort(r.uniform(x0, x1, n)):
+        y0 = P.bottom_edge('chalk', x, thr=0.9)
+        if y0 is None:
+            continue
+        room = max_to - y0
+        if room < 3 * scale:
+            continue
+        L = max(2.5 * scale, room * r.random() ** 1.4)
+        out.append(drip(x, y0 - 0.6 * scale, L, r.uniform(*w) * scale, r.uniform(-0.25, 0.25) * scale))
+    return g('\n'.join(out), CHALK)
+
+
+def save_tex(name, P):
+    os.makedirs(os.path.join(HERE, 'tex'), exist_ok=True)
+    m = P.finalize()
+    np.savez_compressed(os.path.join(HERE, 'tex', name + '.npz'), **{k: m.get(k, np.zeros((P.ny, P.nx), bool)) for k, _ in LAYERS})
+    return f'tex/{name}.npz'
 
 
 # ---- ENVELOPE -------------------------------------------------------------
@@ -64,41 +83,45 @@ def envelope_front():
     tw, th = A.ENV
     W, H = tw + 2 * BLEED, th + 2 * BLEED
     b = BLEED
-    cx, cy, lw = W / 2, b + 72, 96
-    svg = [paint_grad('pg', 0, 70)]
-    svg.append(mist(cx, cy, 70, 42, ORANGE, 0.16, 'm1'))
-    svg.append(g(splat(11, cx - 3, cy + 2, 31, arms=30, droplets=80, specks=170, squash=0.6, tilt=-0.08, arm_len=0.8), BURNT))
-    svg.append(g(splat_drips(12, cx - 3, cy + 2, 31 * 0.6, 8, 24), BURNT))
-    svg.append(g(drip_band(13, 0, W, 0, b + 5, 17, 40), 'url(#pg)'))
-    svg.append(g(splat(14, -2, H - 30, 15, arms=14, droplets=40, specks=90, bias=-0.5, arm_len=0.55), AMBER))
-    svg.append(g(splat(15, W + 4, b + 142, 8, arms=10, droplets=26, specks=60, bias=math.pi + 0.3, arm_len=0.6), CHALK))
-    svg.append(g(spray_specks(16, 0, 0, W, H, 70, 0.3), ORANGE, 0.8))
+    cx, cy, lw = W / 2, b + 66, 96
+    P = Paint(W, H, 0.12, 301)
+    P.stroke('amber', [(-12, 150), (10, 124), (14, 76), (-2, 34), (-14, 20)], 15, pressure=0.95)
+    P.stroke('amber', [(104, -12), (146, 6), (165, 52), (160, 96), (184, 120)], 13, pressure=0.95)
+    P.stroke('amber', [(110, H + 10), (140, H - 14), (184, H - 22)], 15, pressure=0.7)
+    P.swash('chalk', 20, 150, cy, 44, passes=4, tilt=-0.03)
+    P.spatter('chalk', cx + 20, cy + 6, 36, 50, 0.14, 1.1)
+    brush_y = b + 124
+    P.dry_brush('orange', (12, brush_y + 4), (157, brush_y - 3), 33, bend=1.2, dryness=0.45, solid=0.75)
+    svg = swash_drips(P, 30, 140, 10, brush_y - 17, seed=302)
+    svg += g(spray_specks(303, 0, 0, W, H, 40, 0.25), AMBER, 0.85)
     html = A.logo_slot(cx, cy, lw) + f"""
-<div class="abs" style="left:{b}mm;width:{tw}mm;top:{b + 111}mm;text-align:center">
-  <div class="st" style="font-size:34pt;color:{WHITE}">Stay wrapped.</div>
-  <div class="st" style="font-size:34pt;color:{SIGNAL};margin-top:.8mm">Stay protected.</div>
-  <div style="margin-top:3.6mm;font-weight:400;font-size:8.6pt;color:{C['Smoke']}">Invisible protection. Made for your device.</div>
-</div>""" + sticker(b + 22, b + 156, tw - 44, 38, -2.5, 11.5, 7.8)
-    return W, H, page(W, H, INK, '\n'.join(svg), html)
+<div class="abs" style="left:{b}mm;width:{tw}mm;top:{brush_y - 11.5}mm;text-align:center;transform:rotate(-1.4deg)">
+  <div class="st" style="font-size:33pt;color:{C['Ink Text']}">Stay wrapped.</div>
+  <div class="st" style="font-size:33pt;color:{C['Ink Text']};margin-top:.8mm">Stay protected.</div>
+</div>
+<div class="abs" style="left:{b}mm;width:{tw}mm;top:{brush_y + 20}mm;text-align:center;font-weight:400;font-size:8.6pt;color:{C['Smoke']}">
+  Invisible protection. Made for your device.</div>""" + sticker(b + 22, b + 158, tw - 44, 37, -2.5, 11.5, 7.8)
+    return W, H, page(W, H, svg, html), save_tex('b-envelope-front', P), 0.12
 
 
 def envelope_back():
     tw, th = A.ENV
     W, H = tw + 2 * BLEED, th + 2 * BLEED
     b = BLEED
-    cx, cy, lw = W / 2, H / 2 + 4, 100
-    svg = [paint_grad('pg', 0, 60)]
-    svg.append(mist(cx, cy, 80, 60, ORANGE, 0.18, 'm1'))
-    svg.append(g(splat(21, cx, cy, 37, arms=32, droplets=110, specks=260, squash=0.66, arm_len=0.8), BURNT))
-    svg.append(g(splat(22, cx + 6, cy - 3, 24, arms=16, droplets=50, specks=90, squash=0.6, arm_len=0.6), ORANGE))
-    svg.append(g(splat_drips(23, cx, cy, 37 * 0.66, 9, 44), BURNT))
-    svg.append(g(splat_drips(24, cx + 6, cy - 3, 24 * 0.6, 5, 28), ORANGE))
-    svg.append(g(drip_band(25, 0, W, 0, b + 3, 13, 26), 'url(#pg)'))
-    svg.append(g(spray_specks(26, 0, 0, W, H, 60, 0.3), AMBER, 0.8))
+    cx, cy, lw = W / 2, H / 2 - 6, 100
+    P = Paint(W, H, 0.12, 311)
+    P.stroke('amber', [(-14, 190), (12, 160), (18, 106), (0, 56), (-16, 36)], 17, pressure=0.95)
+    P.stroke('amber', [(116, -14), (154, 10), (168, 60), (158, 104), (186, 140)], 14, pressure=0.95)
+    P.swash('chalk', 16, 153, cy, 50, passes=5, tilt=0.025)
+    P.spatter('chalk', cx - 30, cy + 4, 40, 60, 0.14, 1.2)
+    brush_y = H - b - 20
+    P.dry_brush('orange', (20, brush_y + 2), (149, brush_y - 2), 15, bristles=90, bend=0.6, dryness=0.45, solid=0.75)
+    svg = swash_drips(P, 24, 146, 12, brush_y - 16, seed=312)
+    svg += g(spray_specks(313, 0, 0, W, H, 40, 0.25), AMBER, 0.85)
     html = A.logo_slot(cx, cy, lw) + f"""
-<div class="abs st" style="left:{b}mm;width:{tw}mm;bottom:{b + 11}mm;text-align:center;font-size:15pt;color:{WHITE};letter-spacing:.06em">
-  Stay wrapped {DOT} Stay protected</div>"""
-    return W, H, page(W, H, INK, '\n'.join(svg), html)
+<div class="abs st" style="left:{b}mm;width:{tw}mm;top:{brush_y - 3.2}mm;text-align:center;font-size:17pt;color:{C['Ink Text']};letter-spacing:.05em">
+  Stay wrapped {dot(C['Ink Text'])} Stay protected</div>"""
+    return W, H, page(W, H, svg, html), save_tex('b-envelope-back', P), 0.12
 
 
 # ---- MAT PADS -------------------------------------------------------------
@@ -106,60 +129,70 @@ def matpad(tw, th, seed):
     W, H = tw + 2 * BLEED, th + 2 * BLEED
     b = BLEED
     u = min(tw, th)
-    k = u / 163                                    # paint scale relative to the envelope
+    k = u / 163                                    # scale relative to the envelope
     wide = tw / th > 1.2
-    cx, cy = W / 2, H / 2 - u * 0.01
-    lw = u * (0.62 if not wide else 0.76)
-    R = u * (0.21 if not wide else 0.25)
-    sq = 0.62 if not wide else 0.52
-    text_top = H - b - u * 0.055 - u * 0.05
-    drip_room = text_top - u * 0.035 - (cy + R * sq * 0.82)
-    svg = [paint_grad('pg', 0, u * 0.36)]
-    svg.append(mist(cx, cy, R * 2.6, R * 1.6, ORANGE, 0.17, 'm1'))
-    svg.append(g(splat(seed, cx, cy, R, arms=36, droplets=130, specks=320, squash=sq, arm_len=0.85 if not wide else 1.05,
-                       min_speck=0.1 * k), BURNT))
-    svg.append(g(splat(seed + 1, cx + R * 0.2, cy - R * 0.08, R * 0.64, arms=16, droplets=50, specks=90, squash=sq,
-                       arm_len=0.6, min_speck=0.1 * k), ORANGE))
-    svg.append(g(splat_drips(seed + 2, cx, cy, R * sq, 10, drip_room * 0.85, scale=k), BURNT))
-    svg.append(g(splat_drips(seed + 3, cx + R * 0.2, cy - R * 0.08, R * 0.64 * sq, 5, drip_room * 0.5, scale=k), ORANGE))
-    svg.append(g(drip_band(seed + 4, 0, W, 0, b + u * 0.022, int(W / (10 * k)) + 4, u * 0.19, scale=k), 'url(#pg)'))
-    # accents: amber thrown in from the left edge, chalk flick on the right
-    svg.append(g(splat(seed + 5, -u * 0.012, H * 0.6, u * 0.075, arms=16, droplets=46, specks=100, bias=-0.35,
-                       arm_len=0.6, min_speck=0.1 * k), AMBER))
-    svg.append(g(splat(seed + 6, W + u * 0.012, H * 0.4, u * 0.045, arms=12, droplets=30, specks=70,
-                       bias=math.pi + 0.3, arm_len=0.6, min_speck=0.1 * k), CHALK))
-    svg.append(g(spray_specks(seed + 9, 0, 0, W, H, int(110 * W * H / (169 * 211) ** 0.5 / 180) + 60, 0.3 * k, 0.06 * k), ORANGE, 0.8))
-    size = round(u * 0.05 * 2.8346, 1)
+    cell = round(0.12 * k, 3)                      # grain grows with the format so it still reads
+    cx, cy = W / 2, H / 2 - u * 0.05
+    lw = u * (0.6 if not wide else 0.72)
+    P = Paint(W, H, cell, seed, k=k)
+    if wide:
+        P.stroke('amber', [(-0.1 * u, 0.95 * H), (0.12 * u, 0.62 * H), (0.2 * u, 0.3 * H), (0.05 * u, -0.1 * H)], 0.13 * u, pressure=0.95)
+        P.stroke('amber', [(W + 0.1 * u, 0.05 * H), (W - 0.14 * u, 0.3 * H), (W - 0.2 * u, 0.7 * H), (W - 0.02 * u, 1.1 * H)], 0.12 * u, pressure=0.95)
+        P.stroke('amber', [(0.3 * W, H + 0.08 * u), (0.5 * W, H - 0.06 * u), (0.7 * W, H + 0.06 * u)], 0.09 * u, pressure=0.55)
+        sw = (0.22 * W, 0.78 * W)
+    else:
+        P.stroke('amber', [(-0.1 * u, 0.9 * H), (0.1 * u, 0.62 * H), (0.14 * u, 0.3 * H), (-0.04 * u, 0.05 * H)], 0.11 * u, pressure=0.95)
+        P.stroke('amber', [(0.62 * W, -0.08 * u), (0.9 * W, 0.08 * H), (0.97 * W, 0.4 * H), (W + 0.1 * u, 0.62 * H)], 0.1 * u, pressure=0.95)
+        sw = (0.1 * W, 0.9 * W)
+    P.swash('chalk', sw[0], sw[1], cy, 0.3 * u, passes=5, tilt=-0.02)
+    P.spatter('chalk', cx + 0.12 * u, cy + 0.03 * u, 0.24 * u, 70, 0.1 * k, 1.1 * k)
+    brush_y = H - b - 0.1 * u
+    size = round(u * 0.042 * 2.8346, 1)                      # pt
+    text_w = 29 * 0.43 * size * 0.3528                         # mm, ~29 glyphs of condensed stencil
+    bx0 = cx - text_w / 2 - 0.07 * u
+    solid_to = cx + text_w / 2 + 0.05 * u
+    bL = solid_to - bx0 + 0.22 * u
+    P.dry_brush('orange', (bx0, brush_y + 0.01 * u), (bx0 + bL, brush_y - 0.01 * u), 0.085 * u,
+                bristles=130, bend=0.004 * u, dryness=0.45, solid=(solid_to - bx0) / bL)
+    svg = swash_drips(P, sw[0] + 0.05 * u, sw[1] - 0.05 * u, 14, brush_y - 0.1 * u, w=(0.9, 2.3), seed=seed + 1, scale=k)
+    svg += g(spray_specks(seed + 2, 0, 0, W, H, 60, 0.25 * k, 0.06 * k), AMBER, 0.85)
     html = A.logo_slot(cx, cy, lw) + f"""
-<div class="abs st" style="left:{b}mm;width:{tw}mm;bottom:{b + u * 0.055:.2f}mm;text-align:center;font-size:{size}pt;color:{WHITE};letter-spacing:.06em">
-  Stay wrapped {DOT} Stay protected</div>"""
-    return W, H, page(W, H, INK, '\n'.join(svg), html)
+<div class="abs st" style="left:{b}mm;width:{tw}mm;top:{brush_y - 0.018 * u:.2f}mm;text-align:center;font-size:{size}pt;color:{C['Ink Text']};letter-spacing:.05em">
+  Stay wrapped {dot(C['Ink Text'])} Stay protected</div>"""
+    return W, H, page(W, H, svg, html), save_tex(f'b-matpad-{tw}x{th}', P), cell
 
 
 # ---- T-SHIRT --------------------------------------------------------------
 def tee_back():
-    """Garment art: solid paint only (no mist/transparency), specks >= 0.5 mm so DTG holds them."""
-    W, H = 300, 330
-    cx, lw = W / 2, 200
-    cy = 104
-    R = 62
-    svg = [g(splat(41, cx, cy, R, arms=32, droplets=110, specks=160, squash=0.64, arm_len=0.75, min_speck=0.45), BURNT),
-           g(splat(42, cx + 12, cy - 6, R * 0.62, arms=16, droplets=46, specks=60, squash=0.6, arm_len=0.55, min_speck=0.45), ORANGE),
-           g(splat_drips(43, cx, cy, R * 0.64, 9, 70, scale=2.2), BURNT),
-           g(splat_drips(44, cx + 12, cy - 6, R * 0.6 * 0.62, 5, 40, scale=2.2), ORANGE)]
+    """Garment art: 0.4 mm grain so DTG holds every dot; drips and type stay vector."""
+    W, H = 300, 318
+    cx, lw = W / 2, 196
+    cy = 92
+    P = Paint(W, H, 0.35, 321, k=1.6)
+    P.stroke('amber', [(40, 190), (24, 120), (40, 50), (80, 22)], 26, pressure=0.95)
+    P.stroke('amber', [(226, 196), (272, 150), (274, 70), (246, 26)], 24, pressure=0.95)
+    P.swash('chalk', 22, 278, cy, 132, passes=5, tilt=-0.02)
+    P.spatter('chalk', cx + 40, cy + 10, 70, 70, 0.5, 3.2)
+    brush_y = 262
+    P.dry_brush('orange', (8, brush_y + 4), (292, brush_y - 4), 92, bristles=190, bend=3, dryness=0.45, solid=0.9)
+    svg = swash_drips(P, 40, 260, 12, brush_y - 50, w=(2.2, 5.0), seed=322, scale=1.0)
+    P.fade_edges(14)
     html = A.logo_slot(cx, cy, lw) + f"""
-<div class="abs" style="left:0;width:{W}mm;top:232mm;text-align:center">
-  <div class="st" style="font-size:86pt;color:{WHITE}">Stay wrapped.</div>
-  <div class="st" style="font-size:86pt;color:{SIGNAL};margin-top:1.5mm">Stay protected.</div>
+<div class="abs" style="left:0;width:{W}mm;top:{brush_y - 31}mm;text-align:center;transform:rotate(-1.4deg)">
+  <div class="st" style="font-size:86pt;color:{C['Ink Text']}">Stay wrapped.</div>
+  <div class="st" style="font-size:86pt;color:{C['Ink Text']};margin-top:1.5mm">Stay protected.</div>
 </div>"""
-    return W, H, page(W, H, 'transparent', '\n'.join(svg), html)
+    return W, H, page(W, H, svg, html), save_tex('b-tee-back', P), 0.35
 
 
 def tee_front():
-    W, H = 110, 58
-    cx, cy, lw = W / 2, H / 2, 90
-    svg = g(splat(51, cx, cy + 1, 17, arms=18, droplets=30, specks=30, squash=0.62, arm_len=0.55, min_speck=0.45), BURNT)
-    return W, H, page(W, H, 'transparent', svg, A.logo_slot(cx, cy, lw))
+    W, H = 114, 56
+    cx, cy, lw = W / 2, 25, 90
+    P = Paint(W, H, 0.3, 331, k=1.2)
+    P.swash('chalk', 8, 106, cy, 38, passes=3, tilt=-0.02)
+    svg = swash_drips(P, 14, 100, 6, H - 2, w=(1.4, 2.6), seed=332)
+    P.fade_edges(6)
+    return W, H, page(W, H, svg, A.logo_slot(cx, cy, lw)), save_tex('b-tee-front', P), 0.3
 
 
 # ---- DESIGN SHEET ---------------------------------------------------------
@@ -167,98 +200,92 @@ def system_sheet():
     W, H = 420, 297
     m = 16
     lab = f"font-size:6.4pt;color:{C['Label']};line-height:1"
-    svg = []
+    P = Paint(W, H, 0.14, 341)
     hx, hy, hw, hh = m, 34, 226, 150
-    hcx, hcy, hlw = hx + hw / 2, hy + hh / 2 + 4, 110
-    svg.append(f'<defs><clipPath id="hc"><rect x="{hx}" y="{hy}" width="{hw}" height="{hh}" rx="4"/></clipPath></defs>'
-               f'<rect x="{hx}" y="{hy}" width="{hw}" height="{hh}" rx="4" fill="{INK}"/>' + paint_grad('pg', hy, hy + 60) +
-               f'<g clip-path="url(#hc)">{mist(hcx, hcy, 90, 60, ORANGE, 0.17, "ms")}'
-               + g(splat(61, hcx, hcy, 38, arms=30, droplets=110, specks=240, squash=0.64, arm_len=0.8), BURNT)
-               + g(splat(62, hcx + 8, hcy - 4, 24, arms=16, droplets=50, specks=80, squash=0.6, arm_len=0.6), ORANGE)
-               + g(splat_drips(63, hcx, hcy, 38 * 0.64, 9, 46), BURNT)
-               + g(drip_band(64, hx, hx + hw, hy, 5, 26, 34), 'url(#pg)') + '</g>')
-    svg.append(f'<line x1="{m}" y1="25" x2="{W - m}" y2="25" stroke="{C["Tick"]}" stroke-width=".25"/>')
+    hcx, hcy, hlw = hx + hw / 2, hy + hh / 2 - 8, 112
+    P.stroke('amber', [(hx - 6, hy + hh - 6), (hx + 26, hy + 96), (hx + 30, hy + 40), (hx + 6, hy - 6)], 26)
+    P.stroke('amber', [(hx + hw - 70, hy - 6), (hx + hw - 18, hy + 30), (hx + hw - 26, hy + 90), (hx + hw + 8, hy + 130)], 22)
+    P.swash('chalk', hx + 42, hx + hw - 42, hcy, 52, passes=5, tilt=-0.02)
+    P.dry_brush('orange', (hx + 56, hy + hh - 20), (hx + hw - 56, hy + hh - 23), 16, bristles=90, dryness=0.45, solid=0.75)
     cy0, ch = 196, 81
     cw = (W - 2 * m - 2 * 8) / 3
-    for i in range(3):
-        x = m + i * (cw + 8)
-        svg.append(f'<rect x="{x}" y="{cy0}" width="{cw}" height="{ch}" rx="3.5" fill="{C["Graphite"]}"/>')
-    # card demos (each clipped to its card)
-    for i in range(3):
-        x = m + i * (cw + 8)
-        svg.append(f'<defs><clipPath id="c{i}"><rect x="{x}" y="{cy0}" width="{cw}" height="{ch}" rx="3.5"/></clipPath></defs>')
-    x1 = m + 12
-    svg.append(f'<g clip-path="url(#c0)">' + g(splat(71, x1 + 30, cy0 + 40, 13, arms=18, droplets=40, specks=70, bias=-0.3,
-                                                     arm_len=0.7), BURNT) + '</g>')
+    P.stroke('amber', [(m + 14, cy0 + 60), (m + 30, cy0 + 26), (m + 62, cy0 + 16)], 16)
     x2 = m + cw + 8
-    svg.append(paint_grad('pg2', cy0, cy0 + 40)
-               + f'<g clip-path="url(#c1)">' + g(drip_band(72, x2, x2 + cw, cy0, 4, 14, 30), 'url(#pg2)') + '</g>')
+    P.swash('chalk', x2 + 12, x2 + 64, cy0 + 26, 20, passes=3)
+    x3 = m + 2 * (cw + 8)
+    P.dry_brush('orange', (x3 + 10, cy0 + 26), (x3 + 70, cy0 + 24), 18, bristles=80)
+    # clip every texture to its panel: the sheet background stays clean
+    keep = np.zeros((P.ny, P.nx), bool)
+    for (x, y, w, h) in [(hx, hy, hw, hh)] + [(m + i * (cw + 8), cy0, cw, ch) for i in range(3)]:
+        keep[int(y / P.cell):int((y + h) / P.cell), int(x / P.cell):int((x + w) / P.cell)] = True
+    for f in P.fields.values():
+        f[~keep] = 0
+    svg = [f'<rect x="{m + i * (cw + 8)}" y="{cy0}" width="{cw}" height="{ch}" rx="3.5" fill="none" stroke="{C["Tick"]}" stroke-width=".25"/>'
+           for i in range(3)]
+    svg.append(f'<rect x="{hx}" y="{hy}" width="{hw}" height="{hh}" fill="none" stroke="{C["Tick"]}" stroke-width=".25"/>')
+    svg.append(f'<line x1="{m}" y1="25" x2="{W - m}" y2="25" stroke="{C["Tick"]}" stroke-width=".25"/>')
+    svg.append(swash_drips(P, hx + 60, hx + hw - 60, 10, hy + hh - 30, seed=342))
+    svg.append(swash_drips(P, x2 + 18, x2 + 58, 5, cy0 + 62, w=(0.7, 1.4), seed=343))
     sw = []
-    names = ['Wrap Black', 'Burnt', 'Orange', 'Amber', 'Signal', 'Chalk']
-    for i, nme in enumerate(names):
+    for i, nme in enumerate(['Wrap Black', 'Chalk', 'Amber', 'Orange']):
         hexv, cmyk = TOKENS_B[nme]
-        col, row = i % 3, i // 3
-        x, y = 256 + col * 50, 40 + row * 50
+        x, y = 256 + (i % 2) * 75, 40 + (i // 2) * 50
         border = f"border:.25mm solid {C['Tick']};" if nme == 'Wrap Black' else ''
-        sw.append(f"""<div class="abs" style="left:{x}mm;top:{y}mm;width:46mm">
+        sw.append(f"""<div class="abs" style="left:{x}mm;top:{y}mm;width:71mm">
   <div style="height:28mm;border-radius:2.4mm;background:{hexv};{border}"></div>
   <div style="margin-top:2.6mm;font-size:8pt;font-weight:600;color:{WHITE};line-height:1">{nme}</div>
   <div class="mono" style="margin-top:1.8mm;font-size:5.6pt;letter-spacing:.08em;color:{C['Label']};line-height:1.45">{hexv}<br>CMYK {'/'.join(str(v) for v in cmyk)}</div>
 </div>""")
     cards = [
-        ('02 — Splat', 'Thrown paint behind the wordmark: a Burnt base splat with an Orange splat on top. Tendrils taper and end in beads. Keep the core behind the logo and let the arms break out.'),
-        ('03 — Drips', 'Paint poured along the top edge in the logo gradient (Amber → Orange), plus runs dripping from the base of the splat. Drips always fall straight down.'),
-        ('04 — Sticker', 'The ownership card is a slap sticker, tilted −2.5°: an Orange band with a stencil header on a white write-on panel. Name and Number rules stay straight enough to write on.'),
+        ('02 — Airbrush', 'Amber strokes with a solid core that dissolves into spray grain. They frame the layout and pass behind everything else.'),
+        ('03 — Swash + drips', 'A Chalk swash sprayed in 3–5 passes with overspray. The logo sits on it and drips run straight down from its lower edge.'),
+        ('04 — Dry brush', 'An Orange dry-brush drag carries the headline, set in black stencil type. Heavy paint where the brush lands, ragged where it runs dry.'),
     ]
     ctext = []
     for i, (t, body) in enumerate(cards):
         x = m + i * (cw + 8)
-        left = x + (68 if i == 0 else 12)
-        width = cw - (80 if i == 0 else 24)
-        top = cy0 + (14 if i == 0 else 50)
-        ctext.append(f"""<div class="abs" style="left:{left}mm;top:{top}mm;width:{width}mm">
-  <div class="mono" style="font-size:6.4pt;color:{SIGNAL};line-height:1">{t}</div>
-  <div style="margin-top:3mm;font-size:8.2pt;line-height:1.42;color:{C['Label']}">{body}</div></div>""")
-    x3 = m + 2 * (cw + 8)
+        ctext.append(f"""<div class="abs" style="left:{x + 70}mm;top:{cy0 + 12}mm;width:{cw - 80}mm">
+  <div class="mono" style="font-size:6.4pt;color:{ORANGE};line-height:1">{t}</div>
+  <div style="margin-top:3mm;font-size:8pt;line-height:1.42;color:{C['Label']}">{body}</div></div>""")
     html = A.logo_slot(hcx, hcy, hlw) + f"""
 <div class="abs mono" style="left:{m}mm;top:16mm;{lab}">Wrapshap&nbsp;&nbsp;/&nbsp;&nbsp;Visual system&nbsp;&nbsp;—&nbsp;&nbsp;Option B: Graffiti</div>
-<div class="abs mono" style="right:{m}mm;top:16mm;{lab}">v1.0&nbsp;&nbsp;—&nbsp;&nbsp;2026</div>
-<div class="abs mono" style="left:{m + 8}mm;top:{hy + hh - 10}mm;font-size:6pt;color:{C['Label']};line-height:1">01 — Splat lockup</div>
-<div class="abs mono" style="left:256mm;top:34mm;{lab};color:{SIGNAL}">Colour</div>
+<div class="abs mono" style="right:{m}mm;top:16mm;{lab}">v2.0&nbsp;&nbsp;—&nbsp;&nbsp;2026</div>
+<div class="abs st" style="left:{hx}mm;width:{hw}mm;top:{hy + hh - 26}mm;text-align:center;font-size:15pt;color:{C['Ink Text']};letter-spacing:.05em">
+  Stay wrapped {dot(C['Ink Text'])} Stay protected</div>
+<div class="abs mono" style="left:256mm;top:34mm;{lab};color:{ORANGE}">Colour</div>
 {''.join(sw)}
-<div class="abs mono" style="left:256mm;top:146mm;{lab};color:{SIGNAL}">Type</div>
+<div class="abs mono" style="left:256mm;top:146mm;{lab};color:{ORANGE}">Type</div>
 <div class="abs" style="left:256mm;top:152mm;width:148mm">
-  <div class="st" style="font-size:30pt;color:{WHITE}">Stay wrapped. <span style="color:{SIGNAL}">Stay protected.</span></div>
+  <div class="st" style="font-size:30pt;color:{WHITE}">Stay wrapped. <span style="color:{ORANGE}">Stay protected.</span></div>
   <div style="display:flex;gap:10mm;margin-top:4.2mm">
     <div style="font-size:7.4pt;line-height:1.4;color:{C['Label']}"><b style="color:{WHITE};font-weight:600">Big Shoulders Stencil</b> — headlines<br>Black 900, all caps</div>
     <div style="font-size:7.4pt;line-height:1.4;color:{C['Label']}"><b style="color:{WHITE};font-weight:600">Geist</b> — body 400<br>8–10 pt</div>
   </div>
 </div>
-{''.join(ctext)}
-{sticker(x3 + 14, cy0 + 12, cw - 28, 30, -2.5, 9, 6.4)}"""
-    return W, H, page(W, H, INK, '\n'.join(svg), html)
+{''.join(ctext)}"""
+    return W, H, page(W, H, '\n'.join(svg), html), save_tex('b-design-system', P), 0.14
 
 
-def build(names=None):
+def build():
     os.makedirs(os.path.join(HERE, 'html'), exist_ok=True)
     jobs = []
 
-    def add(name, spec, trim=None, cmyk=True):
-        W, H, doc = spec
+    def add(name, spec, trim=None, cmyk=True, bg='Wrap Black'):
+        W, H, doc, tex, cell = spec
         p = os.path.join(HERE, 'html', name + '.html')
         open(p, 'w').write(doc)
-        jobs.append(dict(name=name, html=p, w=W, h=H, trim=trim, cmyk=cmyk))
+        jobs.append(dict(name=name, html=p, w=W, h=H, trim=trim, cmyk=cmyk, tex=tex, cell=cell, layers=LAYERS, bg=bg))
+        print('built', name)
 
     add('b-envelope-front', envelope_front(), A.ENV)
     add('b-envelope-back', envelope_back(), A.ENV)
-    for i, (tw, th) in enumerate(((250, 250), (350, 350), (400, 225), (800, 450))):
-        add(f'b-matpad-{tw}x{th}', matpad(tw, th, 100 + 10 * i if (tw, th) not in ((350, 350), (800, 450)) else 100 + 10 * (i - 1)), (tw, th))
-    add('b-tee-back', tee_back(), cmyk=False)
-    add('b-tee-front', tee_front(), cmyk=False)
+    for tw, th in ((250, 250), (350, 350), (400, 225), (800, 450)):
+        add(f'b-matpad-{tw}x{th}', matpad(tw, th, 400 if tw == th else 420), (tw, th))
+    add('b-tee-back', tee_back(), cmyk=False, bg=None)
+    add('b-tee-front', tee_front(), cmyk=False, bg=None)
     add('b-design-system', system_sheet())
     json.dump(jobs, open(os.path.join(HERE, 'jobs_b.json'), 'w'), indent=1)
     json.dump(TOKENS_B, open(os.path.join(HERE, 'tokens.json'), 'w'), indent=1)
-    print(len(jobs), 'pages')
 
 
 if __name__ == '__main__':
