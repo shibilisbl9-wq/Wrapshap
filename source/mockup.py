@@ -4,14 +4,15 @@ import pymupdf as fitz
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONTS = os.path.abspath(os.path.join(HERE, '..', 'fonts'))
+PREFIX = os.environ.get('PREFIX', '')
 OUT = os.path.join(HERE, 'mockup')
 os.makedirs(OUT, exist_ok=True)
 
 # print artwork -> transparent PNG at 12 px/mm (~305 dpi)
 for n in ('tee-front', 'tee-back'):
-    fitz.open(os.path.join(HERE, 'placed', n + '.pdf'))[0].get_pixmap(dpi=305, alpha=True).save(os.path.join(OUT, n + '.png'))
-bw, bh = [v / 72 * 25.4 for v in fitz.open(os.path.join(HERE, 'placed', 'tee-back.pdf'))[0].rect[2:]]
-fw, fh = [v / 72 * 25.4 for v in fitz.open(os.path.join(HERE, 'placed', 'tee-front.pdf'))[0].rect[2:]]
+    fitz.open(os.path.join(HERE, 'placed', PREFIX + n + '.pdf'))[0].get_pixmap(dpi=305, alpha=True).save(os.path.join(OUT, PREFIX + n + '.png'))
+bw, bh = [v / 72 * 25.4 for v in fitz.open(os.path.join(HERE, 'placed', PREFIX + 'tee-back.pdf'))[0].rect[2:]]
+fw, fh = [v / 72 * 25.4 for v in fitz.open(os.path.join(HERE, 'placed', PREFIX + 'tee-front.pdf'))[0].rect[2:]]
 
 # flat tee, size L, units = mm, x centred, y = 0 at high point of shoulder
 R = [(95, 0), (250, 35), (420, 190), (329, 290), (280, 246)]
@@ -29,8 +30,8 @@ def tee(cx, back):
     front_neck = "M-95 0 C-95 125 95 125 95 0" if not back else "M-95 0 C-90 26 90 26 95 0"
     inner = '' if back else ('<path d="M-95 0 C-90 26 90 26 95 0 C95 125 -95 125 -95 0 Z" fill="#070708"/>'
                              '<path d="M-95 0 C-90 26 90 26 95 0" fill="none" stroke="#1E1E21" stroke-width="10"/>')
-    art = (f'<image href="tee-back.png" x="{-bw / 2}" y="92" width="{bw}" height="{bh}"/>' if back else
-           f'<image href="tee-front.png" x="{128 - fw / 2}" y="{150 - fh / 2}" width="{fw}" height="{fh}"/>')
+    art = (f'<image href="{PREFIX}tee-back.png" x="{-bw / 2}" y="92" width="{bw}" height="{bh}"/>' if back else
+           f'<image href="{PREFIX}tee-front.png" x="{128 - fw / 2}" y="{150 - fh / 2}" width="{fw}" height="{fh}"/>')
     return f'''<g transform="translate({cx} 0)">
   <path d="{body_path()}" fill="#000" opacity=".22" filter="url(#sh)" transform="translate(0 16)"/>
   <path d="{body_path()}" fill="url(#cloth)"/>
@@ -69,10 +70,10 @@ svg{{display:block}}
 <text x="1500" y="-92" text-anchor="end" font-family="Geist Mono" font-weight="500" font-size="15" letter-spacing="3.4" fill="#6E6B64">BLACK TEE · SIZE L · PRINT AT 100%</text>
 {tee(0, False)}
 {tee(1000, True)}
-<text x="0" y="850" text-anchor="middle" font-family="Geist Mono" font-weight="500" font-size="15" letter-spacing="3.4" fill="#6E6B64">FRONT — LEFT CHEST {fw:.0f} MM</text>
+<text x="0" y="850" text-anchor="middle" font-family="Geist Mono" font-weight="500" font-size="15" letter-spacing="3.4" fill="#6E6B64">FRONT — LEFT CHEST {fw:.0f} × {fh:.0f} MM</text>
 <text x="1000" y="850" text-anchor="middle" font-family="Geist Mono" font-weight="500" font-size="15" letter-spacing="3.4" fill="#6E6B64">BACK — {bw:.0f} × {bh:.0f} MM</text>
 </svg></body></html>"""
-open(os.path.join(OUT, 'tee-mockup.html'), 'w').write(html)
+open(os.path.join(OUT, PREFIX + 'tee-mockup.html'), 'w').write(html)
 
 shot = os.path.join(HERE, 'shot.mjs')
 open(shot, 'w').write("""import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
@@ -82,5 +83,5 @@ await p.goto('file://' + html); await p.evaluate(() => document.fonts.ready); aw
 await p.screenshot({ path: out, type: 'jpeg', quality: 92, clip: { x: 0, y: 0, width: +w, height: +h } }); await b.close();
 """)
 H = round(3200 * VB[3] / VB[2])
-subprocess.run(['node', shot, os.path.join(OUT, 'tee-mockup.html'), os.path.join(OUT, 'tee-mockup.jpg'), '3200', str(H)], check=True)
+subprocess.run(['node', shot, os.path.join(OUT, PREFIX + 'tee-mockup.html'), os.path.join(OUT, PREFIX + 'tee-mockup.jpg'), '3200', str(H)], check=True)
 print('mockup', 3200, H)

@@ -4,14 +4,15 @@ import fs from 'fs';
 import path from 'path';
 
 const here = path.dirname(new URL(import.meta.url).pathname);
-const jobs = JSON.parse(fs.readFileSync(path.join(here, 'jobs.json'), 'utf8'));
+const JOBS = process.env.JOBS || 'jobs.json', SLOTS = process.env.SLOTS || 'slots.json';
+const jobs = JSON.parse(fs.readFileSync(path.join(here, JOBS), 'utf8'));
 const only = process.argv.slice(2);
 fs.mkdirSync(path.join(here, 'raw'), { recursive: true });
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
-const slots = fs.existsSync(path.join(here, 'slots.json'))
-  ? JSON.parse(fs.readFileSync(path.join(here, 'slots.json'), 'utf8')) : {};
+const slots = fs.existsSync(path.join(here, SLOTS))
+  ? JSON.parse(fs.readFileSync(path.join(here, SLOTS), 'utf8')) : {};
 for (const j of jobs) {
   if (only.length && !only.includes(j.name)) continue;
   await page.goto('file://' + j.html);
@@ -27,5 +28,5 @@ for (const j of jobs) {
   });
   console.log('printed', j.name);
 }
-fs.writeFileSync(path.join(here, 'slots.json'), JSON.stringify(slots, null, 1));
+fs.writeFileSync(path.join(here, SLOTS), JSON.stringify(slots, null, 1));
 await browser.close();

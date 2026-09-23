@@ -89,37 +89,77 @@ def png(name, path, dpi):
     return pix.width, pix.height
 
 
-made = []
+def size_mm(name):
+    r = P('print', name)[0].rect
+    return round(r.width / MM), round(r.height / MM)
 
-# 00 design system
-save_pdf(['design-system'], out('00-design-system', 'wrapshap-design-system.pdf'), 'Wrapshap — Visual system')
-save_ai([('design-system', '')], out('00-design-system', 'wrapshap-design-system.ai'), 'Wrapshap — Visual system', labels=False, margin=0)
-made.append(jpg('design-system', out('00-design-system', 'wrapshap-design-system.jpg'), 200))
 
-# 01 envelope
-save_pdf(['envelope-front', 'envelope-back'], out('01-envelope', 'wrapshap-envelope-163x205mm-print.pdf'), 'Wrapshap — Envelope 163 x 205 mm')
-save_ai([('envelope-front', 'Front — 163 x 205 mm trim + 3 mm bleed'), ('envelope-back', 'Back — 163 x 205 mm trim + 3 mm bleed')],
-        out('01-envelope', 'wrapshap-envelope-163x205mm.ai'), 'Wrapshap — Envelope 163 x 205 mm')
-made.append(jpg('envelope-front', out('01-envelope', 'wrapshap-envelope-front.jpg'), 300))
-made.append(jpg('envelope-back', out('01-envelope', 'wrapshap-envelope-back.jpg'), 300))
+def export_option(pre, root, title):
+    made = []
+    o = lambda *p: out(root, *p)
+    # 00 design system
+    save_pdf([pre + 'design-system'], o('00-design-system', 'wrapshap-design-system.pdf'), f'Wrapshap — Visual system ({title})')
+    save_ai([(pre + 'design-system', '')], o('00-design-system', 'wrapshap-design-system.ai'), f'Wrapshap — Visual system ({title})',
+            labels=False, margin=0)
+    made.append(jpg(pre + 'design-system', o('00-design-system', 'wrapshap-design-system.jpg'), 200))
+    shutil.copy(os.path.join(HERE, 'logo.pdf'), o('00-design-system', 'wrapshap-logo-vector.pdf'))
+    shutil.copy(os.path.join(HERE, 'logo.pdf'), o('00-design-system', 'wrapshap-logo-vector.ai'))
+    # 01 envelope
+    save_pdf([pre + 'envelope-front', pre + 'envelope-back'], o('01-envelope', 'wrapshap-envelope-163x205mm-print.pdf'),
+             f'Wrapshap — Envelope 163 x 205 mm ({title})')
+    save_ai([(pre + 'envelope-front', 'Front — 163 x 205 mm trim + 3 mm bleed'), (pre + 'envelope-back', 'Back — 163 x 205 mm trim + 3 mm bleed')],
+            o('01-envelope', 'wrapshap-envelope-163x205mm.ai'), f'Wrapshap — Envelope 163 x 205 mm ({title})')
+    made.append(jpg(pre + 'envelope-front', o('01-envelope', 'wrapshap-envelope-front.jpg'), 300))
+    made.append(jpg(pre + 'envelope-back', o('01-envelope', 'wrapshap-envelope-back.jpg'), 300))
+    # 02 mat pads
+    for tw, th, folder, dpi in ((250, 250, '1x1', 200), (350, 350, '1x1', 200), (400, 225, '16x9', 200), (800, 450, '16x9', 150)):
+        n = f'{pre}matpad-{tw}x{th}'
+        base = f'wrapshap-matpad-{folder.replace("x", "-")}-{tw}x{th}mm'
+        save_pdf([n], o('02-mat-pad', folder, base + '-print.pdf'), f'Wrapshap — Mat pad {tw} x {th} mm ({title})')
+        save_ai([(n, f'Mat pad {folder.replace("x", ":")} — {tw} x {th} mm trim + 3 mm bleed')], o('02-mat-pad', folder, base + '.ai'),
+                f'Wrapshap — Mat pad {tw} x {th} mm ({title})')
+        made.append(jpg(n, o('02-mat-pad', folder, base + '.jpg'), dpi))
+    # 03 t-shirt
+    bw, bh = size_mm(pre + 'tee-back')
+    fw, fh = size_mm(pre + 'tee-front')
+    save_pdf([pre + 'tee-back', pre + 'tee-front'], o('03-tshirt', 'wrapshap-tee-print.pdf'), f'Wrapshap — Tee print artwork ({title})')
+    save_ai([(pre + 'tee-back', f'Back print — {bw} x {bh} mm  (dark panel = garment colour, not printed)'),
+             (pre + 'tee-front', f'Left chest — {fw} x {fh} mm')],
+            o('03-tshirt', 'wrapshap-tee-print.ai'), f'Wrapshap — Tee print artwork ({title})', cmyk=False,
+            gap=30, garment=(0.067, 0.067, 0.075))
+    made.append(png(pre + 'tee-back', o('03-tshirt', 'wrapshap-tee-back-print-300dpi.png'), 300))
+    made.append(png(pre + 'tee-front', o('03-tshirt', 'wrapshap-tee-front-chest-print-300dpi.png'), 300))
+    shutil.copy(os.path.join(HERE, 'mockup', pre + 'tee-mockup.jpg'), o('03-tshirt', 'wrapshap-tee-mockup.jpg'))
+    overview(REPO + '/' + root, os.path.join(REPO, root, 'wrapshap-overview.jpg'))
+    return made
 
-# 02 mat pads
-for tw, th, folder, dpi in ((250, 250, '1x1', 200), (350, 350, '1x1', 200), (400, 225, '16x9', 200), (800, 450, '16x9', 150)):
-    n = f'matpad-{tw}x{th}'
-    base = f'wrapshap-matpad-{folder.replace("x", "-")}-{tw}x{th}mm'
-    save_pdf([n], out('02-mat-pad', folder, base + '-print.pdf'), f'Wrapshap — Mat pad {tw} x {th} mm')
-    save_ai([(n, f'Mat pad {folder.replace("x", ":")} — {tw} x {th} mm trim + 3 mm bleed')], out('02-mat-pad', folder, base + '.ai'),
-            f'Wrapshap — Mat pad {tw} x {th} mm')
-    made.append(jpg(n, out('02-mat-pad', folder, base + '.jpg'), dpi))
 
-# 03 t-shirt
-save_pdf(['tee-back', 'tee-front'], out('03-tshirt', 'wrapshap-tee-print.pdf'), 'Wrapshap — Tee print artwork')
-save_ai([('tee-back', 'Back print — 300 x 268 mm  (dark panel = garment colour, not printed)'),
-         ('tee-front', 'Left chest — 90 mm wide')],
-        out('03-tshirt', 'wrapshap-tee-print.ai'), 'Wrapshap — Tee print artwork', cmyk=False,
-        gap=30, garment=(0.067, 0.067, 0.075))
-made.append(png('tee-back', out('03-tshirt', 'wrapshap-tee-back-print-300dpi.png'), 300))
-made.append(png('tee-front', out('03-tshirt', 'wrapshap-tee-front-chest-print-300dpi.png'), 300))
-shutil.copy(os.path.join(HERE, 'mockup', 'tee-mockup.jpg'), out('03-tshirt', 'wrapshap-tee-mockup.jpg'))
+def overview(base, path):
+    rows = [['01-envelope/wrapshap-envelope-front.jpg', '01-envelope/wrapshap-envelope-back.jpg', '00-design-system/wrapshap-design-system.jpg'],
+            ['02-mat-pad/1x1/wrapshap-matpad-1-1-250x250mm.jpg', '02-mat-pad/1x1/wrapshap-matpad-1-1-350x350mm.jpg',
+             '02-mat-pad/16x9/wrapshap-matpad-16-9-400x225mm.jpg', '02-mat-pad/16x9/wrapshap-matpad-16-9-800x450mm.jpg'],
+            ['03-tshirt/wrapshap-tee-mockup.jpg']]
+    W, M, G = 3200, 120, 48
+    built = []
+    for r in rows:
+        ims = [Image.open(os.path.join(base, f)).convert('RGB') for f in r]
+        h = round((W - 2 * M - G * (len(ims) - 1)) / sum(i.width / i.height for i in ims))
+        built.append([i.resize((round(i.width * h / i.height), h), Image.LANCZOS) for i in ims])
+    H = M * 2 + sum(r[0].height for r in built) + G * (len(built) - 1)
+    c = Image.new('RGB', (W, H), (231, 229, 224))
+    y = M
+    for r in built:
+        x = M
+        for i in r:
+            c.paste(i, (x, y))
+            x += i.width + G
+        y += r[0].height + G
+    c.save(path, quality=90, optimize=True)
 
-print(made)
+
+if __name__ == '__main__':
+    opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
+    if opt == 'a':
+        print(export_option('', 'option-a-wrap-halo', 'Option A: Wrap Halo'))
+    else:
+        print(export_option('b-', 'option-b-graffiti', 'Option B: Graffiti'))

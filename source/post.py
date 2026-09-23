@@ -8,8 +8,8 @@ MM = 72 / 25.4
 PX = 0.75                      # CSS px -> PDF pt
 BLEED = 3.0
 
-jobs = json.load(open(os.path.join(HERE, 'jobs.json')))
-slots = json.load(open(os.path.join(HERE, 'slots.json')))
+jobs = json.load(open(os.path.join(HERE, os.environ.get('JOBS', 'jobs.json'))))
+slots = json.load(open(os.path.join(HERE, os.environ.get('SLOTS', 'slots.json'))))
 tokens = json.load(open(os.path.join(HERE, 'tokens.json')))
 logo = fitz.open(os.path.join(HERE, 'logo.pdf'))
 only = sys.argv[1:]
