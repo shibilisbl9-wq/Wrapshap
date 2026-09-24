@@ -1,7 +1,8 @@
-# Wrapshap: envelope redesign, mat pads and polo shirt
+# Wrapshap: envelope redesign, mat pads, polo shirt and stationery
 
 This repo has two design options. Each one is a set of an envelope, four mat pads and a design-system sheet.
-The polo shirt is in Option A, because it uses A's Wrap Halo design.
+The polo shirt and the stationery (letterheads and business cards for Pakistan and the UAE) are in Option A,
+because they use A's Wrap Halo design.
 Both use the **original Wrapshap logo artwork unchanged**. It was taken as vector straight out of the supplied envelope file.
 
 | | Option A: Wrap Halo | Option B: Graffiti |
@@ -36,6 +37,7 @@ Both options share the same core palette. Option B adds one paint colour, Chalk.
 | `02-mat-pad/1x1/` | 250 × 250 mm and 350 × 350 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `02-mat-pad/16x9/` | 400 × 225 mm and 800 × 450 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `03-polo-shirt/` (Option A only) | Black polo with orange collar and cuffs. Front: logo only, 85 mm, left chest. Back: Wrap Halo, logo and tagline, 282 × 236 mm | `.ai`, `-print.pdf` (page 1 back, page 2 front), transparent 300 dpi `.png` per print, `wrapshap-polo-mockup.jpg` |
+| `04-stationery/pakistan/` and `04-stationery/uae/` (Option A only) | A4 letterhead and 90 × 50 mm business card for each office, with that office's address, web and email | `.ai` (the card has front and back on one canvas), `-print.pdf` (CMYK, 3 mm bleed; card page 1 is the front, page 2 the back), `.jpg` previews |
 
 **Send the `-print.pdf` files to the printer.** They have exact trim and bleed boxes and are in CMYK. The polo files are
 the exception, see below. The `.jpg` files are RGB previews cropped to the trim size.
@@ -80,6 +82,12 @@ the exception, see below. The `.jpg` files are RGB previews cropped to the trim 
   website or social handles because I don't know them.
 - **Option B's spray is generated from a fixed seed.** Every stroke, swash and brush is built by code (`source/spray.py`)
   from a seed number. Change the seed in `source/design_b.py` to get a different spray in the same style.
+- **Business cards have placeholders.** The name ("Full Name"), job title ("Designation") and phone number
+  (`+92 3XX XXX XXXX` / `+971 5X XXX XXXX`) are placeholders because they weren't supplied. Replace them in the `.ai`
+  file for each person before printing. The address, web and email are exactly as supplied. On the UAE address,
+  "UAE" was added after "Dubai".
+- **Letterhead.** It is designed for pre-printed paper (offset or digital print). The body area is left white for typing or
+  printing letters. If you also want a Word template with the same header and footer for typing letters, ask.
 - **Shirts.** At your request, the t-shirts from both options were replaced by the single polo. The old t-shirt files
   are still in the git history.
 - **Option B changed direction.** The first version used cartoon paint splats. It was replaced with spray-can textures
@@ -94,4 +102,5 @@ Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 
 - Option A: `design.py` → `render.mjs` → `post.py` → `export.py <repo> a`
 - Option B: `design_b.py` → `JOBS=jobs_b.json SLOTS=slots_b.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> b`
+- Stationery: `stationery.py` → `JOBS=jobs_stat.json SLOTS=slots_stat.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> stationery`
 - Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`

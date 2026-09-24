@@ -163,8 +163,30 @@ def export_polo(root):
     return made
 
 
+def export_stationery(root):
+    made = []
+    for key, label in (('pakistan', 'Pakistan'), ('uae', 'UAE')):
+        o = lambda *p: out(root, '04-stationery', key, *p)
+        n = f'st-{key}'
+        save_pdf([n + '-letterhead'], o(f'wrapshap-letterhead-{key}-A4-print.pdf'), f'Wrapshap — Letterhead {label} (A4)')
+        save_ai([(n + '-letterhead', f'Letterhead {label} — A4 210 x 297 mm trim + 3 mm bleed')],
+                o(f'wrapshap-letterhead-{key}-A4.ai'), f'Wrapshap — Letterhead {label} (A4)')
+        made.append(jpg(n + '-letterhead', o(f'wrapshap-letterhead-{key}-A4.jpg'), 200))
+        save_pdf([n + '-card-front', n + '-card-back'], o(f'wrapshap-business-card-{key}-90x50mm-print.pdf'),
+                 f'Wrapshap — Business card {label} (90 x 50 mm)')
+        save_ai([(n + '-card-front', f'Card front — 90 x 50 mm trim + 3 mm bleed'),
+                 (n + '-card-back', f'Card back ({label}) — replace name, designation, phone before printing')],
+                o(f'wrapshap-business-card-{key}-90x50mm.ai'), f'Wrapshap — Business card {label} (90 x 50 mm)', gap=14, margin=12)
+        made.append(jpg(n + '-card-front', o(f'wrapshap-business-card-{key}-front.jpg'), 600))
+        made.append(jpg(n + '-card-back', o(f'wrapshap-business-card-{key}-back.jpg'), 600))
+    return made
+
+
 if __name__ == '__main__':
     opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
+    if opt == 'stationery':
+        print(export_stationery('option-a-wrap-halo'))
+        sys.exit()
     if opt == 'polo':
         print(export_polo('option-a-wrap-halo'))
         overview(os.path.join(REPO, 'option-b-graffiti'), os.path.join(REPO, 'option-b-graffiti', 'wrapshap-overview.jpg'))
