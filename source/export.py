@@ -183,6 +183,19 @@ def export_tee(root):
     return made
 
 
+def export_voucher(root):
+    made = []
+    for key, label in (('pakistan', 'Pakistan'), ('uae', 'UAE')):
+        o = lambda *p: out(root, '04-stationery', key, *p)
+        n = f'st-{key}-voucher'
+        base = f'wrapshap-receipt-voucher-{key}-A5'
+        save_pdf([n], o(base + '-print.pdf'), f'Wrapshap — Receipt voucher {label} (A5)')
+        save_ai([(n, f'Receipt voucher {label} — A5 landscape 210 x 148 mm trim + 3 mm bleed')], o(base + '.ai'),
+                f'Wrapshap — Receipt voucher {label} (A5)')
+        made.append(jpg(n, o(base + '.jpg'), 200))
+    return made
+
+
 def export_stationery(root):
     made = []
     for key, label in (('pakistan', 'Pakistan'), ('uae', 'UAE')):
@@ -206,6 +219,9 @@ if __name__ == '__main__':
     opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
     if opt == 'tee':
         print(export_tee('option-b-graffiti'))
+        sys.exit()
+    if opt == 'voucher':
+        print(export_voucher('option-a-wrap-halo'))
         sys.exit()
     if opt == 'stationery':
         print(export_stationery('option-a-wrap-halo'))

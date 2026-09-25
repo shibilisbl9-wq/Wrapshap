@@ -38,7 +38,7 @@ Both options share the same core palette. Option B adds one paint colour, Chalk.
 | `02-mat-pad/16x9/` | 400 × 225 mm and 800 × 450 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `03-polo-shirt/` (Option A only) | Black polo with orange collar and cuffs. Front: logo only, 85 mm, left chest. Back: Wrap Halo, logo and tagline, 282 × 236 mm | `.ai`, `-print.pdf` (page 1 back, page 2 front), transparent 300 dpi `.png` per print, `wrapshap-polo-mockup.jpg` |
 | `03-t-shirt/` (Option B only) | Graffiti tee in black and white. Back: the logo with an outline and drips, a crown, a smiley, sparkles, a handwritten tagline and an orange swoosh, 320 × 279 mm. Front: a small version of the logo piece on the left chest, 108 × 60 mm. Inside neck: crown and tagline, 56 × 30 mm. Woven sleeve/hem label, 20 × 32 mm | `.ai` and `-print.pdf` per shirt colour (pages: back, chest, neck, label), transparent 300 dpi `.png` per print, `wrapshap-tee-mockup.jpg` |
-| `04-stationery/pakistan/` and `04-stationery/uae/` (Option A only) | A4 letterhead and 90 × 50 mm business card for each office, with that office's address, web and email | `.ai` (the card has front and back on one canvas), `-print.pdf` (CMYK, 3 mm bleed; card page 1 is the front, page 2 the back), `.jpg` previews |
+| `04-stationery/pakistan/` and `04-stationery/uae/` (Option A only) | A4 letterhead, 90 × 50 mm business card and A5 landscape receipt voucher (210 × 148 mm) for each office, with that office's address, web and email. The voucher has the same fields as the supplied reference voucher, in rupees (Pakistan) or dirhams (UAE) | `.ai` (the card has front and back on one canvas), `-print.pdf` (CMYK, 3 mm bleed; card page 1 is the front, page 2 the back), `.jpg` previews |
 
 **Send the `-print.pdf` files to the printer.** They have exact trim and bleed boxes and are in CMYK. The polo files are
 the exception, see below. The `.jpg` files are RGB previews cropped to the trim size.
@@ -93,6 +93,13 @@ the exception, see below. The `.jpg` files are RGB previews cropped to the trim 
   (`+92 3XX XXX XXXX` / `+971 5X XXX XXXX`) are placeholders because they weren't supplied. Replace them in the `.ai`
   file for each person before printing. The address, web and email are exactly as supplied. On the UAE address,
   "UAE" was added after "Dubai".
+- **Receipt voucher.** It keeps every field of the reference voucher you sent. I changed four things. (1) The unlabelled
+  box next to the amount is now labelled "Being payment for". (2) The reference's real-estate note (deposit not refundable
+  after a deal is cancelled) doesn't apply to Wrapshap, so it was replaced with a neutral line: "valid only when signed by an
+  authorised Wrapshap representative; cheques are subject to realisation". Send your own terms if you want them there.
+  (3) "Client / Agent Signature" became "Customer / Authorised Signature". (4) The phone line and social handles were left
+  out because they weren't supplied. A5 landscape suits standard carbonless (NCR) receipt books. The printer adds the running
+  number, perforation and binding stub.
 - **Letterhead.** It is designed for pre-printed paper (offset or digital print). The body area is left white for typing or
   printing letters. If you also want a Word template with the same header and footer for typing letters, ask.
 - **Graffiti tee.** It follows your references, but the wordmark is your real logo, not redrawn lettering. The crown,
@@ -114,4 +121,5 @@ Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 - Option B: `design_b.py` → `JOBS=jobs_b.json SLOTS=slots_b.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> b`
 - Stationery: `stationery.py` → `JOBS=jobs_stat.json SLOTS=slots_stat.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> stationery`
 - Graffiti tee: `tee.py` → `JOBS=jobs_tee.json SLOTS=slots_tee.json node render.mjs` → the same env vars with `post.py` → `tee_mockup.py` → `export.py <repo> tee` (needs Kalam 700 and Geist 600 TTFs)
+- Receipt voucher: `voucher.py` → `JOBS=jobs_voucher.json SLOTS=slots_voucher.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> voucher`
 - Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`
