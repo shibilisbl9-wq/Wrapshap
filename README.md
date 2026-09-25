@@ -1,8 +1,8 @@
-# Wrapshap: envelope redesign, mat pads, polo shirt and stationery
+# Wrapshap: envelope redesign, mat pads, polo shirt, graffiti t-shirt and stationery
 
 This repo has two design options. Each one is a set of an envelope, four mat pads and a design-system sheet.
 The polo shirt and the stationery (letterheads and business cards for Pakistan and the UAE) are in Option A,
-because they use A's Wrap Halo design.
+because they use A's Wrap Halo design. The graffiti t-shirt is in Option B.
 Both use the **original Wrapshap logo artwork unchanged**. It was taken as vector straight out of the supplied envelope file.
 
 | | Option A: Wrap Halo | Option B: Graffiti |
@@ -37,6 +37,7 @@ Both options share the same core palette. Option B adds one paint colour, Chalk.
 | `02-mat-pad/1x1/` | 250 × 250 mm and 350 × 350 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `02-mat-pad/16x9/` | 400 × 225 mm and 800 × 450 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `03-polo-shirt/` (Option A only) | Black polo with orange collar and cuffs. Front: logo only, 85 mm, left chest. Back: Wrap Halo, logo and tagline, 282 × 236 mm | `.ai`, `-print.pdf` (page 1 back, page 2 front), transparent 300 dpi `.png` per print, `wrapshap-polo-mockup.jpg` |
+| `03-t-shirt/` (Option B only) | Graffiti tee in black and white. Back: the logo with an outline and drips, a crown, a smiley, sparkles, a handwritten tagline and an orange swoosh, 320 × 279 mm. Front: a small version of the logo piece on the left chest, 108 × 60 mm. Inside neck: crown and tagline, 56 × 30 mm. Woven sleeve/hem label, 20 × 32 mm | `.ai` and `-print.pdf` per shirt colour (pages: back, chest, neck, label), transparent 300 dpi `.png` per print, `wrapshap-tee-mockup.jpg` |
 | `04-stationery/pakistan/` and `04-stationery/uae/` (Option A only) | A4 letterhead and 90 × 50 mm business card for each office, with that office's address, web and email | `.ai` (the card has front and back on one canvas), `-print.pdf` (CMYK, 3 mm bleed; card page 1 is the front, page 2 the back), `.jpg` previews |
 
 **Send the `-print.pdf` files to the printer.** They have exact trim and bleed boxes and are in CMYK. The polo files are
@@ -69,6 +70,12 @@ the exception, see below. The `.jpg` files are RGB previews cropped to the trim 
   as they move away from the logo, but that fade uses solid ink colours rather than transparency, which prints badly on
   fabric. The rings also get thinner, from 1.2 mm to 0.6 mm. In the `.ai`, the dark panel behind the artwork only shows
   the shirt colour and is not printed.
+- **Graffiti tee: print.** The artwork is RGB, 100% vector, and all type is converted to outlines, so no fonts are needed.
+  The logo is the original, unchanged. The outline and drips around it are an exact offset of the logo's shape. On the black tee,
+  the thin dark line between the logo and the white outline is left unprinted, so the shirt shows through. The finest lines are
+  about 0.9 mm (the neck print), which DTF and DTG handle. For screen printing, the logo gradient needs a halftone separation.
+- **Graffiti tee: label.** The orange crown label is drawn as a woven label (folded loop, crown on both halves). Give it to
+  the label maker as a reference, not as a print file.
 - **Polo: collar and cuffs are part of the garment, not the print.** Order black polos with an orange knit collar and cuffs.
   Ask the supplier for the colour closest to the brand Orange `#F39200` (roughly Pantone 144 C) and check a physical swatch.
 - **Polo: embroidery.** Polos are often embroidered. The logo's gradient can't be stitched as it is: an embroidery digitiser
@@ -88,8 +95,11 @@ the exception, see below. The `.jpg` files are RGB previews cropped to the trim 
   "UAE" was added after "Dubai".
 - **Letterhead.** It is designed for pre-printed paper (offset or digital print). The body area is left white for typing or
   printing letters. If you also want a Word template with the same header and footer for typing letters, ask.
-- **Shirts.** At your request, the t-shirts from both options were replaced by the single polo. The old t-shirt files
-  are still in the git history.
+- **Graffiti tee.** It follows your references, but the wordmark is your real logo, not redrawn lettering. The crown,
+  smiley and tagline handwriting (Kalam font) come from the references and are not part of your existing brand. Drop them
+  if you don't want a crown as a brand mark.
+- **Shirts.** Earlier, the t-shirts from both options were replaced by the polo. The new graffiti tee (Option B,
+  `03-t-shirt/`) was added after that. The polo is still in Option A, and the old t-shirts are in the git history.
 - **Option B changed direction.** The first version used cartoon paint splats. It was replaced with spray-can textures
   after your references. The old version is still in the git history if you want it back.
 
@@ -103,4 +113,5 @@ Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 - Option A: `design.py` → `render.mjs` → `post.py` → `export.py <repo> a`
 - Option B: `design_b.py` → `JOBS=jobs_b.json SLOTS=slots_b.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> b`
 - Stationery: `stationery.py` → `JOBS=jobs_stat.json SLOTS=slots_stat.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> stationery`
+- Graffiti tee: `tee.py` → `JOBS=jobs_tee.json SLOTS=slots_tee.json node render.mjs` → the same env vars with `post.py` → `tee_mockup.py` → `export.py <repo> tee` (needs Kalam 700 and Geist 600 TTFs)
 - Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`

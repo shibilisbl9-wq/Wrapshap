@@ -127,7 +127,7 @@ def overview(base, path):
     rows = [['01-envelope/wrapshap-envelope-front.jpg', '01-envelope/wrapshap-envelope-back.jpg', '00-design-system/wrapshap-design-system.jpg'],
             ['02-mat-pad/1x1/wrapshap-matpad-1-1-250x250mm.jpg', '02-mat-pad/1x1/wrapshap-matpad-1-1-350x350mm.jpg',
              '02-mat-pad/16x9/wrapshap-matpad-16-9-400x225mm.jpg', '02-mat-pad/16x9/wrapshap-matpad-16-9-800x450mm.jpg'],
-            ['03-polo-shirt/wrapshap-polo-mockup.jpg']]
+            ['03-polo-shirt/wrapshap-polo-mockup.jpg'], ['03-t-shirt/wrapshap-tee-mockup.jpg']]
     rows = [[f for f in r if os.path.exists(os.path.join(base, f))] for r in rows]
     rows = [r for r in rows if r]
     W, M, G = 3200, 120, 48
@@ -163,6 +163,26 @@ def export_polo(root):
     return made
 
 
+def export_tee(root):
+    o = lambda *p: out(root, '03-t-shirt', *p)
+    made = []
+    panel = {'black': (0.067, 0.067, 0.075), 'white': (0.93, 0.93, 0.92)}
+    for g in ('black', 'white'):
+        n = lambda p: f'tee-{g}-{p}'
+        dims = {p: size_mm(n(p)) for p in ('back', 'chest', 'neck')}
+        save_pdf([n('back'), n('chest'), n('neck'), 'tee-label'], o(f'wrapshap-tee-{g}-print.pdf'), f'Wrapshap — Graffiti tee, {g}')
+        save_ai([(n('back'), 'Back — %d x %d mm' % dims['back']), (n('chest'), 'Left chest — %d x %d mm' % dims['chest']),
+                 (n('neck'), 'Inside neck — %d x %d mm' % dims['neck']), ('tee-label', 'Label 20 x 32')],
+                o(f'wrapshap-tee-{g}.ai'), f'Wrapshap — Graffiti tee, {g} (panel = garment colour, not printed)',
+                cmyk=False, gap=30, garment=panel[g])
+        for p in ('back', 'chest', 'neck'):
+            made.append(png(n(p), o(f'wrapshap-tee-{g}-{p}-print-300dpi.png'), 300))
+    made.append(png('tee-label', o('wrapshap-tee-label-300dpi.png'), 300))
+    shutil.copy(os.path.join(HERE, 'mockup', 'tee-graffiti-mockup.jpg'), o('wrapshap-tee-mockup.jpg'))
+    overview(os.path.join(REPO, root), os.path.join(REPO, root, 'wrapshap-overview.jpg'))
+    return made
+
+
 def export_stationery(root):
     made = []
     for key, label in (('pakistan', 'Pakistan'), ('uae', 'UAE')):
@@ -184,6 +204,9 @@ def export_stationery(root):
 
 if __name__ == '__main__':
     opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
+    if opt == 'tee':
+        print(export_tee('option-b-graffiti'))
+        sys.exit()
     if opt == 'stationery':
         print(export_stationery('option-a-wrap-halo'))
         sys.exit()
