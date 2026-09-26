@@ -15,12 +15,12 @@ Start with `wrapshap-tshirt-collection-overview.jpg` and `wrapshap-tshirt-collec
 | `design-5-clean-tagline/` | Clean Tagline | Black | Left chest 145 × 152: crown and stacked tagline; inside neck, woven label | Not on the front (the reference has none); optional back-neck logo, 82 × 31 |
 | `design-6-vertical-bold/` | Vertical Bold | Orange | Back 253 × 490: logo upright, reading bottom to top, with crowns and splats | White letters on a black outline, with drips |
 
-**Realistic mockups.** `wrapshap-tshirt-collection-photo.jpg` shows all six shirts together. Each design folder also has a
-`-photo-back.jpg` or `-photo-front.jpg` (designs 1 and 5 have both), with each shirt laid flat on grey paper under soft
-studio light. These are 3D renders (Blender Cycles), not photographs: each shirt is modelled with folds, body volume, a rib
-collar, stitched hems and seams, and the real print files are mapped onto the fabric, so the artwork follows the folds and
-takes the same light. The logo is the exact artwork, not an AI redraw. The flat `-mockup.jpg` files are still there for exact
-placement and sizes.
+**Realistic mockups.** Design 1 has two photo-style renders, `-photo-back.jpg` and `-photo-front.jpg`: the shirt laid flat on
+grey paper under soft studio light. These are 3D renders (Blender Cycles), not photographs: the shirt is modelled with folds,
+body volume, a rib collar, stitched hems and seams, and the real print files are mapped onto the fabric, so the artwork is exact
+and follows the folds. The same generator (`source/photo_mockup.py`) can render the other five designs and a six-shirt board.
+It was stopped before those finished. The on-model lookbook photos were made in Higgsfield (GPT Image 2) and are in the Higgsfield account,
+not in this repo. Those are AI images that redraw the print, so check the logo in each against the original before using one.
 
 All sizes are in mm. Each folder has:
 - `.ai`: every print for that shirt side by side. The coloured panel behind each print shows the shirt colour and is **not printed**.

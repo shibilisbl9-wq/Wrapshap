@@ -233,9 +233,12 @@ def export_photos(root):
                 dst = out(root, folder, f'wrapshap-tee-d{i}-{folder.split("-", 2)[2]}-photo-{view}.jpg')
                 shutil.copy(src, dst)
                 made.append(os.path.relpath(dst, REPO))
-    dst = out(root, 'wrapshap-tshirt-collection-photo.jpg')
-    shutil.copy(os.path.join(HERE, 'mockup', 'photo-collection.jpg'), dst)
-    return made + [os.path.relpath(dst, REPO)]
+    board = os.path.join(HERE, 'mockup', 'photo-collection.jpg')
+    if os.path.exists(board):
+        dst = out(root, 'wrapshap-tshirt-collection-photo.jpg')
+        shutil.copy(board, dst)
+        made.append(os.path.relpath(dst, REPO))
+    return made
 
 
 def export_voucher(root):
