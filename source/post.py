@@ -2,6 +2,7 @@
 set Trim/Bleed boxes. Writes placed/<name>.pdf (RGB, for previews) and print/<name>.pdf."""
 import json, os, re, sys
 import pymupdf as fitz
+import logo_variants as LV
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MM = 72 / 25.4
@@ -23,8 +24,15 @@ for name, (hexv, cmyk) in tokens.items():
     TOK[tuple(int(hexv[i:i + 2], 16) for i in (1, 3, 5))] = tuple(v / 100 for v in cmyk)
 AMB = next(k for n, (h, _) in tokens.items() if n == 'Amber' for k in [tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))])
 ORG = next(k for n, (h, _) in tokens.items() if n == 'Orange' for k in [tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))])
-_ICC = ImageCms.buildTransform(ImageCms.createProfile('sRGB'),
-                               ImageCms.getOpenProfile('/usr/share/color/icc/ghostscript/default_cmyk.icc'), 'RGB', 'CMYK')
+_ICC = None                    # built on first use: garment (RGB) jobs never need the CMYK profile
+
+
+def icc():
+    global _ICC
+    if _ICC is None:
+        _ICC = ImageCms.buildTransform(ImageCms.createProfile('sRGB'),
+                                       ImageCms.getOpenProfile('/usr/share/color/icc/ghostscript/default_cmyk.icc'), 'RGB', 'CMYK')
+    return _ICC
 
 
 def rgb_to_cmyk(rgb):
@@ -37,7 +45,7 @@ def rgb_to_cmyk(rgb):
     if -0.02 <= t <= 1.02 and all(abs(a + dd * t - c) <= 2.5 for a, dd, c in zip(AMB, d, rgb)):
         t = min(1, max(0, t))
         return tuple(x + (y - x) * t for x, y in zip(TOK[AMB], TOK[ORG]))
-    px = ImageCms.applyTransform(Image.new('RGB', (1, 1), rgb), _ICC).getpixel((0, 0))
+    px = ImageCms.applyTransform(Image.new('RGB', (1, 1), rgb), icc()).getpixel((0, 0))
     return tuple(v / 255 for v in px)
 
 
@@ -149,7 +157,8 @@ def compose(j, fg, cmyk):
 def place_logos(pg, name):
     for s in slots[name]:
         r = fitz.Rect(s['x'] * PX, s['y'] * PX, (s['x'] + s['w']) * PX, (s['y'] + s['h']) * PX)
-        pg.show_pdf_page(r, logo, 0, keep_proportion=True)
+        variant, rot = LV.parse_slot(s['id'])
+        pg.show_pdf_page(r, logo if variant == 'full' else LV.logo(variant), 0, keep_proportion=True, rotate=rot)
 
 
 for j in jobs:

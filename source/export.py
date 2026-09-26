@@ -38,6 +38,7 @@ def save_ai(items, path, title, cmyk=True, gap=24, margin=18, labels=True, garme
     """One canvas holding every artwork side by side (Illustrator opens one PDF page as one
     artboard), with crop marks at trim and a small caption under each piece."""
     srcs = [(P('print', n), cap) for n, cap in items]
+    garments = garment if isinstance(garment, list) else [garment] * len(srcs)   # one colour, or one per item
     ws = [d[0].rect.width for d, _ in srcs]
     hs = [d[0].rect.height for d, _ in srcs]
     cap_h = 12 * MM if labels else 0
@@ -49,11 +50,11 @@ def save_ai(items, path, title, cmyk=True, gap=24, margin=18, labels=True, garme
     x = margin * MM
     k = (0, 0, 0, 1) if cmyk else (0, 0, 0)
     grey = (0, 0, 0, 0.55) if cmyk else (0.45, 0.45, 0.45)
-    for (d, cap), w, h in zip(srcs, ws, hs):
+    for (d, cap), w, h, gcol in zip(srcs, ws, hs, garments):
         y = margin * MM
-        if garment:                                   # garment colour backing (not part of the print)
+        if gcol:                                      # garment colour backing (not part of the print)
             pad = 6 * MM
-            pg.draw_rect(fitz.Rect(x - pad, y - pad, x + w + pad, y + h + pad), color=None, fill=garment, radius=0.02)
+            pg.draw_rect(fitz.Rect(x - pad, y - pad, x + w + pad, y + h + pad), color=None, fill=gcol, radius=0.02)
         pg.show_pdf_page(fitz.Rect(x, y, x + w, y + h), d, 0)
         t = d[0].trimbox
         if abs(t.width - w) > 1:                      # has bleed -> crop marks at trim
@@ -183,6 +184,45 @@ def export_tee(root):
     return made
 
 
+PANEL = {'black': (0.067, 0.067, 0.075), 'white': (0.957, 0.957, 0.949),
+         'cream': (0.937, 0.91, 0.847), 'orange': (0.953, 0.573, 0.0)}
+SHARED = [('tee-black-neck', 'neck', 'Inside neck'), ('tee-label', 'label', 'Woven label 20 x 32 mm (reference for the label maker)')]
+# folder, title, shirt colour, pieces: (piece, file slug, caption)
+COLLECTION = [
+    ('design-1-signature-graffiti', 'Signature Graffiti', 'black',
+     [('tee-black-back', 'back', 'Back'), ('tee-black-chest', 'chest', 'Left chest')] + SHARED),
+    ('design-2-playful-character', 'Playful Character', 'white', [('c2-back', 'back', 'Back')]),
+    ('design-3-minimal-bold', 'Minimal Bold', 'black',
+     [('c3-front', 'front', 'Front'), ('c3-front-alt', 'front-alt-full-colour-logo', 'Alternative: full-colour logo')] + SHARED),
+    ('design-4-abstract', 'Abstract', 'cream',
+     [('c4-back', 'back', 'Back'), ('c4-back-alt', 'back-alt-full-colour-logo', 'Alternative: full-colour logo')]),
+    ('design-5-clean-tagline', 'Clean Tagline', 'black',
+     [('c5-chest', 'chest', 'Left chest'), ('c5-back-neck', 'back-neck-optional', 'Optional: back neck logo')] + SHARED),
+    ('design-6-vertical-bold', 'Vertical Bold', 'orange',
+     [('c6-back', 'back', 'Back'), ('c6-back-alt', 'back-alt-full-colour-logo', 'Alternative: full-colour logo')]),
+]
+
+
+def export_collection(root):
+    made = []
+    for i, (folder, title, shirt, pieces) in enumerate(COLLECTION, 1):
+        o = lambda *p: out(root, folder, *p)
+        base = f'wrapshap-tee-d{i}-{folder.split("-", 2)[2]}'
+        full = f'Wrapshap — T-shirt design {i}: {title} ({shirt} tee)'
+        save_pdf([n for n, _, _ in pieces], o(base + '-print.pdf'), full)
+        caps = [(n, '%s — %d x %d mm' % ((cap,) + size_mm(n))) for n, _, cap in pieces]
+        save_ai(caps, o(base + '.ai'), full + ' — panel = shirt colour, not printed', cmyk=False, gap=30, garment=PANEL[shirt])
+        for n, slug, _ in pieces:
+            made.append(png(n, o(f'{base}-{slug}-print-300dpi.png'), 300))
+        shutil.copy(os.path.join(HERE, 'mockup', f'collection-d{i}.jpg'), o(base + '-mockup.jpg'))
+    # every design's main print on one canvas
+    save_ai([(p[0][0], f'Design {i} — {t}') for i, (_, t, _, p) in enumerate(COLLECTION, 1)],
+            out(root, 'wrapshap-tshirt-collection.ai'), 'Wrapshap — T-shirt collection, designs 1-6 (panels = shirt colour, not printed)',
+            cmyk=False, gap=40, garment=[PANEL[s] for _, _, s, _ in COLLECTION])
+    shutil.copy(os.path.join(HERE, 'mockup', 'collection-overview.jpg'), out(root, 'wrapshap-tshirt-collection-overview.jpg'))
+    return made
+
+
 def export_voucher(root):
     made = []
     for key, label in (('pakistan', 'Pakistan'), ('uae', 'UAE')):
@@ -219,6 +259,9 @@ if __name__ == '__main__':
     opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
     if opt == 'tee':
         print(export_tee('option-b-graffiti'))
+        sys.exit()
+    if opt == 'collection':
+        print(export_collection('t-shirt-collection'))
         sys.exit()
     if opt == 'voucher':
         print(export_voucher('option-a-wrap-halo'))

@@ -1,0 +1,10 @@
+# build inputs and intermediates (see "Rebuilding" in README.md)
+fonts/
+source/__pycache__/
+source/html/
+source/raw/
+source/placed/
+source/print/
+source/preview/
+source/mockup/
+source/*.json

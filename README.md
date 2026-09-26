@@ -1,4 +1,39 @@
-# Wrapshap: envelope redesign, mat pads, polo shirt, graffiti t-shirt and stationery
+# Wrapshap: envelope redesign, mat pads, polo shirt, t-shirts and stationery
+
+## T-shirt collection (six designs)
+
+`t-shirt-collection/` has the six t-shirt designs from the reference board, rebuilt as vector print files on the
+**original Wrapshap logo**. The logo is placed from the vector original and is never redrawn.
+Start with `wrapshap-tshirt-collection-overview.jpg` and `wrapshap-tshirt-collection.ai`, which has all six main prints on one canvas.
+
+| Folder | Design | Shirt | Print | Logo |
+|---|---|---|---|---|
+| `design-1-signature-graffiti/` | Signature Graffiti | Black | Back 320 × 279, left chest 108 × 60, inside neck, woven label | Full colour, white outline and drips |
+| `design-2-playful-character/` | Playful Character | White | Back 340 × 446: phone mascot with sunglasses and peace hands, tagline, swoosh | Full colour, black outline and drips |
+| `design-3-minimal-bold/` | Minimal Bold | Black | Front 290 × 155: logo, marker tagline, crown; inside neck, woven label | One colour, white |
+| `design-4-abstract/` | Abstract | Cream | Back 360 × 484: painted smiley with a crown, sparkles, swooshes | One colour, black, turned 9° |
+| `design-5-clean-tagline/` | Clean Tagline | Black | Left chest 145 × 152: crown and stacked tagline; inside neck, woven label | Not on the front (the reference has none); optional back-neck logo, 82 × 31 |
+| `design-6-vertical-bold/` | Vertical Bold | Orange | Back 253 × 490: logo upright, reading bottom to top, with crowns and splats | White letters on a black outline, with drips |
+
+All sizes are in mm. Each folder has:
+- `.ai`: every print for that shirt side by side. The coloured panel behind each print shows the shirt colour and is **not printed**.
+- `-print.pdf`: one page per print, on a transparent background.
+- A transparent 300 dpi `.png` per print, and a `-mockup.jpg`.
+
+- **One-colour logo (designs 3, 4, 6).** The reference shows the wordmark in one colour on these three shirts, so the
+  logo is recoloured from its own vector paths (`source/logo_variants.py`): the same shapes, only the paint changes.
+  Each of these designs also has an `alt-full-colour-logo` version with the untouched full-colour logo, in case you want that instead.
+- **Sizes.** The reference renders show the prints bigger than a printer can do (up to about 80% of the shirt width).
+  Here they are scaled to fit a 406 × 508 mm (16 × 20 in) DTG/DTF platen. Designs 2, 4 and 6 are over 406 mm tall, so
+  they need the large platen or DTF. Everything is vector, so you can rescale in Illustrator without losing quality.
+- **Print method.** The files are RGB, 100% vector (no embedded images), and all type is converted to outlines, so no
+  fonts are needed. They suit DTF or DTG. For screen printing, the full-colour logo's gradient needs a halftone separation.
+- **Neck print and label.** Designs 1, 3 and 5 include the same inside-neck print and woven label. Design 1 is the black shirt from `option-b-graffiti/03-t-shirt/`, unchanged.
+- **What is new artwork.** The phone mascot, peace hands, crowns, smiley, sparkles and paint marks were drawn to match the
+  reference. They are not existing Wrapshap brand marks.
+- **Garment colours.** Order shirts close to black, white, cream (about `#EFE8D8`) and brand orange `#F39200`, and check a physical swatch.
+
+---
 
 This repo has two design options. Each one is a set of an envelope, four mat pads and a design-system sheet.
 The polo shirt and the stationery (letterheads and business cards for Pakistan and the UAE) are in Option A,
@@ -123,3 +158,6 @@ Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 - Graffiti tee: `tee.py` → `JOBS=jobs_tee.json SLOTS=slots_tee.json node render.mjs` → the same env vars with `post.py` → `tee_mockup.py` → `export.py <repo> tee` (needs Kalam 700 and Geist 600 TTFs)
 - Receipt voucher: `voucher.py` → `JOBS=jobs_voucher.json SLOTS=slots_voucher.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> voucher`
 - Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`
+- T-shirt collection: build the graffiti tee first (design 1), then `collection.py` → `JOBS=jobs_coll.json SLOTS=slots_coll.json node render.mjs`
+  → the same env vars with `post.py` → `collection_mockup.py` → `export.py <repo> collection` (needs Kalam 700, Permanent Marker 400,
+  Geist 500/600/700 TTFs)
