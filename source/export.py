@@ -223,6 +223,21 @@ def export_collection(root):
     return made
 
 
+def export_photos(root):
+    """Photo-style rendered mockups (photo_mockup.py) next to each design's files."""
+    made = []
+    for i, (folder, _, _, _) in enumerate(COLLECTION, 1):
+        for view in ('front', 'back'):
+            src = os.path.join(HERE, 'mockup', f'photo-d{i}-{view}.jpg')
+            if os.path.exists(src):
+                dst = out(root, folder, f'wrapshap-tee-d{i}-{folder.split("-", 2)[2]}-photo-{view}.jpg')
+                shutil.copy(src, dst)
+                made.append(os.path.relpath(dst, REPO))
+    dst = out(root, 'wrapshap-tshirt-collection-photo.jpg')
+    shutil.copy(os.path.join(HERE, 'mockup', 'photo-collection.jpg'), dst)
+    return made + [os.path.relpath(dst, REPO)]
+
+
 def export_voucher(root):
     made = []
     for key, label in (('pakistan', 'Pakistan'), ('uae', 'UAE')):
@@ -262,6 +277,9 @@ if __name__ == '__main__':
         sys.exit()
     if opt == 'collection':
         print(export_collection('t-shirt-collection'))
+        sys.exit()
+    if opt == 'photos':
+        print(export_photos('t-shirt-collection'))
         sys.exit()
     if opt == 'voucher':
         print(export_voucher('option-a-wrap-halo'))
