@@ -1,5 +1,10 @@
 # Wrapshap: envelope redesign, mat pads, polo shirt, graffiti t-shirt and stationery
 
+> **New visual direction: Option F (campaign board in the MÜLER style).** This is the direction you picked.
+> It's a full brand board rebuilt from the MÜLER reference with the real Wrapshap logo, plus a hero banner and five
+> 1080 × 1920 stories. See [Option F](#option-f-campaign-müler-style) below. Options A–E are the earlier
+> envelope work and are unchanged.
+
 This repo has five envelope design directions. Options A and B are each a full set of an envelope, four
 mat pads and a design-system sheet. The polo shirt and the stationery (letterheads and business cards for
 Pakistan and the UAE) are in Option A, because they use A's Wrap Halo design. The graffiti t-shirt is in
@@ -23,7 +28,78 @@ from spray-can texture references (airbrush, dry brush); E was built fresh to ma
 own graffiti column (loose scattered doodles, plain bold headline, corner paint smears). They're deliberately
 different executions of a similar mood — compare both if that's the direction you want.
 
-## Colour
+## Option F: Campaign (MÜLER style)
+
+Folder `option-f-campaign/`. Same structure as the MÜLER board: a hero with giant distressed type behind a
+jumping model, five posters, three tiles (product in hand, group selfie, face close-up), and a guideline strip
+(colour, type, graphic elements, textures, mood). The logo is the **original Wrapshap artwork**, never
+redrawn. The one-colour versions are the original letter shapes filled flat (see `make_logos.py`).
+
+| File | What |
+|---|---|
+| `wrapshap-brand-board.jpg` | The full board, 3072 × 4608 (2:3, same format as the reference) |
+| `01-hero/wrapshap-hero-banner.jpg` | The hero on its own, 3072 × 1320 |
+| `02-stories/wrapshap-story-0X-….jpg` | The five posters as 1080 × 1920 Instagram/WhatsApp stories: clear, privacy, tuff, matte, 60 sec |
+| `03-logo/` | Logo SVGs: black, white, black with the white sticker rim, and the full-colour original |
+| `04-kit/` | The hand-made graphic kit as transparent PNG masks (brushes, crown, smiley, stars, scribbles, arrow, grunge texture). Recolour them to any palette colour |
+
+### Colour
+
+| Token | HEX | Role |
+|---|---|---|
+| Wrap Yellow | `#FFE014` | Lead colour: backgrounds, brush strokes |
+| Paper | `#F7F7F2` | Main background |
+| Ink | `#0E0E0E` | Logo, handwriting, doodles |
+| Graphite | `#4B4B4B` | Secondary text |
+| Mist | `#D5D5D0` | Grey brush, dividers |
+| Pop Pink | `#FF3DA5` | Pop |
+| Pop Cobalt | `#2350F0` | Pop, and the one non-yellow poster background |
+| Pop Green | `#19B85B` | Pop |
+| Pop Violet | `#7C4DFF` | Pop |
+| Logo Orange | `#F39200` | Pop (from the logo) |
+
+Type: the Wrapshap logo for display, **DM Sans** for small text, **Permanent Marker** for the handwritten lines.
+Both are free on Google Fonts.
+
+### Decisions I made that you may want to change
+
+- **The big logo is one colour (black, or white on colour), not the orange full-colour logo.** This is the
+  main reason MÜLER feels subtle and your first Wrapshap version (the orange logo everywhere) felt loud: an amber
+  logo on yellow backgrounds is just more yellow. The full-colour logo stays for packaging, signage and anywhere it
+  appears small. If you want the orange logo big anyway, it's a one-line change per placement in `build.py`.
+- **More colour, with yellow still leading. Rule: "one pop per piece."** Every piece is yellow + black + paper, plus
+  one pop colour taken from the model's outfit (the pink jacket gets pink doodles, the green tracksuit gets green).
+  The **tuff** poster is on cobalt blue to break the all-yellow/white row. Swap it back to yellow or white if that's
+  too far from MÜLER.
+- **The hero model is right of centre, not centred like MÜLER.** MÜLER has 5 fat letters, so the model hides
+  about one. "wrapshap" has 8 narrower letters, so centred she hid "psh" and it read as "wra…ap". Moved right,
+  she covers only the last "p" and "wrapsha…" reads clearly.
+- **Posters are 9:16** (MÜLER's are a bit taller), so each one is also a ready-to-post story.
+- **Copy comes from your earlier work, not invented.** The product names (clear, privacy, tuff, matte, 60 sec) and
+  lines ("NO MORE ALMOST.", "EXACT FIT.", "LOUD OUTSIDE. EXACT INSIDE.", "EVERY PHONE FALLS.") come from your previous
+  posters and stickers. **Check they match what you actually sell**, and the phone brand list (Apple, Samsung,
+  Xiaomi, Oppo, Vivo) in the group tile.
+
+### Read this before using the images publicly
+
+- **The photography is AI-generated** (Higgsfield Soul 2.0). These are not real people. That's fine for a direction
+  board and for pitching the look. For paid ads, the honest recommendation is a real shoot, with this board as the
+  brief. AI images can hide small artefacts, and some platforms and markets expect AI imagery to be labelled.
+- **Other brands' marks were removed by hand:** an Apple logo on the phone, a Nike swoosh on the tuff model's
+  sneaker, Onitsuka Tiger-style stripes on the matte model's sneakers, and garbled lettering on the hero's sole.
+  The phones are still recognisably iPhone-shaped, without logos. Look closely at anything before it runs as an ad.
+- **These are RGB screen files, not print files.** For print (posters, kiosk wraps), say so and they'll go through
+  the same CMYK/bleed pass as Options A and B.
+
+### Rebuilding Option F
+
+In `source/moodboard/`: `make_logos.py` → `retouch.py` → `prep_photos.py` → `extract_kit.py` → `build.py` →
+`export.py`. The full-size generations aren't in git (`photos_raw/` is ignored). Their Higgsfield job IDs are in
+`higgsfield_jobs.json`, and the cropped photos the board actually uses are committed in `img/`, so `build.py` and
+`export.py` work without them. Needs Python (PyMuPDF, Pillow, NumPy, SciPy), Node with Playwright, and DM Sans +
+Permanent Marker TTFs in `fonts/` at the repo root.
+
+## Colour (Options A–E)
 
 All five options share the same core palette. Option B adds one paint colour, Chalk; Option D adds one
 accent, Rose (see its row below — a warm colour chosen to extend the logo's own amber-to-orange gradient,

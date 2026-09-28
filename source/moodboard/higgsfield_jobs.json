@@ -1,0 +1,23 @@
+{
+  "_note": "Higgsfield job IDs for the files in photos_raw/ (not committed). Soul 2.0 at 2k unless noted. Cut-outs marked 'bg' are Higgsfield background removals of the job above them.",
+  "hero_b.png": "cbb06821-473e-4d71-ad9a-0899834760da",
+  "hero_b_cut.png (bg)": "90fbd105-6ac3-40c1-b28d-646095961dfa",
+  "p1_a.png": "b5b53bbb-9016-42be-9cd5-24fc046b6b4c",
+  "p1_cut.png (bg)": "b05ade4a-d4c3-4b33-a270-158d3551502f",
+  "p2_b.png": "6fa5be7b-5616-4e35-8200-40b8488c7465",
+  "p2_cut.png (bg)": "d65cad1d-e74b-4e4c-babe-712aa57547cb",
+  "p3_a.png": "a40d71c9-0536-4b5b-9fa2-29d293fbef66",
+  "p3_cut.png (bg)": "809c6b83-bfc9-4ed2-ad05-3d9e5b95743d",
+  "p4_b.png": "4c4718c3-2cfa-4d31-901d-bc556ce7151f",
+  "p4_cut.png (bg)": "c99ee120-1517-4158-ba2f-c740a231a599",
+  "p5_a.png": "f7c1cc0e-b27b-463c-9ac9-e297cb2a4e70",
+  "p5_cut.png (bg)": "0d105160-a026-4ce1-8954-bf71199d1eb6",
+  "t1_b.png": "c5a6c6e7-a740-4379-b179-57dffa4d0af4",
+  "t1_cut.png (bg, hand came out broken; see retouch.py)": "37adeb68-2181-4024-83cd-208d25a7f146",
+  "t2_b.png": "774f3bc0-b7ba-4246-ae84-96a5912b616d",
+  "t2_cut.png (bg)": "42a56df7-1a82-4a1b-ad33-5c242dd15361",
+  "t3_a.png": "d573b55d-c937-423f-9eab-44b04e8e42e0",
+  "sheet_brush.png": "b173ad09-019c-441b-9079-1dbce66106a5",
+  "sheet_doodle.png": "bdc50be9-6aa1-4261-b6d7-38d72322c548",
+  "sheet_grunge.png": "993f8b3e-3f2a-4fc0-a3f5-bf867fee8f22"
+}
