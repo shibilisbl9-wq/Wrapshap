@@ -1,11 +1,11 @@
-// Usage: node shot.mjs <page.html> <out.png> <width> <height> [scale]
+// Usage: node shot.mjs <page.html> <out.png> <width> <height> [scale] [transparent]
 // Pages are served over a local http server: CSS masks refuse file:// images.
 import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
 
-const [,, html, out, w, h, scale = '1'] = process.argv;
+const [,, html, out, w, h, scale = '1', transparent = ''] = process.argv;
 const root = path.resolve(path.dirname(html), '..', '..');   // repo root, so ../../fonts resolves
 const types = { '.html': 'text/html', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp',
   '.ttf': 'font/ttf', '.json': 'application/json', '.jpg': 'image/jpeg' };
@@ -23,6 +23,6 @@ const page = await browser.newPage({ viewport: { width: Math.ceil(+w), height: M
 await page.goto(url, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
 await page.waitForTimeout(300);
-await page.screenshot({ path: out, clip: { x: 0, y: 0, width: +w, height: +h } });
+await page.screenshot({ path: out, omitBackground: !!transparent, clip: { x: 0, y: 0, width: +w, height: +h } });
 await browser.close();
 server.close();

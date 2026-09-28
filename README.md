@@ -30,18 +30,22 @@ different executions of a similar mood — compare both if that's the direction 
 
 ## Option F: Campaign (MÜLER style)
 
-Folder `option-f-campaign/`. Same structure as the MÜLER board: a hero with giant distressed type behind a
-jumping model, five posters, three tiles (product in hand, group selfie, face close-up), and a guideline strip
-(colour, type, graphic elements, textures, mood). The logo is the **original Wrapshap artwork**, never
-redrawn. The one-colour versions are the original letter shapes filled flat (see `make_logos.py`).
+Folder `option-f-campaign/`. Same structure as the MÜLER board: a hero with giant type behind a jumping model,
+five posters, three tiles (product in hand, group selfie, face close-up), and a guideline strip (colour, type,
+graphic elements, textures, mood). Two things were added on top of MÜLER: **your sticker set** is slapped onto
+the hero, posters and tiles and shown in full on a blue sticker strip, and every background carries a faint
+**tone-on-tone doodle pattern**. The logo is the **original Wrapshap artwork**, never redrawn, and always
+**flat, with no texture or grunge**. The one-colour versions are the original letter shapes filled flat (see
+`make_logos.py`).
 
 | File | What |
 |---|---|
 | `wrapshap-brand-board.jpg` | The full board, 3072 × 4608 (2:3, same format as the reference) |
-| `01-hero/wrapshap-hero-banner.jpg` | The hero on its own, 3072 × 1320 |
+| `01-hero/wrapshap-hero-banner.jpg` | The hero on its own, 3072 × 1260 |
 | `02-stories/wrapshap-story-0X-….jpg` | The five posters as 1080 × 1920 Instagram/WhatsApp stories: clear, privacy, tuff, matte, 60 sec |
 | `03-logo/` | Logo SVGs: black, white, black with the white sticker rim, and the full-colour original |
-| `04-kit/` | The hand-made graphic kit as transparent PNG masks (brushes, crown, smiley, stars, scribbles, arrow, grunge texture). Recolour them to any palette colour |
+| `04-kit/` | The hand-made graphic kit as transparent PNG masks (brushes, crown, smiley, stars, scribbles, arrow, grunge texture). Recolour them to any palette colour. `doodle-pattern-1080.png` is the background doodle pattern on its own (black on transparent). Use it at about 6–8% opacity on paper/white, or tinted darker yellow on yellow |
+| `05-stickers/` | Your sticker set (crown, CUT IN 60 SEC, EXACT FIT, wrapshap logo, NO MORE ALMOST., smiley, sparkle, WE GOT YOU.) as transparent WebPs. Taken from your earlier board's assets, unchanged. The logo sticker uses the real logo |
 
 ### Colour
 
@@ -75,6 +79,13 @@ Both are free on Google Fonts.
   about one. "wrapshap" has 8 narrower letters, so centred she hid "psh" and it read as "wra…ap". Moved right,
   she covers only the last "p" and "wrapsha…" reads clearly.
 - **Posters are 9:16** (MÜLER's are a bit taller), so each one is also a ready-to-post story.
+- **Where the stickers went.** Hero: CUT IN 60 SEC (slapped on the type) and NO MORE ALMOST. Posters: sparkle
+  (clear), WE GOT YOU. (privacy), smiley (tuff), EXACT FIT (matte), CUT IN 60 SEC (60 sec). Tiles: sparkle, smiley
+  and crown. The full set is on the blue strip. To fit the strip and keep the 2:3 board, the hero and the tile row
+  are a little shorter than before.
+- **Background doodles are deliberately faint** (about 6–8% black on paper/white, darker yellow on yellow, white on
+  blue), so they read as texture and don't compete with the stickers or the handwriting. Stronger or weaker is a
+  one-line change (`BG_TONE` in `build.py`).
 - **Copy comes from your earlier work, not invented.** The product names (clear, privacy, tuff, matte, 60 sec) and
   lines ("NO MORE ALMOST.", "EXACT FIT.", "LOUD OUTSIDE. EXACT INSIDE.", "EVERY PHONE FALLS.") come from your previous
   posters and stickers. **Check they match what you actually sell**, and the phone brand list (Apple, Samsung,
@@ -94,7 +105,7 @@ Both are free on Google Fonts.
 ### Rebuilding Option F
 
 In `source/moodboard/`: `make_logos.py` → `retouch.py` → `prep_photos.py` → `extract_kit.py` → `build.py` →
-`export.py`. The full-size generations aren't in git (`photos_raw/` is ignored). Their Higgsfield job IDs are in
+`export.py`. The stickers the board uses are committed in `stickers/`. The full-size generations aren't in git (`photos_raw/` is ignored). Their Higgsfield job IDs are in
 `higgsfield_jobs.json`, and the cropped photos the board actually uses are committed in `img/`, so `build.py` and
 `export.py` work without them. Needs Python (PyMuPDF, Pillow, NumPy, SciPy), Node with Playwright, and DM Sans +
 Permanent Marker TTFs in `fonts/` at the repo root.
