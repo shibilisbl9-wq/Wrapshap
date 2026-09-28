@@ -1,7 +1,8 @@
-"""Minimal prepress for Option C's envelope-only mockups: place the original vector logo,
-set Trim/Bleed boxes, export JPG previews. No CMYK conversion — these are RGB mockups for
-picking a direction, not print-ready files (see README), so this skips post.py's to_cmyk
-step and its ICC dependency entirely.
+"""Minimal prepress for the envelope-only concept mockups (Options C, D, E): place the
+original vector logo, set Trim/Bleed boxes, export JPG previews. No CMYK conversion — these
+are RGB mockups for picking a direction, not print-ready files (see README), so this skips
+post.py's to_cmyk step and its ICC dependency entirely. JOBS/SLOTS env vars pick which
+option's jobs file to run, same convention as render.mjs.
 """
 import json, os
 import pymupdf as fitz
@@ -12,8 +13,8 @@ MM = 72 / 25.4
 PX = 0.75
 BLEED = 3.0
 
-jobs = json.load(open(os.path.join(HERE, 'jobs_c.json')))
-slots = json.load(open(os.path.join(HERE, 'slots_c.json')))
+jobs = json.load(open(os.path.join(HERE, os.environ.get('JOBS', 'jobs_c.json'))))
+slots = json.load(open(os.path.join(HERE, os.environ.get('SLOTS', 'slots_c.json'))))
 logo = fitz.open(os.path.join(HERE, 'logo.pdf'))
 for d in ('placed', 'preview'):
     os.makedirs(os.path.join(HERE, d), exist_ok=True)

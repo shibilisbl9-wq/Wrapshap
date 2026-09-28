@@ -1,36 +1,45 @@
 # Wrapshap: envelope redesign, mat pads, polo shirt, graffiti t-shirt and stationery
 
-This repo has three envelope design directions. Options A and B are each a full set of an envelope, four
+This repo has five envelope design directions. Options A and B are each a full set of an envelope, four
 mat pads and a design-system sheet. The polo shirt and the stationery (letterheads and business cards for
 Pakistan and the UAE) are in Option A, because they use A's Wrap Halo design. The graffiti t-shirt is in
-Option B. Option C is envelope-only — see its row below and "What's in each option folder".
-All three use the **original Wrapshap logo artwork unchanged**. It was taken as vector straight out of the
+Option B. Options C, D and E are a trio built to match the three columns of your reference image exactly
+(icon pattern / vibrant gradient / graffiti street) so you can pick one — they're envelope-only concept
+mockups, not full production sets. See "What's in each option folder" for what that means in practice.
+All five use the **original Wrapshap logo artwork unchanged**. It was taken as vector straight out of the
 supplied envelope file.
 
-| | Option A: Wrap Halo | Option B: Graffiti | Option C: Icon Pattern |
-|---|---|---|---|
-| Folder | `option-a-wrap-halo/` | `option-b-graffiti/` | `option-c-icon-pattern/` |
-| Mood | Clean, premium, tech | Street, spray-painted | Fun, scattered, youthful |
-| Main graphic | Thin rounded "device" outlines around the logo, fading outward | Spray-can textures: grainy airbrush strokes, an off-white sprayed swash with drips behind the logo, and an orange dry-brush stripe under the headline | A seeded scatter of hand-drawn device icons (phone, laptop, bolt, "W" mark, crown, smiley, sparkle) — solid black on Amber for the front, tone-on-tone on Wrap Black for the back |
-| Headline type | Geist SemiBold | Big Shoulders Stencil (Black, all caps), set in black on the dry-brush stripe | Geist ExtraBold, all caps, straight on the Amber ground |
-| Ownership card | Minimal card, off-white | "HELLO MY NAME IS"-style slap sticker, tilted | Minimal card, white |
-| Quick look | `option-a-wrap-halo/wrapshap-overview.jpg` | `option-b-graffiti/wrapshap-overview.jpg` | `option-c-icon-pattern/wrapshap-overview.jpg` |
+| | Option A: Wrap Halo | Option B: Graffiti | Option C: Icon Pattern | Option D: Vibrant/Modern | Option E: Street Pop |
+|---|---|---|---|---|---|
+| Folder | `option-a-wrap-halo/` | `option-b-graffiti/` | `option-c-icon-pattern/` | `option-d-vibrant-modern/` | `option-e-street-pop/` |
+| Mood | Clean, premium, tech | Street, spray-painted | Fun, scattered, youthful | Premium, fluid, modern | Loose, playful, hand-drawn |
+| Main graphic | Thin rounded "device" outlines around the logo, fading outward | Spray-can textures: grainy airbrush strokes, an off-white sprayed swash with drips behind the logo, and an orange dry-brush stripe under the headline | A seeded scatter of hand-drawn device icons (phone, laptop, bolt, "W" mark, crown, smiley, sparkle) — solid black on Amber for the front, tone-on-tone on Wrap Black for the back | Soft organic "lava lamp" blobs in a warm Amber → Orange → Rose gradient, bleeding from the corners on Wrap Black | A loose scatter of hand-drawn doodles (crown, smiley, sparkle, bolt, X marks, arrow) plus rough Amber paint smears bleeding off two corners, on Wrap Black |
+| Headline type | Geist SemiBold | Big Shoulders Stencil (Black, all caps), set in black on the dry-brush stripe | Geist ExtraBold, all caps, straight on the Amber ground | Geist SemiBold, top-right, white | Geist ExtraBold, top-left, white |
+| Ownership card | Minimal card, off-white | "HELLO MY NAME IS"-style slap sticker, tilted | Minimal card, white | Minimal card, off-white | Minimal card, off-white |
+| Quick look | `option-a-wrap-halo/wrapshap-overview.jpg` | `option-b-graffiti/wrapshap-overview.jpg` | `option-c-icon-pattern/wrapshap-overview.jpg` | `option-d-vibrant-modern/wrapshap-overview.jpg` | `option-e-street-pop/wrapshap-overview.jpg` |
+
+Options C and E are both "street/graffiti" in mood but come from different references: B was built earlier
+from spray-can texture references (airbrush, dry brush); E was built fresh to match this reference image's
+own graffiti column (loose scattered doodles, plain bold headline, corner paint smears). They're deliberately
+different executions of a similar mood — compare both if that's the direction you want.
 
 ## Colour
 
-All three options share the same core palette. Option B adds one paint colour, Chalk. Option C uses only
-tokens already in this table (Wrap Black, Amber, Orange, Graphite, White, Label) — nothing new — so it isn't
-listed in the "Used in" column below.
+All five options share the same core palette. Option B adds one paint colour, Chalk; Option D adds one
+accent, Rose (see its row below — a warm colour chosen to extend the logo's own amber-to-orange gradient,
+see "Decisions" for why). Option C and E use only tokens already in this table — nothing new — so they
+aren't listed in the "Used in" column.
 
 | Token | HEX | CMYK | Used in |
 |---|---|---|---|
-| Wrap Black (large solids) | `#0B0B0C` | 60/40/40/100 | A, B |
-| Amber (logo top) | `#ECBF30` | 10/18/90/0 | A, B |
-| Orange (logo bottom) | `#F39200` | 0/50/100/0 | A, B |
+| Wrap Black (large solids) | `#0B0B0C` | 60/40/40/100 | A, B, C, D, E |
+| Amber (logo top) | `#ECBF30` | 10/18/90/0 | A, B, C, D, E |
+| Orange (logo bottom) | `#F39200` | 0/50/100/0 | A, B, C, D, E |
 | Signal (accent type) | `#F0A616` | 5/36/96/0 | A |
 | Paper (write-on card) | `#F4F2EE` | 2/2/4/0 | A |
 | Chalk (off-white spray paint) | `#F2EFE8` | 3/3/7/0 | B |
-| Small grey and black type | — | black ink only (K) | A, B |
+| Rose (gradient accent) | `#F2545B` | 0/74/54/0 | D |
+| Small grey and black type | — | black ink only (K) | A, B, C, D, E |
 
 ## What's in each option folder
 
@@ -47,11 +56,13 @@ listed in the "Used in" column below.
 **Send the `-print.pdf` files to the printer.** They have exact trim and bleed boxes and are in CMYK. The polo files are
 the exception, see below. The `.jpg` files are RGB previews cropped to the trim size.
 
-**Option C is envelope-only, and mockup-only.** It's a `01-envelope/` with just `wrapshap-envelope-front.jpg` and
-`wrapshap-envelope-back.jpg` (300 dpi, RGB, cropped to the 163 × 205 mm trim), plus the same `wrapshap-overview.jpg`
-quick-look as A and B. There's no mat pad, design system, `.ai`, or `-print.pdf` for this option — it was built to let
-you pick a direction, the way your reference image did, not to send to a printer. If you pick C, say so and I'll take
-it through the same production pass as A and B: CMYK `-print.pdf`, `.ai`, and the rest of the deliverable set.
+**Options C, D and E are envelope-only, and mockup-only.** Each is a `01-envelope/` with just
+`wrapshap-envelope-front.jpg` and `wrapshap-envelope-back.jpg` (300 dpi, RGB, cropped to the 163 × 205 mm
+trim), plus the same `wrapshap-overview.jpg` quick-look as A and B. There's no mat pad, design system, `.ai`,
+or `-print.pdf` for any of the three — they were built to let you pick a direction, the way your reference
+image did, not to send to a printer. Whichever of C, D or E you pick, say so and I'll take it through the
+same production pass as A and B: CMYK `-print.pdf`, `.ai`, a design-system sheet, mat pads, and the rest of
+the deliverable set.
 
 ## Read before printing or editing
 
@@ -91,8 +102,8 @@ it through the same production pass as A and B: CMYK `-print.pdf`, `.ai`, and th
 - **Polo: embroidery.** Polos are often embroidered. The logo's gradient can't be stitched as it is: an embroidery digitiser
   will turn it into 2–3 thread colours for the chest logo. The thin back rings are too fine to embroider, so print the back
   (DTF or DTG) even if you embroider the front. For screen printing, the logo gradient needs a halftone separation.
-- **Option C files are RGB screen mockups, not print files.** No CMYK conversion, no trim/bleed `.ai`, no fonts-embedded
-  PDF — just the placed logo and a JPG export, so nothing here is ready for a printer yet.
+- **Option C, D and E files are RGB screen mockups, not print files.** No CMYK conversion, no trim/bleed `.ai`, no
+  fonts-embedded PDF — just the placed logo and a JPG export, so nothing here is ready for a printer yet.
 
 ## Decisions I made that you may want to change
 
@@ -121,29 +132,44 @@ it through the same production pass as A and B: CMYK `-print.pdf`, `.ai`, and th
   `03-t-shirt/`) was added after that. The polo is still in Option A, and the old t-shirts are in the git history.
 - **Option B changed direction.** The first version used cartoon paint splats. It was replaced with spray-can textures
   after your references. The old version is still in the git history if you want it back.
-- **Option C (Icon Pattern) is new, envelope-only, and reuses B's crown/smiley/sparkle.** You asked for three style
-  directions, using your reference image (a yellow icon-pattern envelope, among others) for inspiration. Options A and
-  B already covered "clean/tech" and "street/spray", so C fills the missing "fun icon pattern" direction. The reference's
-  envelope put the wordmark on a flat yellow background; your real logo is amber-to-orange with a white-and-orange rim,
-  so I kept it on Amber (a token you already had) rather than inventing a new yellow — the rim is what keeps it readable,
-  not the background. The icon set (phone, laptop, bolt, a "W" mark, plus the crown/smiley/sparkle from Option B's
-  references) is generated by seeded rejection-sampling in `source/design_c.py`, so it's reproducible and easy to
+- **Options C, D and E are a matched trio built from your reference image, and all three are envelope-only concept
+  mockups.** Your reference showed three style columns (icon pattern, vibrant gradient, graffiti street); C, D and E
+  each match one, so you can compare all three and pick. They're envelope-only because a background treatment
+  (a pattern, a gradient, a paint smear) doesn't by itself tell me how to extend to a design-system sheet, mat pad,
+  t-shirt or stationery — say which one you want taken further and I'll build the rest of the set the way A and B
+  were built.
+- **Option C (Icon Pattern) reuses B's crown/smiley/sparkle.** The reference's icon-pattern envelope put the wordmark
+  on a flat yellow background; your real logo is amber-to-orange with a white-and-orange rim, so I kept it on Amber
+  (a token you already had) rather than inventing a new yellow — the rim is what keeps it readable, not the background.
+  The icon set (phone, laptop, bolt, a "W" mark, plus the crown/smiley/sparkle from Option B's references) is generated
+  by seeded rejection-sampling in `source/handdrawn.py` + `source/design_c.py`, so it's reproducible and easy to
   re-seed for a different scatter. Like Option B's crown and smiley, treat these as optional: drop them if a plain
-  device-icon set (phone/laptop/bolt/"W") reads more on-brand to you than the playful ones. It's envelope-only because
-  a "scattered pattern" doesn't extend to a design-system sheet or mat pad without more direction from you on where else
-  you want it (t-shirt? stationery?) — say the word and I'll build those out the way A and B were.
+  device-icon set (phone/laptop/bolt/"W") reads more on-brand to you than the playful ones.
+- **Option D (Vibrant/Modern) shifts the reference's gradient warm, and adds a new colour, Rose.** The reference's
+  vibrant envelope uses a cool blue → purple → pink gradient; your logo is warm amber-to-orange, and a cool gradient
+  behind it would fight the logo rather than frame it, the same reasoning as Option C's background. This keeps the
+  reference's *shape* language (soft overlapping blob forms) but shifts the palette warm: Amber → Orange → Rose (a new
+  coral-red token, `#F2545B`), so it reads as one family with the logo. If you'd rather have the literal cool gradient
+  even though it clashes with the current logo colours, tell me — that's a genuine option, just a different one than
+  what's built here.
+- **Option E (Street Pop) is a new graffiti take, separate from Option B.** Both are "street" in mood, but B was built
+  earlier from different, texture-heavy references (spray-can airbrush and dry-brush). E was built fresh to match
+  *this* reference's own graffiti column: a plain bold headline top-left, loose hand-drawn doodles scattered around the
+  logo, and rough paint smears bleeding off two corners, with no spray texture engine involved. Compare both if you
+  want the street/graffiti mood but aren't sure which execution you prefer.
 
 ## Rebuilding (optional)
 
 `source/` holds the generator. Layouts are written as HTML/SVG in millimetres, Chromium prints them to vector PDF,
 then the original logo is placed and the colour is converted to CMYK. Option B's textures are generated in
-`spray.py` and placed under the vector artwork as 1-bit masks. Option C's icon scatter is generated directly in
-`design_c.py` (numpy only, no image masks). You need Python 3 (PyMuPDF, Pillow, NumPy, SciPy), Node with Playwright,
-and the font TTFs in a `fonts/` folder next to `source/`.
+`spray.py` and placed under the vector artwork as 1-bit masks. Options C, D and E's icon scatters, blobs and paint
+smears are generated directly in `source/handdrawn.py` (numpy only, no image masks) and used by `design_c.py`,
+`design_d.py` and `design_e.py`. You need Python 3 (PyMuPDF, Pillow, NumPy, SciPy), Node with Playwright, and the
+font TTFs in a `fonts/` folder next to `source/`.
 
 - Option A: `design.py` → `render.mjs` → `post.py` → `export.py <repo> a`
 - Option B: `design_b.py` → `JOBS=jobs_b.json SLOTS=slots_b.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> b`
-- Option C (envelope mockups only, RGB): `design_c.py` → `JOBS=jobs_c.json SLOTS=slots_c.json node render.mjs` → `post_c.py` (places the logo and sets trim/bleed boxes, no CMYK step) → copy `source/preview/c-envelope-*.jpg` into `option-c-icon-pattern/01-envelope/`
+- Options C, D, E (envelope mockups only, RGB): `design_c.py` / `design_d.py` / `design_e.py` → `JOBS=jobs_<c|d|e>.json SLOTS=slots_<c|d|e>.json node render.mjs` → the same env vars with `post_mockup.py` (places the logo and sets trim/bleed boxes, no CMYK step) → copy `source/preview/<c|d|e>-envelope-*.jpg` into the matching `option-*/01-envelope/`
 - Stationery: `stationery.py` → `JOBS=jobs_stat.json SLOTS=slots_stat.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> stationery`
 - Graffiti tee: `tee.py` → `JOBS=jobs_tee.json SLOTS=slots_tee.json node render.mjs` → the same env vars with `post.py` → `tee_mockup.py` → `export.py <repo> tee` (needs Kalam 700 and Geist 600 TTFs)
 - Receipt voucher: `voucher.py` → `JOBS=jobs_voucher.json SLOTS=slots_voucher.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> voucher`
