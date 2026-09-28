@@ -7,6 +7,7 @@
   p3_clean.png  'tuff' model: Nike swoosh removed from the left sneaker.
   p4_clean.png  'matte' model: the crossed stripes on both sneakers painted out.
   hero_clean.png hero: the garbled AI lettering on the upturned sole filled in.
+  hw_cut.png    wide-pose hero (straddle jump), cut out locally and free with rembg/BiRefNet.
 """
 import numpy as np
 from PIL import Image
@@ -153,9 +154,17 @@ def hero_sole():
     save(im, 'hero_clean.png')
 
 
+def cutout_free(src, out, model='birefnet-portrait'):
+    """Free local background removal (rembg + BiRefNet). Keeps hair strands and white sneakers
+    on a light backdrop, which a colour key can't."""
+    from rembg import remove, new_session
+    remove(Image.open(R + src).convert('RGB'), session=new_session(model)).save(R + out)
+
+
 if __name__ == '__main__':
     phone()
     face()
     print('swoosh px', swoosh())
     print('stripe px', stripes())
     hero_sole()
+    cutout_free('hw_a.png', 'hw_cut.png')

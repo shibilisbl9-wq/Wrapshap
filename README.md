@@ -41,7 +41,7 @@ the hero, posters and tiles and shown in full on a blue sticker strip, and every
 | File | What |
 |---|---|
 | `wrapshap-brand-board.jpg` | The full board, 3072 × 4608 (2:3, same format as the reference) |
-| `01-hero/wrapshap-hero-banner.jpg` | The hero on its own, 3072 × 1260 |
+| `01-hero/wrapshap-hero-banner.jpg` | The hero on its own, 3072 × 1350 |
 | `02-stories/wrapshap-story-0X-….jpg` | The five posters as 1080 × 1920 Instagram/WhatsApp stories: clear, privacy, tuff, matte, 60 sec |
 | `03-logo/` | Logo SVGs: black, white, black with the white sticker rim, and the full-colour original |
 | `04-kit/` | The hand-made graphic kit as transparent PNG masks (brushes, crown, smiley, stars, scribbles, arrow, grunge texture). Recolour them to any palette colour. `doodle-pattern-1080.png` is the background doodle pattern on its own (black on transparent). Use it at about 6–8% opacity on paper/white, or tinted darker yellow on yellow |
@@ -75,17 +75,22 @@ Both are free on Google Fonts.
   one pop colour taken from the model's outfit (the pink jacket gets pink doodles, the green tracksuit gets green).
   The **tuff** poster is on cobalt blue to break the all-yellow/white row. Swap it back to yellow or white if that's
   too far from MÜLER.
-- **The hero model is right of centre, not centred like MÜLER.** MÜLER has 5 fat letters, so the model hides
-  about one. "wrapshap" has 8 narrower letters, so centred she hid "psh" and it read as "wra…ap". Moved right,
-  she covers only the last "p" and "wrapsha…" reads clearly.
+- **The hero uses a wide, low jump (legs split sideways), centred under the full-width logo.** With the earlier
+  tall jumping pose, a centred model hid three letters. The wide pose keeps her body below the letters, so like
+  MÜLER she hides about one ("p"), and the whole logo still reads. This photo was cut out with a free local
+  model (rembg + BiRefNet), no credits.
 - **Posters are 9:16** (MÜLER's are a bit taller), so each one is also a ready-to-post story.
-- **Where the stickers went.** Hero: CUT IN 60 SEC (slapped on the type) and NO MORE ALMOST. Posters: sparkle
-  (clear), WE GOT YOU. (privacy), smiley (tuff), EXACT FIT (matte), CUT IN 60 SEC (60 sec). Tiles: sparkle, smiley
-  and crown. The full set is on the blue strip. To fit the strip and keep the 2:3 board, the hero and the tile row
-  are a little shorter than before.
-- **Background doodles are deliberately faint** (about 6–8% black on paper/white, darker yellow on yellow, white on
-  blue), so they read as texture and don't compete with the stickers or the handwriting. Stronger or weaker is a
-  one-line change (`BG_TONE` in `build.py`).
+- **Where the stickers went.** Hero: NO MORE ALMOST. Each poster carries exactly one sticker in the same corner
+  (top right under the logo; top left on 60 sec so it doesn't cover his hand): sparkle (clear), WE GOT YOU.
+  (privacy), smiley (tuff), EXACT FIT (matte), CUT IN 60 SEC (60 sec). The tiles have none, to keep them clean.
+  The full set is on the blue strip.
+- **Background doodles are sparse and faint**: only crowns, smileys, stars and asterisks, about 5% black on
+  paper/white and darker yellow on yellow. An earlier denser version, with scribbles and arrows too, made the
+  surfaces look dirty. Stronger or weaker is a one-line change (`BG_TONE` in `build.py`).
+- **Cleanliness rules applied after a critique pass:** every poster uses one template (label, logo, one brush,
+  a big model bleeding off the bottom, one handwritten line in the lower third, one pop doodle, one sticker).
+  The handwriting is condensed like marker lettering, and all photos share one grade. The guide strip was thinned
+  to the MÜLER layout (no hex labels on the board, 2 × 2 textures). The HEX codes are in the table above.
 - **Copy comes from your earlier work, not invented.** The product names (clear, privacy, tuff, matte, 60 sec) and
   lines ("NO MORE ALMOST.", "EXACT FIT.", "LOUD OUTSIDE. EXACT INSIDE.", "EVERY PHONE FALLS.") come from your previous
   posters and stickers. **Check they match what you actually sell**, and the phone brand list (Apple, Samsung,
@@ -108,7 +113,8 @@ In `source/moodboard/`: `make_logos.py` → `retouch.py` → `prep_photos.py` �
 `export.py`. The stickers the board uses are committed in `stickers/`. The full-size generations aren't in git (`photos_raw/` is ignored). Their Higgsfield job IDs are in
 `higgsfield_jobs.json`, and the cropped photos the board actually uses are committed in `img/`, so `build.py` and
 `export.py` work without them. Needs Python (PyMuPDF, Pillow, NumPy, SciPy), Node with Playwright, and DM Sans +
-Permanent Marker TTFs in `fonts/` at the repo root.
+Permanent Marker TTFs in `fonts/` at the repo root. `retouch.py` also needs `rembg` (`pip install "rembg[cpu]"`),
+which downloads the BiRefNet model (~1 GB) on first use.
 
 ## Colour (Options A–E)
 

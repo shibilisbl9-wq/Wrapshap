@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     shot('board.html', tmp, 1024, 1536, 3)
     to_jpg(tmp, os.path.join(OUT, 'wrapshap-brand-board.jpg'))
-    shot('hero.html', tmp, 1024, 420, 3)
+    shot('hero.html', tmp, 1024, 450, 3)
     to_jpg(tmp, os.path.join(OUT, '01-hero', 'wrapshap-hero-banner.jpg'))
     for i, name in enumerate(STORIES, 1):
         shot(f'poster-{i}.html', tmp, 1080, 1920, 1)

@@ -75,6 +75,7 @@ def photo(name, x, y, h, z=None, anchor='tl', flip=False):
 
 def hand(text, x, y, size, color='ink', rot=-12, z=None, anchor='tl', lh=0.98, align='left', w=None):
     st = box(x, y, w or 'auto', None, rot, False, z, anchor).replace('width:autopx', 'width:auto')
+    st = st.replace(f'rotate({rot}deg)', f'rotate({rot}deg) scaleX(0.86)') if rot else st + ';transform:scaleX(0.86)'
     return (f'<div class="hand" style="{st};font-size:{size}px;color:{col(color)};'
             f'line-height:{lh};text-align:{align}">{text}</div>')
 
@@ -143,241 +144,224 @@ def st(name, x, y, w, rot=0, z=5, anchor='tl'):
     return f'<img class="st" src="stickers/st-{name}.webp" style="{box(x, y, w, round(w * ih / iw, 2), rot, False, z, anchor)}">'
 
 
-BG_DOODLES = ['doodle-crown', 'doodle-smiley', 'doodle-star', 'doodle-squiggle', 'doodle-arrow',
-              'doodle-star-smiley', 'ast', 'doodle-scribble']
-BG_TONE = {  # doodle colour and strength per background
-    'paper': ('ink', 0.075), 'white': ('ink', 0.06), 'yellow': ('#A87E00', 0.42), 'cobalt': ('white', 0.14),
+BG_DOODLES = ['doodle-crown', 'doodle-smiley', 'doodle-star', 'ast']   # clean shapes only
+BG_TONE = {  # doodle colour and strength per background: texture, not decoration
+    'paper': ('ink', 0.055), 'white': ('ink', 0.05), 'yellow': ('#A87E00', 0.26), 'cobalt': ('white', 0.10),
 }
 
 
-def bg_doodles(seed, w, h, bg, cell=62, size=(17, 28)):
-    """A loose hand-drawn doodle wallpaper, tone-on-tone, behind everything else."""
+def bg_doodles(seed, w, h, bg, cell=90, size=(22, 30), keep=0.45):
+    """A sparse tone-on-tone doodle wallpaper behind everything else."""
     color, op = BG_TONE[bg]
     rng = random.Random(seed)
     e = []
     for gy in range(-1, int(h / cell) + 1):
         for gx in range(-1, int(w / cell) + 1):
-            if rng.random() < 0.28:
+            if rng.random() > keep:
                 continue
-            x = gx * cell + (cell / 2 if gy % 2 else 0) + rng.uniform(-0.2, 0.5) * cell
-            y = gy * cell + rng.uniform(-0.2, 0.5) * cell
-            name, sz, rot = rng.choice(BG_DOODLES), rng.uniform(*size), rng.uniform(-35, 35)
+            x = gx * cell + (cell / 2 if gy % 2 else 0) + rng.uniform(0, 0.4) * cell
+            y = gy * cell + rng.uniform(0, 0.4) * cell
+            name, sz, rot = rng.choice(BG_DOODLES), rng.uniform(*size), rng.uniform(-25, 25)
             if name == 'ast':
-                e.append(ast(color, round(x, 1), round(y, 1), round(sz * 0.75, 1), round(rot)))
+                e.append(ast(color, round(x, 1), round(y, 1), round(sz * 0.7, 1), round(rot)))
             else:
-                k = 1.7 if name == 'doodle-scribble' else 1
-                e.append(mk(name, color, round(x, 1), round(y, 1), round(sz * k, 1), rot=round(rot)))
+                e.append(mk(name, color, round(x, 1), round(y, 1), round(sz, 1), rot=round(rot)))
     return f'<div class="bgd" style="opacity:{op}">{"".join(e)}</div>'
 
 
 # ---------------------------------------------------------------- sections
 
+HERO_H = 450
+
+
 def hero():
-    e = [bg_doodles(1, 1024, 420, 'paper', cell=66, size=(18, 30))]
-    # brushes behind the wordmark
-    e.append(mk('brush-dab', 'yellow', 330, 248, 360, rot=-24, z=1))
-    e.append(mk('brush-zigzag', 'yellow', 640, 236, 330, rot=-14, z=1))
-    e.append(mk('brush-swoosh', 'yellow', 610, -40, 150, rot=38, z=1))
-    e.append(mk('brush-loop', 'yellow', 30, 142, 150, rot=-10, z=1))
-    e.append(logo('ink', 36, 52, 690, rot=-5, z=2))
-    # a sticker slapped on the type, under the model
-    e.append(st('cut60', 296, 262, 92, rot=-12, z=3))
-    # the model sits in front of the wordmark, as in the reference
-    e.append(photo('hero', 606, 6, 418, z=4))
-    e.append(mk('doodle-crown', 'ink', 104, 24, 58, rot=-10, z=5))
-    e.append(label('SMALL<br>TECH.<br>BIG<br>ENERGY.', 26, 24, 11.5))
-    e.append(label('LOUD<br>OUTSIDE.<br>EXACT<br>INSIDE.', 26, 24, 11.5, anchor='tr', align='right'))
-    # left: hand-drawn stamp
-    e.append(svg(rough_ring(7, 52, 44), 40, 286, 124, 104, '0 0 120 100', rot=-8, z=5))
-    e.append(hand('GOOD<br>VIBES<br>ONLY.', 66, 302, 16.5, z=6, rot=-14))
-    e.append(lines(3, 92, 378, 86, z=5))
-    # right: smiley with crown, and the tagline as a speech-bubble sticker
-    e.append(mk('doodle-smiley', 'pink', 892, 118, 92, rot=-8, z=5))
-    e.append(mk('doodle-crown', 'pink', 924, 90, 38, rot=6, z=5))
-    e.append(st('nomore', 872, 272, 124, rot=8, z=6))
-    return f'<section class="hero" style="height:420px">{"".join(e)}</section>'
+    e = [bg_doodles(1, 1024, HERO_H, 'paper')]
+    # big confident strokes behind the model, like the reference
+    e.append(mk('brush-dab', 'yellow', 250, 250, 520, rot=-16, z=1))
+    e.append(mk('brush-zigzag', 'yellow', 420, 150, 420, rot=-12, z=1))
+    # the whole wordmark across the top; the model overlaps only its lower edge
+    e.append(logo('ink', 92, 18, 840, rot=-4, z=2))
+    e.append(mk('doodle-crown', 'ink', 118, 56, 58, rot=-14, z=5))
+    e.append(photo('hero', 190, 0, 402, z=4, anchor='bl'))
+    e.append(label('SMALL<br>TECH.<br>BIG<br>ENERGY.', 24, 22, 11))
+    e.append(label('LOUD<br>OUTSIDE.<br>EXACT<br>INSIDE.', 24, 22, 11, anchor='tr', align='right'))
+    # one element each side, as in the reference
+    e.append(svg(rough_ring(7, 52, 44), 26, 300, 124, 104, '0 0 120 100', rot=-8, z=5))
+    e.append(hand('GOOD<br>VIBES<br>ONLY.', 50, 318, 17, z=6, rot=-12))
+    e.append(lines(3, 72, 396, 80, z=5))
+    e.append(st('nomore', 874, 300, 122, rot=7, z=6))
+    return f'<section class="hero" style="height:{HERO_H}px">{"".join(e)}</section>'
 
 
+# Every poster follows one template: label, logo, one brush, a big model bleeding off the bottom,
+# a handwritten line in the lower third, one pop-colour doodle and one sticker in the same corner.
 POSTERS = [
-    # bg, label, logo colour, brush layer, model, copy, doodles
-    dict(bg='yellow', lab='clear.', logo='white', model='p1',
-         brush=[('brush-zigzag-arrow', 'white', 16, 84, 180, 6)],
-         copy=('CRYSTAL<br>CLEAR.', 10, 34, 15, 'ink'),
-         doodles=[('doodle-smiley', 'cobalt', 10, 84, 38, -6, 'bl')],
-         sticker=('sparkle', 156, 94, 30, 12)),
-    dict(bg='white', lab='privacy.', logo='ink', model='p2',
-         brush=[('brush-loop', 'yellow', 20, 108, 170, -8)],
-         copy=('EYES OFF<br>MY SCREEN.', 112, 44, 12.5, 'ink'),
-         doodles=[('crown', 'pink', 150, 100, 28, 8, 'bl')],
-         sticker=('wegotyou', 140, 92, 50, 10)),
-    dict(bg='cobalt', lab='tuff.', logo='white', model='p3', lab_color='white',
-         brush=[('brush-m', 'yellow', 12, 118, 176, -6, 'v')],
-         copy=('EVERY<br>PHONE<br>FALLS.', 134, 36, 14, 'white'),
-         doodles=[('crown', 'yellow', 16, 128, 34, -10, 'tl')],
-         sticker=('smiley', 150, 96, 38, 12)),
-    dict(bg='white', lab='matte.', logo='ink', model='p4',
-         brush=[('brush-zigzag-arrow', 'yellow', 26, 96, 170, -18)],
-         copy=('NO<br>GLARE.', 134, 150, 18, 'ink'),
-         doodles=[('ast', 'green', 164, 98, 18, 0, 'tl')],
-         sticker=('exactfit', 10, 96, 70, -10)),
-    dict(bg='yellow', lab='60&nbsp;sec.', logo='white', model='p5',
-         brush=[('brush-zigzag', 'white', -30, 190, 280, -58)],
-         copy=('SHOP<br>NOW', 12, 40, 19, 'ink'),
-         doodles=[('doodle-arrow', 'violet', 64, 8, 28, -60, 'bl')],
-         sticker=('cut60', 4, 84, 46, -10)),
+    dict(bg='yellow', lab='clear.', logo='white', model='p1', mh=292, mx=34,
+         brush=('brush-zigzag-arrow', 'white', 6, 88, 196, 4),
+         copy=('CRYSTAL<br>CLEAR.', 'l'), pop=('doodle-smiley', 'cobalt'), sticker='sparkle'),
+    dict(bg='white', lab='privacy.', logo='ink', model='p2', mh=286, mx=-30,
+         brush=('brush-loop', 'yellow', 26, 104, 170, -8),
+         copy=('EYES OFF<br>MY SCREEN.', 'r'), pop=('doodle-crown', 'pink'), sticker='wegotyou'),
+    dict(bg='cobalt', lab='tuff.', logo='white', model='p3', mh=250, mx=-24, lab_color='white',
+         brush=('brush-m', 'yellow', 10, 110, 180, -6, 'v'),
+         copy=('EVERY<br>PHONE<br>FALLS.', 'r', 'white'), pop=('doodle-crown', 'yellow', (46, 108, 36, -10)),
+         sticker='smiley'),
+    dict(bg='white', lab='matte.', logo='ink', model='p4', mh=236, mx=0,
+         brush=('brush-zigzag-arrow', 'yellow', 22, 80, 176, -20),
+         copy=('NO<br>GLARE.', 'rhigh'), pop=('ast', 'green'), sticker='exactfit'),
+    dict(bg='yellow', lab='60&nbsp;sec.', logo='white', model='p5', mh=286, mx=26,
+         brush=('brush-zigzag', 'white', -36, 196, 290, -58),
+         copy=('SHOP<br>NOW', 'l'), pop=('doodle-arrow', 'violet'), sticker='cut60', sticker_left=True),
 ]
-
-MODEL = {  # height and x offset of each poster's cut-out
-    'p1': (268, 30), 'p2': (256, -34), 'p3': (226, -34), 'p4': (212, -14), 'p5': (262, 22),
-}
+PH = 355.5556
 
 
 def poster(p, x=0, y=0):
-    e = [bg_doodles(10 + len(p['lab']), 200, 356, p['bg'], cell=50, size=(13, 21))]
+    e = [bg_doodles(10 + len(p['lab']), 200, PH, p['bg'], cell=70, size=(16, 22), keep=0.5)]
     e.append(label(p['lab'], 12, 12, 10.5, p.get('lab_color', 'ink'), weight=700, ls=0))
-    e.append(logo(p['logo'], 8, 30, 186, rot=-5, z=3))
-    for name, c, bx, by, bw, rot, *fl in p['brush']:
-        e.append(mk(name, c, bx, by, bw, rot=rot, flip=fl[0] if fl else False, z=1))
-    h, dx = MODEL[p['model']]
-    w = h * IMG[p['model']]['w'] / IMG[p['model']]['h']
-    e.append(photo(p['model'], round((200 - w) / 2 + dx, 1), 0, h, z=2, anchor='bl'))
-    text, cx, cy, size, c = p['copy']
-    e.append(hand(text, cx, cy, size, c, z=4, anchor='bl'))
-    for name, c, dx_, dy, dw, rot, anchor in p['doodles']:
-        if name == 'ast':
-            e.append(ast(c, dx_, dy, dw, rot, z=4, anchor=anchor))
-        elif name == 'crown':
-            e.append(mk('doodle-crown', c, dx_, dy, dw, rot=rot, z=4, anchor=anchor))
-        else:
-            e.append(mk(name, c, dx_, dy, dw, rot=rot, z=4, anchor=anchor))
-    name, sx, sy, sw, srot = p['sticker']
-    e.append(st(name, sx, sy, sw, rot=srot, z=5))
+    e.append(logo(p['logo'], 8, 28, 186, rot=-5, z=3))
+    name, c, bx, by, bw, rot, *fl = p['brush']
+    e.append(mk(name, c, bx, by, bw, rot=rot, flip=fl[0] if fl else False, z=1))
+    w = p['mh'] * IMG[p['model']]['w'] / IMG[p['model']]['h']
+    e.append(photo(p['model'], round((200 - w) / 2 + p['mx'], 1), -14, p['mh'], z=2, anchor='bl'))
+    text, side, *tc = p['copy']
+    tc = tc[0] if tc else 'ink'
+    cx, cy = {'l': (10, 30), 'r': (116, 30), 'rhigh': (130, 150)}[side]
+    e.append(hand(text, cx, cy, 15, tc, z=4, anchor='bl', rot=-10))
+    e.append(lines(len(text), cx + 2, cy - 18, 58, tc, n=2, z=4, anchor='bl', sw=3))
+    # the pop doodle sits just above the handwriting
+    dn, dc, *at = p['pop']
+    if at:  # a placed doodle, e.g. the crown on the tuff model's head
+        px, py, pw, pr = at[0]
+        e.append(mk(dn, dc, px, py, pw, rot=pr, z=4))
+    elif dn == 'ast':
+        e.append(ast(dc, cx + 4, cy + 52, 18, z=4, anchor='bl'))
+    else:
+        e.append(mk(dn, dc, cx + 2, cy + 50, 28, rot=-8, z=4, anchor='bl'))
+    # one sticker, always top-right under the logo
+    sw = 44 if p['sticker'] != 'exactfit' else 58
+    if p.get('sticker_left'):
+        e.append(st(p['sticker'], 8, 96, 40, rot=-10, z=5))
+    else:
+        e.append(st(p['sticker'], 10, 98, sw, rot=10, z=5, anchor='tr'))
     return (f'<div class="poster" style="left:{x}px;top:{y}px;background:{col(p["bg"])}">'
             f'{"".join(e)}</div>')
 
 
+TILE_H = 330
+
+
 def tiles():
-    t1 = [bg_doodles(21, 298, 330, 'paper', cell=56, size=(14, 24)),
-          mk('brush-swoosh', 'yellow', 70, -30, 140, rot=62, z=1),
-          mk('brush-dab', 'yellow', -30, 196, 240, rot=-38, z=1),
-          mk('doodle-crown', 'yellow', 30, 14, 96, rot=-10, z=1),
-          photo('phone', 92, 0, 292, z=2, anchor='bl'),
-          st('sparkle', 236, 36, 34, rot=14, z=5),
-          hand('EXACT<br>FIT.', 12, 60, 25, z=3, anchor='bl'),
-          lines(21, 14, 30, 84, z=3, anchor='bl')]
-    t2 = [bg_doodles(22, 408, 330, 'paper', cell=56, size=(14, 24)),
-          mk('brush-dab', 'yellow', -10, 34, 90, rot=-10, z=1),
-          logo('ink', 50, 16, 300, rot=-4, z=3),
-          photo('group', 30, 0, 228, z=2, anchor='bl'),
-          hand('APPLE<br>SAMSUNG<br>XIAOMI<br>OPPO<br>VIVO<br>+ MORE', 12, 112, 10, z=3, rot=-8, lh=1.12),
-          mk('doodle-arrow', 'ink', 38, 196, 20, rot=-24, z=3),
-          st('smiley', 344, 118, 48, rot=10, z=5)]
-    t3 = [bg_doodles(23, 306, 330, 'yellow', cell=56, size=(14, 24)),
-          mk('brush-m', 'white', -10, 50, 196, rot=-10, flip='v', z=1),
-          photo('face', -50, 6, 344, z=2, anchor='tr'),
-          st('crown', 26, 30, 66, rot=-10, z=5),
+    t1 = [bg_doodles(21, 298, TILE_H, 'paper', cell=80),
+          mk('brush-swoosh', 'yellow', 110, -40, 150, rot=58, z=1),
+          mk('brush-dab', 'yellow', -40, 190, 260, rot=-36, z=1),
+          mk('doodle-crown', 'yellow', 24, 12, 100, rot=-10, z=1),
+          photo('phone', -30, -28, 340, z=2, anchor='br'),
+          hand('EXACT<br>FIT.', 14, 60, 26, z=3, anchor='bl'),
+          lines(21, 16, 30, 80, z=3, anchor='bl')]
+    t2 = [bg_doodles(22, 408, TILE_H, 'paper', cell=80),
+          mk('brush-dab', 'yellow', -12, 32, 92, rot=-10, z=1),
+          logo('ink', 54, 14, 296, rot=-4, z=3),
+          photo('group', 34, -12, 246, z=2, anchor='bl'),
+          hand('APPLE<br>SAMSUNG<br>XIAOMI<br>OPPO<br>VIVO<br>+ MORE', 12, 118, 10.5, z=3, rot=-8, lh=1.12),
+          mk('doodle-arrow', 'ink', 38, 206, 20, rot=-24, z=3),
+          mk('doodle-smiley', 'yellow', 346, 122, 50, rot=-8, z=3)]
+    t3 = [bg_doodles(23, 306, TILE_H, 'yellow', cell=80),
+          mk('brush-m', 'white', -12, 52, 200, rot=-10, flip='v', z=1),
+          photo('face', -52, 4, 346, z=2, anchor='tr'),
+          mk('doodle-crown', 'ink', 30, 32, 58, rot=-8, z=3),
           hand('IT JUST<br>FITS.', 18, 56, 24, z=3, anchor='bl'),
-          lines(31, 20, 28, 86, z=3, anchor='bl')]
+          lines(31, 20, 28, 84, z=3, anchor='bl')]
     return (f'<div class="tile" style="left:0;width:298px;background:{C["paper"]}">{"".join(t1)}</div>'
             f'<div class="tile" style="left:304px;width:408px;background:{C["paper"]}">{"".join(t2)}</div>'
             f'<div class="tile" style="left:718px;width:306px;background:{C["yellow"]}">{"".join(t3)}</div>')
 
 
-STRIP = [  # sticker, height, rotation, lift
-    ('crown', 70, -8, 0), ('cut60', 78, 6, 0), ('exactfit', 58, -6, 4), ('logo-orig', 58, 0, 0),
-    ('nomore', 80, 5, 0), ('smiley', 74, -5, 0), ('sparkle', 74, 10, 0), ('wegotyou', 78, 4, 0),
+STRIP_H = 80
+STRIP = [  # sticker, height, rotation
+    ('crown', 54, -8), ('cut60', 60, 6), ('exactfit', 44, -6), ('logo-orig', 44, 0),
+    ('nomore', 60, 5), ('smiley', 56, -5), ('sparkle', 56, 10), ('wegotyou', 60, 4),
 ]
 
 
 def strip():
-    """The full sticker pack on a cobalt band, like your sticker strip."""
-    e = [bg_doodles(31, 1024, 104, 'cobalt', cell=56, size=(14, 22))]
-    e.append(label('STICKER<br>PACK', 18, 38, 8.5, 'white', weight=900, ls=0.08, lh=1.15))
-    widths = [h * STK[n][0] / STK[n][1] for n, h, _, _ in STRIP]
-    gap = (1024 - 96 - 20 - sum(widths)) / (len(STRIP) - 1)
-    x = 96
-    for (n, h, rot, lift), w in zip(STRIP, widths):
-        e.append(st(n, round(x, 1), round((104 - h) / 2 - lift, 1), round(w, 1), rot=rot, z=2))
+    """The full sticker pack on a flat cobalt band, like your sticker strip."""
+    e = [label('STICKER<br>PACK', 18, 29, 8.5, 'white', weight=900, ls=0.08, lh=1.15)]
+    widths = [h * STK[n][0] / STK[n][1] for n, h, _ in STRIP]
+    x0, x1 = 110, 1024 - 30
+    gap = (x1 - x0 - sum(widths)) / (len(STRIP) - 1)
+    x = x0
+    for (n, h, rot), w in zip(STRIP, widths):
+        e.append(st(n, round(x, 1), round((STRIP_H - h) / 2, 1), round(w, 1), rot=rot, z=2))
         x += w + gap
-    return f'<section class="strip" style="height:104px">{"".join(e)}</section>'
+    return f'<section class="strip" style="height:{STRIP_H}px">{"".join(e)}</section>'
 
 
 def swatch(x, y, sq, bg, inner=''):
     return f'<i class="tx" style="left:{x}px;top:{y}px;width:{sq}px;height:{sq}px;background:{bg}">{inner}</i>'
 
 
+GUIDE_H = 1536 - HERO_H - PH - TILE_H - STRIP_H - 4 * 6
+
+
 def guide():
     g = []
-    # 1 colour
+    head = lambda t, x: label(t, x, 20, 9.5, weight=700, ls=0.08)
+    # 1 colour: the MÜLER layout, plus one row of pops
     x = 28
-    g.append(label('COLOUR PALETTE', x, 20, 9.5, weight=700, ls=0.08))
-    hexlab = lambda c, cx, y: label(C[c][1:], cx, y, 6, weight=500, color='graphite', ls=0.04).replace(
-        'left:', 'margin-left:-14px;width:28px;text-align:center;left:').replace('width:auto;', '')
+    g.append(head('COLOUR PALETTE', x))
     for i, (c, bd) in enumerate([('yellow', 0), ('paper', 1), ('ink', 0), ('graphite', 0), ('mist', 0)]):
         border = ';box-shadow:inset 0 0 0 1px #cfcfca' if bd else ''
-        g.append(f'<i class="sw" style="left:{x + i * 40}px;top:42px;width:32px;height:32px;'
+        g.append(f'<i class="sw" style="left:{x + i * 40}px;top:44px;width:32px;height:32px;'
                  f'border-radius:50%;background:{col(c)}{border}"></i>')
-        g.append(hexlab(c, x + i * 40 + 16, 78))
+    for i, c in enumerate(['pink', 'cobalt', 'green', 'violet', 'orange']):
+        g.append(f'<i class="sw" style="left:{x + i * 40 + 7}px;top:86px;width:18px;height:18px;'
+                 f'border-radius:50%;background:{col(c)}"></i>')
     grads = [f'linear-gradient(90deg,{C["yellow"]},#FFF6B8 55%,{C["paper"]})',
              f'linear-gradient(90deg,{C["ink"]},#6a6a6a 60%,{C["mist"]})',
              'linear-gradient(90deg,#9FB6FF,#F6A6D6 50%,#FFE39A)']
     for i, gr in enumerate(grads):
-        g.append(f'<i class="sw" style="left:{x + i * 66}px;top:92px;width:58px;height:24px;background:{gr}"></i>')
-    g.append(label('POPS · ONE PER PIECE', x, 126, 7.5, weight=700, ls=0.08, color='graphite'))
-    for i, c in enumerate(['pink', 'cobalt', 'green', 'violet', 'orange']):
-        g.append(f'<i class="sw" style="left:{x + i * 40 + 5}px;top:138px;width:22px;height:22px;'
-                 f'border-radius:50%;background:{col(c)}"></i>')
-        g.append(hexlab(c, x + i * 40 + 16, 163))
-    g.append(hand('BOLD<br>BRIGHT<br>FUN<br>PREMIUM', x + 2, 184, 13.5, rot=-10, lh=1.0))
-    g.append(mk('doodle-crown', 'ink', x + 72, 186, 24, rot=6))
-    g.append(lines(41, x + 4, 252, 80))
+        g.append(f'<i class="sw" style="left:{x + i * 66}px;top:118px;width:58px;height:30px;background:{gr}"></i>')
+    g.append(hand('BOLD<br>BRIGHT<br>FUN<br>PREMIUM', x + 2, 172, 14, rot=-10, lh=1.0))
+    g.append(mk('doodle-crown', 'ink', x + 74, 172, 26, rot=6))
+    g.append(lines(41, x + 4, 238, 80))
     # 2 typography
     x = 262
-    g.append(label('TYPOGRAPHY', x, 20, 9.5, weight=700, ls=0.08))
-    g.append(logo('ink', x - 2, 40, 196, rot=-4))
-    g.append(f'<img src="logo-colour.svg" style="position:absolute;left:{x + 132}px;top:110px;width:66px">')
-    g.append(label('DM SANS', x, 122, 10, weight=900, ls=0.06))
-    g.append(label('ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>0123456789', x, 138, 8.2, weight=500, ls=0.04, lh=1.5))
-    g.append(label('abcdefghijklmnopqrstuvwxyz<br>0123456789', x, 166, 8.2, weight=400, ls=0.04, lh=1.5))
-    g.append(label('PERMANENT MARKER', x, 202, 10, weight=900, ls=0.06))
-    g.append(hand('Hand-lettered, loud &amp; fast.', x, 218, 12.5, rot=-3))
-    g.append(label('Logo flat, never textured: one colour for display, full colour for packaging, '
-                   'signage and the logo sticker', x, 246, 7, weight=500, color='graphite', ls=0.02, lh=1.35)
-             .replace('width:auto', 'width:196px;white-space:normal'))
-    # 3 graphic elements
+    g.append(head('TYPOGRAPHY', x))
+    g.append(logo('ink', x - 2, 44, 196, rot=-4))
+    g.append(label('DM SANS', x, 134, 10, weight=900, ls=0.06))
+    g.append(label('ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>0123456789', x, 152, 8.2, weight=500, ls=0.04, lh=1.6))
+    g.append(label('abcdefghijklmnopqrstuvwxyz<br>0123456789', x, 184, 8.2, weight=400, ls=0.04, lh=1.6))
+    g.append(label('PERMANENT MARKER', x, 222, 10, weight=900, ls=0.06))
+    g.append(hand('Hand-lettered, loud &amp; fast.', x, 240, 13, rot=-3))
+    # 3 graphic elements: fewer, with room around them
     x = 500
-    g.append(label('GRAPHIC ELEMENTS', x, 20, 9.5, weight=700, ls=0.08))
-    g.append(mk('doodle-crown', 'ink', x + 4, 44, 44, rot=-6))
-    g.append(mk('doodle-smiley', 'ink', x + 70, 40, 50))
-    g.append(ast('ink', x + 146, 46, 30))
-    g.append(lines(51, x + 2, 100, 68, rot=-18, sw=4.2))
-    g.append(mk('brush-m', 'yellow', x + 84, 92, 86, rot=-8, flip='v'))
-    g.append(mk('doodle-squiggle', 'green', x + 172, 96, 13, rot=-8))
-    g.append(mk('doodle-star-smiley', 'pink', x + 6, 160, 46, rot=-8))
-    g.append(mk('doodle-scribble', 'ink', x + 60, 176, 66))
-    g.append(mk('doodle-arrow', 'cobalt', x + 150, 168, 24, rot=-20))
-    g.append(mk('brush-dab', 'yellow', x + 74, 240, 96, rot=-10))
-    g.append(hand('60 SEC', x + 94, 228, 20, rot=-14))
-    # 4 texture: brushes, grunge (never on the logo) and the background doodle pattern
+    g.append(head('GRAPHIC ELEMENTS', x))
+    g.append(mk('doodle-crown', 'ink', x + 6, 48, 46, rot=-6))
+    g.append(mk('doodle-smiley', 'ink', x + 78, 44, 50))
+    g.append(ast('ink', x + 150, 50, 30))
+    g.append(lines(51, x + 2, 118, 70, rot=-18, sw=4.2))
+    g.append(mk('brush-m', 'yellow', x + 88, 104, 84, rot=-8, flip='v'))
+    g.append(mk('brush-loop', 'ink', x + 4, 186, 64, rot=-6))
+    g.append(mk('brush-dab', 'yellow', x + 84, 232, 96, rot=-10))
+    g.append(hand('60 SEC', x + 102, 222, 20, rot=-14))
+    # 4 texture: 2 x 2 like the reference, with the doodle pattern as one of them
     x = 712
-    g.append(label('TEXTURE / OVERLAYS', x, 20, 9.5, weight=700, ls=0.08))
-    sq, pat = 60, 'position:absolute;inset:0;'
-    g.append(swatch(x, 42, sq, C['paper'], mk('brush-zigzag', 'yellow', -60, -4, 200, rot=-38)))
-    g.append(swatch(x + 70, 42, sq, C['ink']).replace('class="tx"', 'class="tx grunge"'))
-    g.append(swatch(x, 110, sq, C['paper'], mk('brush-zigzag-arrow', 'mist', -6, -30, 78, rot=12)))
-    g.append(swatch(x + 70, 110, sq, C['paper'], f'<i class="grunge-neg" style="background:{C["ink"]}"></i>'))
-    g.append(swatch(x, 178, sq, C['paper'], bg_doodles(41, 60, 60, 'paper', cell=24, size=(9, 14))
-                    .replace('opacity:0.075', 'opacity:0.3')))
-    g.append(swatch(x + 70, 178, sq, C['yellow'], bg_doodles(42, 60, 60, 'yellow', cell=24, size=(9, 14))
-                    .replace('opacity:0.42', 'opacity:0.7')))
-    g.append(label('DOODLE PATTERN, TONE-ON-TONE', x, 246, 6.5, weight=700, ls=0.06, color='graphite'))
+    g.append(head('TEXTURE / OVERLAYS', x))
+    sq = 74
+    g.append(swatch(x, 44, sq, C['paper'], mk('brush-zigzag', 'yellow', -72, 0, 240, rot=-38)))
+    g.append(swatch(x + 84, 44, sq, C['ink']).replace('class="tx"', 'class="tx grunge"'))
+    g.append(swatch(x, 128, sq, C['paper'], mk('brush-zigzag-arrow', 'mist', -8, -34, 94, rot=12)))
+    g.append(swatch(x + 84, 128, sq, C['yellow'], bg_doodles(42, 74, 74, 'yellow', cell=30, size=(12, 16), keep=0.8)
+                    .replace('opacity:0.26', 'opacity:0.6')))
+    g.append(label('DOODLE PATTERN', x + 84, 208, 6.5, weight=700, ls=0.06, color='graphite'))
     # 5 mood
     x = 906
-    g.append(label('MOOD', x, 20, 9.5, weight=700, ls=0.08))
+    g.append(head('MOOD', x))
     for i, w in enumerate(['ENERGY', 'YOUTH', 'TECH', 'FASHION', 'FUN', 'CONFIDENCE', 'COMMUNITY', 'PREMIUM']):
-        g.append(label(w, x + 4, 46 + i * 26, 9.5, weight=500, ls=0.1))
+        g.append(label(w, x + 4, 48 + i * 26, 9.5, weight=500, ls=0.1))
     rules = ''.join(f'<i class="rule" style="left:{v}px"></i>' for v in (242, 480, 694, 886))
-    return f'<section class="guide" style="height:302px">{rules}{"".join(g)}</section>'
+    return f'<section class="guide" style="height:{GUIDE_H:.2f}px">{rules}{"".join(g)}</section>'
 
 
 CSS = """
@@ -395,6 +379,7 @@ section,.poster,.tile{position:relative;overflow:hidden}
 .poster{position:absolute;width:200px;height:355.5556px}
 .tiles{position:relative;height:330px;margin-top:6px}
 .tile{position:absolute;top:0;height:330px}
+.ph{filter:contrast(1.05) saturate(1.08) brightness(1.02)}
 .strip{background:COBALT;margin-top:6px}
 .guide{background:#FAFAF7;margin-top:6px}
 .mk,.logo,.ph,.sv,.hand,.lab,.sw,.tx,.st{position:absolute;display:block}
@@ -425,7 +410,8 @@ if __name__ == '__main__':
     open('board.html', 'w').write(page(body))
     open('hero.html', 'w').write(page(hero()))
     # the background doodle pattern on its own: solid ink on transparent, 1080 x 1080
-    pat = bg_doodles(7, 1080, 1080, 'paper', cell=110, size=(34, 56)).replace('opacity:0.075', 'opacity:1')
+    pat = bg_doodles(7, 1080, 1080, 'paper', cell=120, size=(40, 56), keep=0.6).replace(
+        f'opacity:{BG_TONE["paper"][1]}', 'opacity:1')
     open('pattern.html', 'w').write(page(f'<section style="height:1080px">{pat}</section>', 1080,
                                          'html,body{background:transparent}'))
     for i, p in enumerate(POSTERS, 1):
