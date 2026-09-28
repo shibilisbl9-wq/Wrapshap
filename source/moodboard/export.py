@@ -46,6 +46,16 @@ if __name__ == '__main__':
         if f.endswith('.png'):
             shutil.copy(os.path.join(HERE, 'kit', f), os.path.join(OUT, '04-kit', f))
     shot('pattern.html', os.path.join(OUT, '04-kit', 'doodle-pattern-1080.png'), 1080, 1080, 1, transparent=True)
+    # the earlier variant with the cobalt tuff poster and cobalt sticker strip, for comparison
+    alt = os.path.join(OUT, 'alt-with-blue')
+    os.makedirs(alt, exist_ok=True)
+    env = dict(os.environ, WRAPSHAP_BLUE='1')
+    subprocess.run(['python3', 'build.py'], cwd=HERE, check=True, env=env)
+    shot('board.html', tmp, 1024, 1536, 3)
+    to_jpg(tmp, os.path.join(alt, 'wrapshap-brand-board-with-blue.jpg'))
+    shot('poster-3.html', tmp, 1080, 1920, 1)
+    to_jpg(tmp, os.path.join(alt, 'wrapshap-story-03-tuff-blue-1080x1920.jpg'))
+    subprocess.run(['python3', 'build.py'], cwd=HERE, check=True)   # back to the main variant
     for f in sorted(os.listdir(os.path.join(HERE, 'stickers'))):
         if f.endswith('.webp'):
             shutil.copy(os.path.join(HERE, 'stickers', f), os.path.join(OUT, '05-stickers', 'wrapshap-sticker-' + f[3:]))

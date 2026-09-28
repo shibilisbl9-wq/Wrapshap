@@ -2,10 +2,12 @@
 
 photos_raw/ holds the full-size Higgsfield generations and cut-outs; it is not committed.
 Selected shots:  hero = hw_a (wide straddle jump),  poster 1-5 = p1_a, p2_b, p3_a, p4_b, p5_a (3 and 4 retouched, see retouch.py),
-tile 1 (hand + phone) = t1_b, tile 2 (group) = t2_b, tile 3 (face) = t3_a."""
+tile 1 (hand + phone) = t1_b, tile 2 (group) = t2_b, tile 3 (face) = t3_a.
+Every photo gets the same bright grade (grade.py) so the set reads as one high-key shoot."""
 import json
 import numpy as np
 from PIL import Image
+from grade import grade
 
 PICKS = {  # output name: (cut-out file, max height px)
     'hero': ('hw_cut.png', 1500),
@@ -22,6 +24,7 @@ for name, (src, hmax) in PICKS.items():
     im = im.crop(box)
     if im.height > hmax:
         im = im.resize((round(im.width * hmax / im.height), hmax), Image.LANCZOS)
+    im = grade(im)
     im.save(f'img/{name}.webp', quality=90, method=6)
     info[name] = {'w': im.width, 'h': im.height, 'src_box': box}
     print(name, im.size)

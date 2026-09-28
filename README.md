@@ -45,6 +45,7 @@ the hero, posters and tiles and shown in full on a blue sticker strip, and every
 | `02-stories/wrapshap-story-0X-….jpg` | The five posters as 1080 × 1920 Instagram/WhatsApp stories: clear, privacy, tuff, matte, 60 sec |
 | `03-logo/` | Logo SVGs: black, white, black with the white sticker rim, and the full-colour original |
 | `04-kit/` | The hand-made graphic kit as transparent PNG masks (brushes, crown, smiley, stars, scribbles, arrow, grunge texture). Recolour them to any palette colour. `doodle-pattern-1080.png` is the background doodle pattern on its own (black on transparent). Use it at about 6–8% opacity on paper/white, or tinted darker yellow on yellow |
+| `alt-with-blue/` | The previous variant for comparison: the same board with the cobalt tuff poster and a cobalt sticker strip, plus that tuff story |
 | `05-stickers/` | Your sticker set (crown, CUT IN 60 SEC, EXACT FIT, wrapshap logo, NO MORE ALMOST., smiley, sparkle, WE GOT YOU.) as transparent WebPs. Taken from your earlier board's assets, unchanged. The logo sticker uses the real logo |
 
 ### Colour
@@ -57,7 +58,7 @@ the hero, posters and tiles and shown in full on a blue sticker strip, and every
 | Graphite | `#4B4B4B` | Secondary text |
 | Mist | `#D5D5D0` | Grey brush, dividers |
 | Pop Pink | `#FF3DA5` | Pop |
-| Pop Cobalt | `#2350F0` | Pop, and the one non-yellow poster background |
+| Pop Cobalt | `#2350F0` | Pop (the clear model's hoodie). Only the `alt-with-blue` variant uses it as a background |
 | Pop Green | `#19B85B` | Pop |
 | Pop Violet | `#7C4DFF` | Pop |
 | Logo Orange | `#F39200` | Pop (from the logo) |
@@ -73,8 +74,15 @@ Both are free on Google Fonts.
   appears small. If you want the orange logo big anyway, it's a one-line change per placement in `build.py`.
 - **More colour, with yellow still leading. Rule: "one pop per piece."** Every piece is yellow + black + paper, plus
   one pop colour taken from the model's outfit (the pink jacket gets pink doodles, the green tracksuit gets green).
-  The **tuff** poster is on cobalt blue to break the all-yellow/white row. Swap it back to yellow or white if that's
-  too far from MÜLER.
+  The colour comes from the outfits and the doodles, not from extra backgrounds: the posters alternate yellow and
+  white exactly like MÜLER. An earlier variant put the tuff poster and the sticker strip on cobalt blue. It's
+  kept in `alt-with-blue/` for comparison.
+- **The sticker strip is black.** It keeps the strip as an anchor under the tiles in a core brand colour, and the
+  stickers' white die-cut edges pop hardest on it. White (quietest) and yellow (like the original sticker sheet)
+  were also tried; `STRIP_BG` in `build.py` switches it.
+- **All photos share one bright, high-key grade** (`grade.py`): shadows lifted, a touch more exposure, cleaner
+  whites, richer clothing colour with skin tones protected, slight sharpening. The generator's own grade was
+  muted and grey in the shadows, which is what made the models look dull next to MÜLER.
 - **The hero uses a wide, low jump (legs split sideways), centred under the full-width logo.** With the earlier
   tall jumping pose, a centred model hid three letters. The wide pose keeps her body below the letters, so like
   MÜLER she hides about one ("p"), and the whole logo still reads. This photo was cut out with a free local
@@ -89,7 +97,7 @@ Both are free on Google Fonts.
   surfaces look dirty. Stronger or weaker is a one-line change (`BG_TONE` in `build.py`).
 - **Cleanliness rules applied after a critique pass:** every poster uses one template (label, logo, one brush,
   a big model bleeding off the bottom, one handwritten line in the lower third, one pop doodle, one sticker).
-  The handwriting is condensed like marker lettering, and all photos share one grade. The guide strip was thinned
+  The handwriting is condensed like marker lettering. The guide strip was thinned
   to the MÜLER layout (no hex labels on the board, 2 × 2 textures). The HEX codes are in the table above.
 - **Copy comes from your earlier work, not invented.** The product names (clear, privacy, tuff, matte, 60 sec) and
   lines ("NO MORE ALMOST.", "EXACT FIT.", "LOUD OUTSIDE. EXACT INSIDE.", "EVERY PHONE FALLS.") come from your previous
@@ -110,7 +118,7 @@ Both are free on Google Fonts.
 ### Rebuilding Option F
 
 In `source/moodboard/`: `make_logos.py` → `retouch.py` → `prep_photos.py` → `extract_kit.py` → `build.py` →
-`export.py`. The stickers the board uses are committed in `stickers/`. The full-size generations aren't in git (`photos_raw/` is ignored). Their Higgsfield job IDs are in
+`export.py` (which also builds the `alt-with-blue` variant via `WRAPSHAP_BLUE=1`). The stickers the board uses are committed in `stickers/`. The full-size generations aren't in git (`photos_raw/` is ignored). Their Higgsfield job IDs are in
 `higgsfield_jobs.json`, and the cropped photos the board actually uses are committed in `img/`, so `build.py` and
 `export.py` work without them. Needs Python (PyMuPDF, Pillow, NumPy, SciPy), Node with Playwright, and DM Sans +
 Permanent Marker TTFs in `fonts/` at the repo root. `retouch.py` also needs `rembg` (`pip install "rembg[cpu]"`),

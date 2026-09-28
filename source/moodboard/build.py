@@ -9,11 +9,14 @@ take any brand colour. Every background carries a faint tone-on-tone doodle patt
 """
 import json
 import math
+import os
 import random
 
 KIT = json.load(open('kit/sizes.json'))
 IMG = json.load(open('img/sizes.json'))
 STK = json.load(open('stickers/sizes.json'))
+# WRAPSHAP_BLUE=1 builds the earlier variant with the cobalt tuff poster and a cobalt sticker strip
+BLUE = os.environ.get('WRAPSHAP_BLUE') == '1'
 LOGO_AR = 219.12 / 79.92
 
 C = {
@@ -205,6 +208,10 @@ POSTERS = [
     dict(bg='cobalt', lab='tuff.', logo='white', model='p3', mh=250, mx=-24, lab_color='white',
          brush=('brush-m', 'yellow', 10, 110, 180, -6, 'v'),
          copy=('EVERY<br>PHONE<br>FALLS.', 'r', 'white'), pop=('doodle-crown', 'yellow', (46, 108, 36, -10)),
+         sticker='smiley') if BLUE else
+    dict(bg='yellow', lab='tuff.', logo='white', model='p3', mh=250, mx=-24,
+         brush=('brush-m', 'white', 10, 110, 180, -6, 'v'),
+         copy=('EVERY<br>PHONE<br>FALLS.', 'r'), pop=('doodle-crown', 'ink', (46, 108, 36, -10)),
          sticker='smiley'),
     dict(bg='white', lab='matte.', logo='ink', model='p4', mh=236, mx=0,
          brush=('brush-zigzag-arrow', 'yellow', 22, 80, 176, -20),
@@ -278,6 +285,7 @@ def tiles():
 
 
 STRIP_H = 80
+STRIP_BG = C['ink']   # also tried: white (quietest), yellow (like the original sticker sheet)
 STRIP = [  # sticker, height, rotation
     ('crown', 54, -8), ('cut60', 60, 6), ('exactfit', 44, -6), ('logo-orig', 44, 0),
     ('nomore', 60, 5), ('smiley', 56, -5), ('sparkle', 56, 10), ('wegotyou', 60, 4),
@@ -294,7 +302,8 @@ def strip():
     for (n, h, rot), w in zip(STRIP, widths):
         e.append(st(n, round(x, 1), round((STRIP_H - h) / 2, 1), round(w, 1), rot=rot, z=2))
         x += w + gap
-    return f'<section class="strip" style="height:{STRIP_H}px">{"".join(e)}</section>'
+    bg = C['cobalt'] if BLUE else STRIP_BG
+    return f'<section class="strip" style="height:{STRIP_H}px;background:{bg}">{"".join(e)}</section>'
 
 
 def swatch(x, y, sq, bg, inner=''):
@@ -379,7 +388,6 @@ section,.poster,.tile{position:relative;overflow:hidden}
 .poster{position:absolute;width:200px;height:355.5556px}
 .tiles{position:relative;height:330px;margin-top:6px}
 .tile{position:absolute;top:0;height:330px}
-.ph{filter:contrast(1.05) saturate(1.08) brightness(1.02)}
 .strip{background:COBALT;margin-top:6px}
 .guide{background:#FAFAF7;margin-top:6px}
 .mk,.logo,.ph,.sv,.hand,.lab,.sw,.tx,.st{position:absolute;display:block}
