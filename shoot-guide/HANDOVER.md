@@ -1,7 +1,24 @@
 # Wrapshap shoot guide: handover to the local (desktop) chat
 
-Written 1 Oct 2026 from the cloud session. **Status: planning and prep done. The shoot guide itself is NOT built.**
-No philosophy `.md`, no PDF, no storyboard frames exist yet. Do not assume otherwise.
+Written 1 Oct 2026 from the cloud session.
+
+**UPDATE (later the same day): the shoot guide IS now built.** Files in this folder:
+- `wrapshap-shoot-guide.pdf`: 24 pages, 1440x810. Cover, Day-1 run sheet, how-to-read + rules, one page per factory script S1-S10
+  (drawn frames, timeline rail, floor plan, take log), 9 pages of post cards for A1-D3, launch calendar, QC + open questions.
+- `design-philosophy.md`: the canvas-design philosophy ("Loud Registration") the PDF follows.
+- `src/` (lib.mjs drawing kit, scripts.mjs, posts.mjs, build.mjs, render.mjs) and `fonts/`: rebuild with
+  `node src/build.mjs && node src/render.mjs` (Node + global playwright + Chromium). Edit the data files, not the PDF.
+
+What is still NOT done, so the local chat should pick it up:
+1. The frames are **drawn in code**, not generated. The user then asked for Google Flow to be used. Generating photoreal or
+   styled frames in Flow and placing them in the PDF (or beside it) is the open task. Nothing was generated in Flow from this session.
+2. The guide has not been checked against the Flow project's "S1-10 Factory Storyboards" plan. Compare them and reconcile differences.
+3. Post beats marked PROPOSED, the Day-1 times and the suggested shots/moves are my additions, not from the launch plan. The user has not reviewed them.
+4. The original "Instagram research of Mobile Outfitters GCC / SKW" request is still blocked (see section 6).
+5. The kiosk is drawn generically; no real photo of it exists in the repo.
+
+The sections below were written before the build and are still accurate unless marked.
+
 
 ## 1. What the user wants
 
@@ -84,7 +101,7 @@ Things visible in the Flow images that **must be checked before use**:
   That is about 5 frames, so it cannot cover a 47-frame storyboard. This is why Flow was chosen.
   Nothing was generated or spent.
 - Instagram research (earlier request) could not be done: Instagram blocked the fetch. Still waiting on screenshots or the exact SKW handle.
-- Files saved: `shoot-guide/assets/wrapshap-logo-sparkle.png` and this file. Fonts were downloaded in the cloud container but are not committed.
+- Files saved: see the UPDATE at the top. Fonts (DM Sans, Anton, Permanent Marker, DM Mono; all OFL/Apache) are committed in `fonts/`.
 - Earlier planning decision: draw storyboard frames in code in the brand's marker style (free, shows framing and arrows, does not invent a kiosk).
   The user then chose Flow instead. Either is fine. A hybrid works well: Flow for the hero looks, code-drawn overlays for timings and arrows.
 

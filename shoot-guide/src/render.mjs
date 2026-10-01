@@ -1,0 +1,14 @@
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const require = createRequire('/opt/node22/lib/node_modules/');
+const { chromium } = require('playwright');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' }).catch(async () => chromium.launch());
+const page = await browser.newPage();
+await page.goto('file://' + root + '/build/guide.html');
+await page.evaluate(() => document.fonts.ready);
+await page.waitForTimeout(600);
+await page.pdf({ path: root + '/wrapshap-shoot-guide.pdf', width: '1440px', height: '810px', printBackground: true, preferCSSPageSize: true });
+await browser.close();
+console.log('pdf ok');
