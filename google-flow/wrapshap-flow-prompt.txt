@@ -1,0 +1,178 @@
+===== PART 1 OF 2 =====
+
+You are my production team for the WrapShap launch in Pakistan. Build every visual asset listed below in this Flow project. Follow this brief exactly. The logo is the image I attached (also saved in this project as "wrapshap-logo").
+
+KIOSK LOCATION: ____________________
+(If this line is still blank, write "Find the kiosk" wherever the location goes.)
+
+HOW TO WORK
+1. Before you spend any credits, reply once with: the full asset list (ID, image or video, aspect ratio, FINAL or REF) and the total credit cost. Then wait for me to type GO.
+2. After GO, make everything without stopping to ask questions. Where something is unclear, make the sensible choice and list it in the final report.
+3. One output per asset (no 4-up variations) unless I ask for more.
+4. Rename every file to its ID plus FINAL or REF, for example "A2-1 Rickshaw FINAL" or "S1 Bilkul Fit Hai REF".
+5. Put the files into these Collections: "WS 00 Brand kit", "WS 1 The Struggle Is Real", "WS 2 Snip Snap Reveal", "WS 3 Pull Up Week", "WS 4 Keep It Loud", "WS 5 Factory shoot storyboards".
+6. If you hit a quota or limit, stop and tell me the last ID you finished. When I type CONTINUE, carry on from the next one.
+7. At the end, give me a table: ID, file name, FINAL or REF, and what is still needed (text or music in the edit, or what we must film for real).
+
+FINAL vs REF (most important rule)
+Our plan says every proof is real: real tests, real timers, real customers, our real kiosk. So:
+- FINAL = graphics, art and mood shots that make no product claim. These can be posted.
+- REF = a shot reference for our camera team. It is NOT for posting. Anything that shows a test result, the machine cutting, a timer, a real customer, or our kiosk is REF.
+- Make REF assets as storyboard images (not videos) to save credits. Put a small "REF – NOT FOR POSTING" tag in the top corner of every REF image.
+
+WHAT WRAPSHAP IS (use only these facts, never invent others)
+- A kiosk that cuts a screen-protector film for your exact phone model in under 60 seconds. Thousands of models.
+- The films are TPU and EPU. They are not glass.
+- Four finishes, always shown in this order: CLEAR, PRIVACY, MATTE, TUFF.
+- CLEAR: virtually invisible, 99%+ light transmittance.
+- PRIVACY: blocks side views at 35°.
+- MATTE: anti-glare micro-texture and an oil-repellent top layer. Less glare, fewer prints.
+- TUFF: 0.25–0.35 mm, 4H–5H, an EPU layer that spreads the hit. TUFF is the only finish that may be linked to drops or impact.
+- Say "scratch-resistant". Never write or show "scratch-proof", "unbreakable" or "shatterproof".
+- Brand line: "No more almost." Sign-off: "Don't worry, we got you."
+
+LOGO RULES
+- Use the attached logo exactly as it is: same shape, same orange-to-amber gradient, same white outline. Never redraw, recolour, stretch, tilt or crop it.
+- Only place the logo where this brief asks for it, large and flat on a plain area. Never inside video clips.
+- Never draw six-pointed stars anywhere: not in the logo, not in doodles, not as sparkles. Sparkles are always four-pointed.
+
+LOOK AND FEEL ("Yellow Edition")
+- Colours: Wrap Yellow #FFD60A (main background), Ink #141311 (text and doodles), Paper #F3F2EE (cards and light backgrounds), Orange #F39200 (small accents). Amber #ECBF30 appears in the logo only.
+- Type in images: big headlines in a tall, condensed, heavy sans (like Anton); punchy lines in black hand-written marker (like Permanent Marker); small text in a clean geometric sans (like DM Sans).
+- Graphic motifs: black hand-drawn marker doodles (a crown, a smiley, four-point sparkles, curved arrows, loose circles around flaws, a thick marker strike-through over the word "almost"), white rough-edged label cards, sticker cut-outs with a white border and a soft shadow, a light paper grain.
+- Photography: bright, punchy and natural. Everyday life in Lahore and Karachi. Pakistani people of mixed ages in everyday clothes (shalwar kameez, kurtas, jeans, some women in a dupatta or hijab). Real skin texture, natural hands with five fingers, no plastic AI look, no poverty clichés.
+- Phones: generic modern smartphones with no visible brand logos. Screens are off, or show a plain abstract wallpaper. No real apps, no readable chats.
+- Vertical posts: keep the top 12% and the bottom 20% free of text and logos (TikTok and Reels buttons sit there).
+
+ALWAYS / NEVER
+- Videos: no on-screen text, no captions, no subtitles, no music, no speech unless asked. Ambient sound only. We add text and trending audio in the edit.
+- Images: include only the exact text given in quotes. English only. Spell it exactly; check every letter before saving.
+- Never show a phone hitting the ground, cracking or breaking.
+- No other brands or logos, and nothing that looks like Google Translate or any other app's interface.
+
+---------------------------------------------
+COLLECTION "WS 00 Brand kit" (all FINAL)
+
+K1 · Image 4:5 · "No more almost" hero
+Wrap Yellow background with a light paper grain. Upper left: the logo, small. Centre: "No more" in huge black condensed heavy type. Below it, on a white rough-edged label, the word "almost." in big black marker lettering with a thick black marker line struck through it. Upper right: a black marker crown doodle. One smiley and two four-point sparkles scattered loosely. Lots of empty space.
+
+K2 · Image 9:16 · Same design as K1, rearranged for vertical, with all text in the middle 68% of the height.
+
+K3 · Image 1:1 · Doodle sticker sheet
+Plain white background. Black hand-drawn marker doodles, well spaced so each can be cut out: a crown, a smiley face, four-point sparkles in three sizes, three curved arrows, a loose hand-drawn circle, a thick strike-through line, three short motion lines, a yellow (#FFD60A) highlighter swipe. No text.
+
+K4 · Image 9:16 · End card
+Wrap Yellow background. The logo centred in the upper middle, with a small black marker crown just above it. Below it in black marker lettering: "Don't worry, we got you." Lower down, a white pill-shaped label with the KIOSK LOCATION in clean black sans.
+
+---------------------------------------------
+COLLECTION "WS 1 The Struggle Is Real"
+
+A1 · Image 4:5 · REF · "Spot your almost" flat-lay
+Shot straight overhead, knolling style, on a seamless Wrap Yellow surface under hard, even light. Nine phones in a perfect 3×3 grid, each squared to the grid, screens off. Eight have a different screen-protector flaw: 1 corner edge lifting, 2 camera cut-out misaligned over the lens, 3 big air bubble dead centre, 4 dust specks trapped under the film, 5 yellowed old film, 6 crooked cut leaving a gap down one side, 7 cracked glass guard, 8 spiderweb-cracked glass guard. Phone 9 (bottom right) is spotless with a perfectly flush film. A loose black marker circle around every flaw and a small marker number next to each phone.
+
+A2 · Six videos · 9:16 · FINAL · "Every phone falls"
+Shared style for all six: slow motion, sports-broadcast feel, crisp high shutter speed, punchy colour, ambient sound only. Each clip ends with the phone in mid-air or just slipping away, BEFORE any impact. We freeze the last frame in the edit. Never show the landing.
+A2-1 Rickshaw: a young man steps down from a colourful auto-rickshaw on a busy Lahore street. His phone slips from his fingers. Ends with the phone mid-air above the road.
+A2-2 Bike pocket: a motorbike rider in Karachi traffic leans into a turn. His phone slides out of his shirt pocket. Ends mid-air.
+A2-3 Shaadi dance floor: a guest at a lively mehndi night (marigolds, fairy lights) is filming on their phone while dancing. A big dance move sends the phone flying. Ends mid-air.
+A2-4 Last-ball six: friends playing tape-ball cricket in a street at golden hour. The batter hits a six; a friend leaps to celebrate and his phone flies out of his hand. Ends mid-air.
+A2-5 Kitchen counter: a home kitchen, a woman rolling parathas. Her phone rests on the counter edge; her elbow nudges it. Ends with the phone tipping off the edge.
+A2-6 Toddler grip: a toddler on a sofa grabs a parent's phone with both hands, then lets go. Ends with the phone mid-air above a soft cushion.
+
+A3-1 · Image 9:16 · FINAL · Contest card
+Wrap Yellow background. Top: "SHOW US THE WORST SCREEN PROTECTOR IN PAKISTAN" in huge black condensed heavy type. Middle: a photo-real close-up of a hand holding a phone with a hilariously bad screen protector: half peeled, cracked in three places, one giant bubble. A black marker arrow points at it. Below, on a white rough-edged label in black marker: "Tag us. The 10 worst get a free cut on opening day."
+
+A3-2 · Image 1:1 · FINAL · Score stickers
+White background. Five sticker-style score badges, each tilted slightly, white border, soft shadow, black marker text on yellow or white: "2/10, bro what is this" · "1/10 call the police" · "3/10 brave" · "0/10 legendary" · "10/10 worst ever".
+
+A5 · Image 9:16 · FINAL · "Name a phone we can't cut"
+Wrap Yellow background. A hand thrusts a phone toward the camera like a dare; the phone fills the upper half, screen off, slight wide-angle perspective. Big black marker lettering across the top: "NAME A PHONE WE CAN'T CUT." A marker crown doodle beside it. Leave the bottom 40% as plain yellow (we drop real comment screenshots there in the edit).
+
+---------------------------------------------
+COLLECTION "WS 2 Snip Snap Reveal"
+
+B1 · Image 9:16 · REF · Kiosk build timelapse storyboard
+Four stacked panels, the same locked tripod wide angle in panels 1, 2 and 4: (1) an empty kiosk spot in a busy mall, labelled "DAY 1"; (2) the kiosk half-built, people as motion blur, labelled "DAY 3"; (3) handheld close-up of the sign being mounted, labelled "HANDHELD DETAIL"; (4) the finished kiosk at night with its neon base glowing, labelled "OPENING DAY – DATE + MALL ON LAST FRAME".
+
+B2 · Image 4:5 · Squad family shot
+If I attached photos of the real WrapShap boxes, use them as ingredients and mark this FINAL. If not, use plain unbranded boxes and mark it REF.
+Low three-quarter angle. Four product boxes in a row, left to right: CLEAR, PRIVACY, MATTE, TUFF. A cutting mat underneath, with a freshly cut strip of clear film curling across it. Soft shadow, one warm key light, Paper #F3F2EE background. Under each box, a small white card with the finish name in black marker.
+
+B3 · Image 9:16 · REF · CLEAR "Spot the film"
+A phone on a stand, shot straight on in soft, even light. Its screen is split down the middle: one half bare, one half with clear film, and they look identical. A big marker "A" over the left half and "B" over the right. Small label: "HOLD 2 SECONDS – LET PEOPLE COMMENT".
+
+B4 · Image 9:16 · REF · PRIVACY "Side-eye proof"
+Three stacked panels, shot on a city bus: (1) straight on, a woman's phone screen clearly readable; (2) the camera has swung about 35° to the side and the screen looks dark; (3) a black marker eye doodle crossed out. Label: "ONE TAKE, ONE GIMBAL ARC, NO CUTS".
+
+B5 · Image 9:16 · REF · MATTE "Sun, glare, paratha fingers"
+Two stacked panels from the same tripod angle, outdoors at harsh noon: (top) a glossy phone screen washed out by glare, the holder's face reflected, greasy fingerprints visible, labelled "BEFORE"; (bottom) the same phone, same hands, same light, now with a matte film: readable, no prints, labelled "AFTER". Label: "TRIPOD LOCKED – ONLY THE FILM CHANGES".
+
+B6-1 · Video 9:16 · FINAL · TUFF art opener
+Pure black backdrop, one hard orange-tinted side light. A cricket bat swings through frame in extreme slow motion, and dark glossy shards burst outward through the air around a box sitting still in the centre. The box is never hit and stays untouched. If I attached a photo of the real TUFF box, use it as an ingredient; otherwise use a plain matte black box with no text. No phone and no film in this clip. Ambient whoosh only. This is art, not a test.
+
+B6-2 · Image 9:16 · REF · TUFF steel-ball drop test
+Four stacked panels on a black backdrop with one hard side light: (1) a phone lying flat on a foam pad, a ruler standing beside it, a steel ball held above; (2) the ball released, labelled "HIGH FRAME RATE"; (3) the moment of impact on the screen; (4) macro on the film after the hit. Label: "RUN IT FOR REAL – PUT THE REAL HEIGHT ON SCREEN".
+
+===== PART 2 OF 2 =====
+(If you pasted Part 1 separately: this continues the same WrapShap job, with the same brief, rules, look and naming as Part 1.)
+
+---------------------------------------------
+COLLECTION "WS 3 Pull Up Week"
+
+C1 · Image 9:16 · REF · Opening day, founder's voice
+Four stacked panels in a warm, cinematic style with shallow depth of field: (1) low-angle push-in on the kiosk; (2) macro on the kiosk sign; (3) macro of the cutter working; (4) the first customer smiling at the counter. Label: "FOUNDER VOICEOVER – SUBTITLES THROUGHOUT – MALL, FLOOR, HOURS ON LAST FRAME".
+
+C4 · Image 9:16 · REF · From worst to cut
+Four stacked panels, with identical framing in panels 1 and 4: (1) a contest winner at the kiosk holding a phone with a wrecked film; (2) the old film peeled off on camera; (3) the new film applied, with a timer in the corner; (4) the owner reacting with a big grin. Label: "CONSENT SIGNED – REAL TIMER".
+
+C2 · Eight images · 4:5 · FINAL · "W·R·A·P·S·H·A·P: how it works" carousel
+One template for all eight slides. Wrap Yellow field. One giant black condensed heavy letter fills about 70% of the slide height, sitting behind everything. A white rounded step card with a soft shadow sits in EXACTLY the same spot on every slide (lower third), with black clean sans text. A black marker arrow points right on slides 1–7. A small "1/8" … "8/8" in the top right.
+C2-1 Letter "W". Card: "Wrap your phone in 60 seconds."
+C2-2 Letter "R". Card: "1. Pick your phone model."
+C2-3 Letter "A". Card: "2. The machine cuts your film."
+C2-4 Letter "P". Card: "3. Wipe the screen clean."
+C2-5 Letter "S". Card: "4. Peel and align."
+C2-6 Letter "H". Card: "5. Smooth it down."
+C2-7 Letter "A". Card: "All done. Exact fit."
+C2-8 Letter "P". Card: "Pull up to" and then the KIOSK LOCATION. The logo sits small above the card. No arrow on this slide.
+
+C3 · Image 9:16 · REF · Almost vs exact
+Two stacked macro panels at screen level with one raking light and the same frame in both: (top) "ALMOST": a fingernail lifts the film edge, dust underneath, the camera cut-out lapping over the lens; (bottom) "EXACT": the same phone, the film edge flush into the curve, a clean cut-out. Label: "REAL PHONE, OWNER'S PERMISSION – REAL SOUND, NO MUSIC".
+
+C5 · Image 9:16 · REF · Stump the machine
+Four stacked panels: (1) a phone-screenshot-style card reading "@user said we can't cut this"; (2) the phone model being searched on the kiosk touchscreen; (3) the film being cut and fitted, with a timer in the corner; (4) a hand holding the fitted phone up to camera. Label: "REAL TIMER – NO SPEED-RAMPS".
+
+---------------------------------------------
+COLLECTION "WS 4 Keep It Loud"
+
+D1 · Image 9:16 · FINAL · "Rate the fit" title card
+Wrap Yellow background. "RATE THE FIT" in huge black condensed heavy type, with a big black marker "__/10" underneath. A black marker doodle of a handheld microphone and a small crown.
+
+D2 · Five images · 4:5 · FINAL · "Is it glass?" carousel
+Same yellow, black and paper style on every slide.
+D2-1 Wrap Yellow. "IS IT GLASS?" in huge black condensed heavy type. Underneath, in black marker: "No. Here's why that's good."
+D2-2 A clean two-column comparison. Left column on Paper #F3F2EE, header "GLASS", rows: "Bulky" · "Shatters on impact" · "Can't follow a curve". Right column on Wrap Yellow, header "TUFF" with a black marker crown on top, rows: "0.25–0.35 mm" · "4H–5H scratch-resistant" · "EPU layer spreads the hit".
+D2-3 Wrap Yellow. "TUFF" huge. Three white cards: "0.25–0.35 mm" · "4H–5H" · "EPU layer spreads the hit".
+D2-4 Paper background. Header in black marker: "Not after TUFF? Meet the rest of the squad." Three white cards in this order: "CLEAR — looks like nothing's on" · "PRIVACY — for nosy neighbours" · "MATTE — for noon sun".
+D2-5 Wrap Yellow. "Will it fit yours?" in huge black condensed type. Below: "Cut for your exact phone in under 60 seconds." Then the KIOSK LOCATION on a white pill label, the logo, and "Don't worry, we got you." in black marker.
+
+D3 · Image 9:16 · REF · The sneaky neighbour
+Three stacked panels: (1) a café table: someone on their phone while a friend leans in from the side, trying to read it; (2) the same scene, the friend leaning further, neck stretched (comedy); (3) a hard cut to the phone screen seen from the side at 35°: flat black. Label: "CAST A FRIEND – SAME 35° REVEAL EVERY WEEK – ALTERNATE CAFÉ / OFFICE".
+
+---------------------------------------------
+COLLECTION "WS 5 Factory shoot storyboards" (all REF)
+
+Ten storyboard sheets, one per script. Each is a 16:9 image with a row or grid of panels, one panel per beat, a small time code and a one-line English caption under each panel. Setting: a clean factory or workshop with a film-cutting kiosk machine, a work table under bright lights, and a bench by a window. Props: dummy phones with dark screens, film sheets, dust wipes, a microfiber cloth. The cast are ordinary staff, comedic and expressive. Title each sheet with its ID and name.
+
+S1 "Bilkul Fit Hai" (25s): 0–3s proud shopkeeper shows a phone with a crooked, lifting film · 3–7s customer points at a camera hole sitting half over the lens · 7–11s customer pokes a bubble that slides around · 11–21s record-scratch cut to the kiosk: pick, cut, wipe, peel, smooth, timer in the corner · 21–25s customer holds up a flush phone; the shopkeeper shrinks.
+S2 The Bubble Roommate (25s): 0–3s macro on a bubble · 3–9s a thumb pushes the bubble to the edge and it slides back · 9–13s dramatic slow-motion peel of the old film · 13–21s dust wipe, microfiber, kiosk cut, new film goes on · 21–25s a microfiber-wrapped thumb pushes the last tiny bubble off the edge.
+S3 60 Seconds, Go (30s): 0–3s a staffer starts a stopwatch · 3–12s one staffer folds a microfiber into a swan, another attempts a tongue-twister · 12–20s a third staffer hunts for the dust wipe he's standing on, intercut with the machine cutting · 20–25s the timer stops as the film sits flush · 25–30s the swan collapses; the team concedes.
+S4 Which Half? (12s): 0–2s two staffers stare at a dummy with film on one half only · 2–6s a slow tilt under the factory lights while they argue · 6–8s a two-second hold · 8–12s a fingernail lifts the film corner on one half.
+S5 Uncle, Not the Kurta (20s): 0–3s an uncle breathes on the phone and wipes it on his kurta · 3–6s close-up of streaks and lint; a young staffer is horrified · 6–14s an ASMR clean: dust wipe, slow microfiber circles · 14–18s kiosk cut, film on, flush · 18–20s the uncle reaches for his kurta again; she pulls the phone away.
+S6 Your Phone Is Not a Mirror (15s): 0–3s a girl fixes her hair using the glossy phone as a mirror · 3–7s close-up of thumbprints and glare; her friend teases her · 7–12s the kiosk cuts MATTE and it goes on, same angle, glare softened · 12–15s she tries the mirror trick again, nothing, and shrugs.
+S7 "Glass Wala Do" (20s): 0–3s a customer asks for glass; the staffer stares into the camera · 3–10s the staffer bends a TUFF film into a curve and it springs back · 10–16s the film goes on the phone, macro along the curved edge · 16–20s the customer taps it and nods.
+S8 Not Your Screen, Uncle (20s): 0–3s a staffer on a bench with a phone; an uncle slides closer, neck stretching · 3–8s the staffer scoots away, the uncle follows · 8–15s the staffer holds a privacy film sheet up to the window: see-through face-on, dark when tilted; the uncle tries every angle, even crouching · 15–20s the defeated uncle pretends to check the time.
+S9 Types of Customers (30s): one actor playing four characters · opener title card · the Worrier, nervous, as the kiosk screen finds the model · the Glass Guy, cut to the TUFF bend · the Speedrunner glancing at a waiting rickshaw, timer on the cut · the Over-cleaner wiping the screen over and over · closer: a split screen of all four admiring their phones in sync.
+S10 POV: I'm the Film (30s): 0–3s macro on a blank film sheet in the machine · 3–8s a phone model is picked on the screen · 8–12s blade macro · 12–17s slow-motion backing peel · 17–22s wipe and microfiber on the phone · 22–27s the film lands and gets smoothed, edge to edge · 27–30s the finished phone held up.
+
+When everything is done, send me the final report table described at the top.
