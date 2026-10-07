@@ -123,3 +123,23 @@ Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 - Graffiti tee: `tee.py` → `JOBS=jobs_tee.json SLOTS=slots_tee.json node render.mjs` → the same env vars with `post.py` → `tee_mockup.py` → `export.py <repo> tee` (needs Kalam 700 and Geist 600 TTFs)
 - Receipt voucher: `voucher.py` → `JOBS=jobs_voucher.json SLOTS=slots_voucher.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> voucher`
 - Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`
+
+## Store artwork: mobile poster and counter panel
+
+Rebuilt from the references in `references/store-artwork/`. Generator: `source/store_art.py`.
+
+| Piece | Size (placeholder) | Files |
+|---|---|---|
+| Mobile poster | 600 × 900 mm, 3 mm bleed | `.ai`, `-print.pdf`, `.jpg` |
+| Counter panel | 2400 × 450 mm, 3 mm bleed | `.ai`, `-print.pdf`, `.jpg`, plus a `-graphics-only` version with no wood |
+
+- **Higgsfield assets** (GPT Image 2.5, using the references as input): the poster's phone/film/splatter background, the
+  "STAY PROTECTED." brush lettering, the counter's two graffiti groups and the oak texture.
+- **What is vector.** The logo is the original, placed unchanged. The brush lettering and the graffiti were traced to vector
+  shapes. The icons, labels (Montserrat, converted to outlines), dividers, swoosh, burst lines, ghost logo and the counter
+  logo's dark rim and shadow are drawn as vectors. The poster background and the wood are images.
+- **Image resolution.** The poster background is 2336 × 3504 px, about 100 dpi at 600 × 900 mm. The wood is tiled at
+  about 80 dpi. That is fine for viewing distance but not for close-up print, so upscale them before going bigger.
+- **Colour.** RGB, not converted to CMYK. Most large-format and vinyl printers accept RGB.
+- The output files are not committed here (the build ran in Higgsfield's sandbox). To rebuild:
+  `python3 store_art.py <asset_dir> <out_dir>` with the five Higgsfield images and `Montserrat.ttf` in `<asset_dir>`.
