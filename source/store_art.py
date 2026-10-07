@@ -386,7 +386,7 @@ def poster(W=600, H=900):
     m = separate(img, 'black')
     m = {c: clean(v, 2) for c, v in m.items()}
     box = bbox(m.values())
-    dst = (o + W * 0.115, o + H * 0.292, o + W * 0.925, o + H * 0.462)
+    dst = (o + W * 0.10, o + H * 0.285, o + W * 0.935, o + H * 0.478)
     for c in ('yellow', 'white'):
         place(trace(m[c], turd=6), box, dst).draw(pg, WHITE if c == 'white' else mean_color(img, m[c]))
     yellow = mean_color(img, m['yellow'])
@@ -463,7 +463,7 @@ def counter(W=2400, H=450, wood=True):
 
     # tagline, swoosh
     x, y = P(805, 191)
-    put_text(pg, 'STAY PROTECTED.', x, y, 15.5 * u, 600, CREAM, track=0.34)
+    put_text(pg, 'STAY PROTECTED.', x, y, 19.5 * u, 600, CREAM, track=0.34)
     sw = Pen()
     x0, yb = P(745, 205)
     x1, _ = P(872, 205)
