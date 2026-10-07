@@ -462,11 +462,11 @@ def counter(W=2400, H=450, wood=True):
     put_text(pg, '®', lx1 - 2 * u, ly1 - 26 * u, 15 * u, 700, CREAM, anchor='start')
 
     # tagline, swoosh
-    x, y = P(805, 191)
+    x, y = P(805, 194)
     put_text(pg, 'STAY PROTECTED.', x, y, 19.5 * u, 600, CREAM, track=0.34)
     sw = Pen()
-    x0, yb = P(745, 205)
-    x1, _ = P(872, 205)
+    x0, yb = P(745, 209)
+    x1, _ = P(872, 209)
     L = x1 - x0
     sw.move((x0, yb + 1.8 * u))
     sw.curve((x0 + L * 0.35, yb - 1.2 * u), (x0 + L * 0.7, yb - 2.6 * u), (x1, yb - 2.2 * u))
