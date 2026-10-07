@@ -131,15 +131,18 @@ Rebuilt from the references in `references/store-artwork/`. Generator: `source/s
 | Piece | Size (placeholder) | Files |
 |---|---|---|
 | Mobile poster | 600 × 900 mm, 3 mm bleed | `.ai`, `-print.pdf`, `.jpg` |
-| Counter panel | 2400 × 450 mm, 3 mm bleed | `.ai`, `-print.pdf`, `.jpg`, plus a `-graphics-only` version with no wood |
+| Counter panel | 2400 × 450 mm, 3 mm bleed | `.ai`, `-print.pdf`, `.jpg`. Graphics only on a transparent background, because it is applied onto the wooden counter. The brown in the `.jpg` is only for the preview |
 
 - **Higgsfield assets** (GPT Image 2.5, using the references as input): the poster's phone/film/splatter background, the
-  "STAY PROTECTED." brush lettering, the counter's two graffiti groups and the oak texture.
+  "STAY PROTECTED." brush lettering, and the counter's two graffiti groups.
 - **What is vector.** The logo is the original, placed unchanged. The brush lettering and the graffiti were traced to vector
   shapes. The icons, labels (Montserrat, converted to outlines), dividers, swoosh, burst lines, ghost logo and the counter
-  logo's dark rim and shadow are drawn as vectors. The poster background and the wood are images.
-- **Image resolution.** The poster background is 2336 × 3504 px, about 100 dpi at 600 × 900 mm. The wood is tiled at
-  about 80 dpi. That is fine for viewing distance but not for close-up print, so upscale them before going bigger.
+  logo's dark rim and shadow are drawn as vectors. The poster background is an image. The counter panel is 100% vector.
+- **Image resolution.** The poster background is 2336 × 3504 px, about 100 dpi at 600 × 900 mm. That is fine at viewing
+  distance but not for close-up print, so upscale it before going bigger.
+- **Counter print on wood.** Printed on clear vinyl, the colours sit on the brown wood: without a white underbase the
+  yellow goes dull and the cream text and icons almost disappear. Ask the printer for white ink under all artwork, or
+  print on white vinyl and contour-cut each element.
 - **Colour.** RGB, not converted to CMYK. Most large-format and vinyl printers accept RGB.
 - The output files are not committed here (the build ran in Higgsfield's sandbox). To rebuild:
-  `python3 store_art.py <asset_dir> <out_dir>` with the five Higgsfield images and `Montserrat.ttf` in `<asset_dir>`.
+  `python3 store_art.py <asset_dir> <out_dir>` with the four Higgsfield images and `Montserrat.ttf` in `<asset_dir>`.

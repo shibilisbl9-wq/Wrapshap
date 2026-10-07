@@ -5,7 +5,6 @@ Raster assets come from Higgsfield (gpt_image_2_5, references in references/stor
   letter.png  "STAY PROTECTED." dry-brush lettering on black  -> traced to vector
   gl.png      counter, left graffiti (crown, splatter, scribble) on white -> traced to vector
   gr.png      counter, right graffiti (star, smiley, bolt, spray line) on white -> traced to vector
-  wood.png    oak laminate for the counter background
 
 Everything else is vector and drawn here: the original logo (placed unchanged from logo.pdf),
 the ghost logo, the icon row, labels (Montserrat, converted to outlines), dividers, the swoosh
@@ -327,7 +326,8 @@ def new_doc(W, H):
     return doc, pg
 
 
-def finish(doc, pg, W, H, stem, title):
+def finish(doc, pg, W, H, stem, title, preview_bg=None):
+    """preview_bg: flat colour behind the JPG preview only (not in the .ai / PDF)."""
     trim = fitz.Rect(BLEED * MM, BLEED * MM, (W + BLEED) * MM, (H + BLEED) * MM)
     pg.set_trimbox(trim)
     pg.set_bleedbox(pg.rect)
@@ -335,7 +335,13 @@ def finish(doc, pg, W, H, stem, title):
     os.makedirs(OUT, exist_ok=True)
     doc.save(os.path.join(OUT, stem + '.ai'), garbage=3, deflate=True)
     doc.save(os.path.join(OUT, stem + '-print.pdf'), garbage=3, deflate=True)
-    pix = pg.get_pixmap(dpi=max(20, int(2400 / (W / 25.4))), clip=trim)
+    src = pg
+    if preview_bg:
+        tmp = fitz.open()
+        src = tmp.new_page(width=pg.rect.width, height=pg.rect.height)
+        src.draw_rect(src.rect, color=None, fill=preview_bg)
+        src.show_pdf_page(src.rect, doc, pg.number)
+    pix = src.get_pixmap(dpi=max(20, int(2400 / (W / 25.4))), clip=trim)
     pix.pil_save(os.path.join(OUT, stem + '.jpg'), quality=90)
     print('wrote', stem)
 
@@ -410,26 +416,12 @@ ORANGE_LINE = hexc('#F3A20F')
 DARK_RIM = hexc('#2B1D0E')
 
 
-def counter(W=2400, H=450, wood=True):
+def counter(W=2400, H=450):
+    """Graphics only, transparent background: it is printed and applied onto the wooden counter."""
     doc, pg = new_doc(W, H)
     o = BLEED
     TW, TH = W + 2 * BLEED, H + 2 * BLEED
     u = W / 1600                                          # reference band is 1600 px wide
-
-    if wood:
-        # oak laminate (Higgsfield), tiled with a mirrored repeat so the grain stays at a natural scale
-        wd = load('wood.png')
-        wh, ww = wd.shape[:2]
-        tile_w = 1200.0
-        k = tile_w / ww
-        th = wh * k
-        y = (TH - th) / 2
-        x, flip = 0.0, False
-        while x < TW:
-            img = cv2.flip(wd, 1) if flip else wd
-            pg.insert_image(fitz.Rect(x * MM, y * MM, (x + tile_w) * MM, (y + th) * MM), stream=jpeg_bytes(img, 90))
-            x += tile_w
-            flip = not flip
 
     def P(px, py):                                        # reference px (band coords) -> page mm
         return o + px * u, o + py * u
@@ -485,16 +477,13 @@ def counter(W=2400, H=450, wood=True):
     for px in (667, 806, 946):
         strokes(pg, [[('M', P(px, 228)), ('L', P(px, 282))]], ORANGE_LINE, 2.6 * u)
 
-    suffix = '' if wood else '-graphics-only'
-    finish(doc, pg, W, H, f'wrapshap-counter-panel-{W}x{H}mm{suffix}',
-           'Wrapshap - counter panel' + ('' if wood else ' (graphics only)'))
+    finish(doc, pg, W, H, f'wrapshap-counter-panel-{W}x{H}mm', 'Wrapshap - counter panel',
+           preview_bg=hexc('#7A5838'))
 
 
 if __name__ == '__main__':
-    which = os.environ.get('ONLY', 'poster,counter,counter-bare').split(',')
+    which = os.environ.get('ONLY', 'poster,counter').split(',')
     if 'poster' in which:
         poster()
     if 'counter' in which:
-        counter(wood=True)
-    if 'counter-bare' in which:
-        counter(wood=False)
+        counter()
