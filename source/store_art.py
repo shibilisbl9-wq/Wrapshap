@@ -113,7 +113,7 @@ def strokes(page, polylines, color, width, opacity=1.0):
 # ---- tracing (Higgsfield rasters -> vector) -----------------------------------
 def trace(mask, turd=3):
     """Binary mask -> Pen in pixel units (potrace, smooth curves)."""
-    bm = potrace.Bitmap(mask.astype(bool))
+    bm = potrace.Bitmap(~mask.astype(bool))            # potracer traces the dark (False) pixels
     plist = bm.trace(turdsize=turd, turnpolicy=potrace.POTRACE_TURNPOLICY_MINORITY, alphamax=1.0,
                      opticurve=True, opttolerance=0.2)
     pen = Pen()
