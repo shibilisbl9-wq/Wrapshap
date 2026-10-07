@@ -459,7 +459,7 @@ def counter(W=2400, H=450, wood=True):
             pg, (0, 0, 0), opacity=a, even_odd=False)
     logo_silhouette_pen(1.5).transformed(*tf).draw(pg, DARK_RIM, even_odd=False)
     lx0, ly0, lx1, ly1 = place_logo(pg, lcx, ltop, lw)
-    put_text(pg, '®', lx1 - 4 * u, ly1 - 9 * u, 15 * u, 700, CREAM, anchor='start')
+    put_text(pg, '®', lx1 - 2 * u, ly1 - 26 * u, 15 * u, 700, CREAM, anchor='start')
 
     # tagline, swoosh
     x, y = P(805, 191)
