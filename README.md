@@ -43,6 +43,31 @@ Both options share the same core palette. Option B adds one paint colour, Chalk.
 **Send the `-print.pdf` files to the printer.** They have exact trim and bleed boxes and are in CMYK. The polo files are
 the exception, see below. The `.jpg` files are RGB previews cropped to the trim size.
 
+## Retail: spray bottle (`retail/01-spray-bottle/`)
+
+Logo only, as requested. It is a die-cut sticker: the original vector logo with a 1.5 mm white contour border.
+
+| File | What |
+|---|---|
+| `wrapshap-bottle-sticker-vertical-28x72mm-print.pdf` / `.ai` | **Recommended.** The logo turned to read bottom-to-top, 28 × 72 mm at the cut line |
+| `wrapshap-bottle-sticker-horizontal-33x14mm-print.pdf` / `.ai` | Alternative. The logo reads left-to-right, 33 × 14 mm at the cut line |
+| `*-preview.png` | Transparent 600 dpi preview of each sticker |
+| `wrapshap-bottle-mockup.jpg` | Both versions on the supplied bottle photo (vertical left, horizontal right) |
+
+- **Why vertical.** The bottle is slim. A label can only use about a quarter of a cylinder before the ends curve out of
+  sight, so a horizontal logo has to be about 30 mm wide, which is small from across a counter. Turned vertical, the logo
+  uses the height of the bottle and is more than twice as large.
+- **The bottle size is an estimate.** No size was supplied. From the photo it looks like a 100 ml round bottle about
+  38 mm across, with a 24 mm sprayer. Measure the real bottle before ordering. The artwork is vector, so it can be resized
+  without loss. Keep the across-the-bottle dimension at or under about 75% of the diameter.
+- **Cut line.** The cut line is a separate spot colour named `CutContour`: a 0.25 pt hairline set to overprint. Most
+  sticker printers' cutters read this name. Ask the printer whether they use a different name.
+- **Material.** Use white gloss vinyl or white BOPP with a laminate that is waterproof and solvent-resistant, because the
+  bottle will get wet and cleaners often contain alcohol. The white border is the bare vinyl and uses no ink. On clear
+  vinyl, the printer needs a white ink layer under the whole sticker, or the orange will look washed out.
+- **Direct screen printing** on the bottle is an option at volume. The logo's gradient then needs a halftone separation
+  or a flattened 2–3 spot-colour version. Ask if you want that.
+
 ## Read before printing or editing
 
 - **About the `.ai` files.** They were built without Illustrator, so they are *PDF-based* `.ai` files. Illustrator
@@ -123,3 +148,4 @@ Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 - Graffiti tee: `tee.py` → `JOBS=jobs_tee.json SLOTS=slots_tee.json node render.mjs` → the same env vars with `post.py` → `tee_mockup.py` → `export.py <repo> tee` (needs Kalam 700 and Geist 600 TTFs)
 - Receipt voucher: `voucher.py` → `JOBS=jobs_voucher.json SLOTS=slots_voucher.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> voucher`
 - Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`
+- Spray bottle sticker: `bottle.py <repo> <bottle-photo.jpg>` (needs PyMuPDF, Pillow, NumPy and Shapely; no fonts)
