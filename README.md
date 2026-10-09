@@ -68,6 +68,50 @@ Logo only, as requested. It is a die-cut sticker: the original vector logo with 
 - **Direct screen printing** on the bottle is an option at volume. The logo's gradient then needs a halftone separation
   or a flattened 2–3 spot-colour version. Ask if you want that.
 
+## Retail, Pakistan (`retail/02` to `retail/06`)
+
+Yellow and black, matching the launch plan ("Yellow Edition"): Wrap Yellow `#FFD60A` (CMYK 0/15/100/0) on Wrap Black,
+Anton for headlines, Geist for prices and body, Permanent Marker for the hand-written "Stay wrapped. Stay protected." line.
+The yellow brush and spray marks are 1-bit textures like Option B's. Quick look: `retail/wrapshap-retail-overview.jpg`.
+
+| Folder | What | Size |
+|---|---|---|
+| `02-acrylic-display-1-pricing/` | Front: smartphone prices + mobile full-body combos. Back: tablet, laptop, smart watch, camera, earbuds, smart ring, car infotainment | A4, 2 sides |
+| `03-acrylic-display-2-education/` | Front: "Choose your protection", six films with a feature check grid. Back: Standard vs Lifetime Care, how Lifetime Care works, 7 key terms | A4, 2 sides |
+| `04-tri-fold-flyer-1-price-list/` | Every price on the sheet, all 95 rows, including all three combo tables | A4 landscape, roll fold |
+| `05-tri-fold-flyer-2-product-info/` | Why WrapShap, the six films, Lifetime Care and key terms, devices, contact | A4 landscape, roll fold |
+| `06-roll-up-standee/` | Brand-led: logo, tagline, protected-phone visual, the six films, devices, web address | 850 × 2000 mm |
+
+Each folder has a `-print.pdf` (CMYK, 3 mm bleed, fonts embedded), a `.ai` (all sides on one canvas with crop marks) and JPG previews.
+
+- **Prices.** Every price comes from `source/data/pricing_pk.json`, which was parsed straight from
+  *WrapShap_Updated_Pricing_Review.pdf*. Nothing was typed by hand. The print PDFs were checked against that file:
+  all 95 rows match. To change a price, edit the JSON and rebuild; the layouts don't need touching.
+- **The price sheet still says "Proposed".** Get it signed off before printing. Three combos look like typos because they
+  cost less than their parts: Tablet Privacy + Tuff (Rs 14,000, below Tuff Full Body at Rs 15,000), Tablet Privacy + Tuff
+  Matte (Rs 14,500) and Mobile Privacy + Tuff (Rs 10,000, the same as Tuff Full Body). They are printed as supplied.
+- **Acrylic 1 uses a grid, not a list.** Rows are the films; columns are 1 Side (or Screen) and Full Body, each with
+  Standard, Lifetime Care and Replacement fee. That fits 51 products on one A4 side at a size readable from the counter.
+  Camera has no Full Body price for Privacy or Tuff Privacy on the sheet, so those cells show "—". The tablet and laptop
+  combos are only on flyer 1; they did not fit on the acrylic without overcrowding it.
+- **The feature checks on "Choose your protection" are my reading of the film names**, not a supplier spec: Clear and Tuff
+  are crystal-clear, Matte and Tuff Matte are anti-glare, the three Tuff films add impact strength, the two Privacy films
+  add side-view privacy. Correct them in `TYPES` in `source/retail.py` if any are wrong.
+- **Copy I wrote or changed.** The film descriptions and the "how Lifetime Care works" steps are new. The 7 key terms are
+  your mockup's terms, shortened but with the same meaning. Terms 2 and 4 say nearly the same thing; you can drop one.
+  "Cut for your exact model in under 60 seconds" comes from the launch plan. Contact details are the Lahore office's
+  from the stationery. No phone number is shown because none was supplied.
+- **The phone visual is a vector illustration**, not a photo, so it prints sharp at any size. A real product photo of
+  a wrapped phone would be stronger on the standee and the flyer covers.
+- **Tri-fold folding.** Roll fold. Outside, left to right: flap 97 mm (folds in), back 100 mm, cover 100 mm. Inside: 100,
+  100 and 97 mm. Folds are at 97 and 197 mm from the left on the outside. Ask the printer to score before folding,
+  because the solid black will crack on the fold otherwise.
+- **Standee.** 850 × 2000 mm is the common roll-up size; check it with the printer. The bottom 100–150 mm usually
+  disappears into the base, so nothing important is below the web address. Print at 100–150 dpi equivalent; the file is
+  vector, so the printer can rasterise at any resolution.
+- **Acrylic displays.** The A4 sheets go behind the acrylic, so print on photo or satin paper. If the printer prints
+  directly on the acrylic (UV print), ask them about a white underlayer.
+
 ## Read before printing or editing
 
 - **About the `.ai` files.** They were built without Illustrator, so they are *PDF-based* `.ai` files. Illustrator
@@ -149,3 +193,4 @@ Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 - Receipt voucher: `voucher.py` → `JOBS=jobs_voucher.json SLOTS=slots_voucher.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> voucher`
 - Polo: `polo.py` → `JOBS=jobs_polo.json SLOTS=slots_polo.json node render.mjs` → the same env vars with `post.py` → `polo_mockup.py` → `export.py <repo> polo`
 - Spray bottle sticker: `bottle.py <repo> <bottle-photo.jpg>` (needs PyMuPDF, Pillow, NumPy and Shapely; no fonts)
+- Retail displays, flyers and standee: `retail.py` → `JOBS=jobs_retail.json SLOTS=slots_retail.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> retail` (fonts: Geist, Geist Mono, Anton, Permanent Marker, Big Shoulders Stencil; all free on Google Fonts)

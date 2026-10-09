@@ -1,0 +1,616 @@
+{
+ "source": "WrapShap_Updated_Pricing_Review.pdf (Pakistan retail, proposed)",
+ "currency": "Rs.",
+ "sections": [
+  {
+   "name": "Smartphone",
+   "rows": [
+    [
+     "Clear - 1 Side",
+     4000,
+     5000,
+     1500
+    ],
+    [
+     "Clear - Full Body",
+     7000,
+     9000,
+     3000
+    ],
+    [
+     "Matte - 1 Side",
+     5000,
+     6000,
+     1500
+    ],
+    [
+     "Matte - Full Body",
+     8000,
+     10000,
+     3000
+    ],
+    [
+     "Tuff - 1 Side",
+     6500,
+     8000,
+     2500
+    ],
+    [
+     "Tuff - Full Body",
+     10000,
+     12000,
+     5000
+    ],
+    [
+     "Tuff Matte - 1 Side",
+     7000,
+     8500,
+     2500
+    ],
+    [
+     "Tuff Matte - Full Body",
+     10500,
+     12500,
+     5000
+    ],
+    [
+     "Privacy - 1 Side",
+     7500,
+     9000,
+     2500
+    ],
+    [
+     "Privacy - Full Body",
+     11000,
+     13000,
+     5000
+    ],
+    [
+     "Tuff Privacy - 1 Side",
+     8000,
+     9500,
+     3000
+    ],
+    [
+     "Tuff Privacy - Full Body",
+     11500,
+     13500,
+     6000
+    ]
+   ]
+  },
+  {
+   "name": "Tablet / iPad",
+   "rows": [
+    [
+     "Clear - 1 Side",
+     5500,
+     7000,
+     2250
+    ],
+    [
+     "Clear - Full Body",
+     10000,
+     12500,
+     4500
+    ],
+    [
+     "Matte - 1 Side",
+     6500,
+     8000,
+     2250
+    ],
+    [
+     "Matte - Full Body",
+     11000,
+     13500,
+     4500
+    ],
+    [
+     "Tuff - 1 Side",
+     9000,
+     11000,
+     4000
+    ],
+    [
+     "Tuff - Full Body",
+     15000,
+     18000,
+     8000
+    ],
+    [
+     "Tuff Matte - 1 Side",
+     9500,
+     11500,
+     4000
+    ],
+    [
+     "Tuff Matte - Full Body",
+     16000,
+     19000,
+     8000
+    ],
+    [
+     "Privacy - 1 Side",
+     10000,
+     12000,
+     4000
+    ],
+    [
+     "Privacy - Full Body",
+     16000,
+     19000,
+     8000
+    ],
+    [
+     "Tuff Privacy - 1 Side",
+     10500,
+     12500,
+     4500
+    ],
+    [
+     "Tuff Privacy - Full Body",
+     17000,
+     20000,
+     9000
+    ]
+   ]
+  },
+  {
+   "name": "Laptop",
+   "rows": [
+    [
+     "Clear - 1 Side",
+     6500,
+     8000,
+     3000
+    ],
+    [
+     "Clear - Full Body",
+     12000,
+     15000,
+     6000
+    ],
+    [
+     "Matte - 1 Side",
+     7500,
+     9000,
+     3000
+    ],
+    [
+     "Matte - Full Body",
+     13000,
+     16000,
+     6000
+    ],
+    [
+     "Tuff - 1 Side",
+     10000,
+     12000,
+     4500
+    ],
+    [
+     "Tuff - Full Body",
+     17000,
+     20000,
+     9000
+    ],
+    [
+     "Tuff Matte - 1 Side",
+     10500,
+     12500,
+     4500
+    ],
+    [
+     "Tuff Matte - Full Body",
+     18000,
+     21000,
+     9000
+    ]
+   ]
+  },
+  {
+   "name": "Smart Watch",
+   "rows": [
+    [
+     "Clear - Screen",
+     2000,
+     2500,
+     750
+    ],
+    [
+     "Clear - Full Body",
+     3500,
+     4500,
+     1500
+    ],
+    [
+     "Matte - Screen",
+     2500,
+     3000,
+     750
+    ],
+    [
+     "Matte - Full Body",
+     4000,
+     5000,
+     1500
+    ],
+    [
+     "Tuff - Screen",
+     3000,
+     3500,
+     1000
+    ],
+    [
+     "Tuff - Full Body",
+     5000,
+     6000,
+     2000
+    ],
+    [
+     "Tuff Matte - Screen",
+     3250,
+     3750,
+     1000
+    ],
+    [
+     "Tuff Matte - Full Body",
+     5500,
+     6500,
+     2000
+    ],
+    [
+     "Privacy - Screen",
+     3500,
+     4000,
+     1000
+    ],
+    [
+     "Privacy - Full Body",
+     6000,
+     7000,
+     2000
+    ],
+    [
+     "Tuff Privacy - Screen",
+     3750,
+     4500,
+     1250
+    ],
+    [
+     "Tuff Privacy - Full Body",
+     6500,
+     7500,
+     2500
+    ]
+   ]
+  },
+  {
+   "name": "Camera and Other Devices",
+   "rows": [
+    [
+     "Camera Clear - Screen",
+     2500,
+     3500,
+     1000
+    ],
+    [
+     "Camera Clear - Full Body",
+     4500,
+     6000,
+     2000
+    ],
+    [
+     "Camera Matte - Screen",
+     3000,
+     4000,
+     1000
+    ],
+    [
+     "Camera Matte - Full Body",
+     5000,
+     6500,
+     2000
+    ],
+    [
+     "Camera Tuff - Screen",
+     4000,
+     5000,
+     1500
+    ],
+    [
+     "Camera Tuff - Full Body",
+     6500,
+     8000,
+     3000
+    ],
+    [
+     "Camera Tuff Matte - Screen",
+     4500,
+     5500,
+     1500
+    ],
+    [
+     "Camera Tuff Matte - Full Body",
+     7000,
+     8500,
+     3000
+    ],
+    [
+     "Camera Privacy - Screen",
+     4500,
+     5500,
+     1500
+    ],
+    [
+     "Camera Tuff Privacy - Screen",
+     5000,
+     6000,
+     1750
+    ],
+    [
+     "Earbuds Clear - Full Body",
+     2500,
+     3500,
+     1000
+    ],
+    [
+     "Smart Ring - Clear",
+     2000,
+     3000,
+     750
+    ],
+    [
+     "Smart Ring - Tuff",
+     3000,
+     4000,
+     1250
+    ],
+    [
+     "Smart Ring - Tuff Matte",
+     3250,
+     4250,
+     1250
+    ],
+    [
+     "Infotainment - Clear",
+     7500,
+     10000,
+     3000
+    ],
+    [
+     "Infotainment - Tuff",
+     11000,
+     14000,
+     4000
+    ],
+    [
+     "Infotainment - Tuff Matte",
+     12000,
+     15000,
+     4500
+    ]
+   ]
+  },
+  {
+   "name": "Mobile Full Body Combos",
+   "rows": [
+    [
+     "Clear + Matte",
+     7500,
+     9500,
+     3000
+    ],
+    [
+     "Clear + Tuff",
+     8500,
+     10500,
+     4000
+    ],
+    [
+     "Clear + Tuff Matte",
+     9000,
+     11000,
+     4000
+    ],
+    [
+     "Clear + Privacy",
+     9000,
+     11000,
+     4000
+    ],
+    [
+     "Clear + Tuff Privacy",
+     9500,
+     11500,
+     4500
+    ],
+    [
+     "Matte + Tuff",
+     9000,
+     11000,
+     4000
+    ],
+    [
+     "Matte + Tuff Matte",
+     9500,
+     11500,
+     4000
+    ],
+    [
+     "Matte + Privacy",
+     9500,
+     11500,
+     4000
+    ],
+    [
+     "Matte + Tuff Privacy",
+     10000,
+     12000,
+     4500
+    ],
+    [
+     "Privacy + Tuff",
+     10000,
+     12000,
+     5000
+    ],
+    [
+     "Privacy + Tuff Matte",
+     10500,
+     12500,
+     5000
+    ],
+    [
+     "Tuff + Tuff Matte",
+     10250,
+     12250,
+     5000
+    ],
+    [
+     "Tuff + Tuff Privacy",
+     10500,
+     12500,
+     5500
+    ],
+    [
+     "Tuff Matte + Tuff Privacy",
+     11000,
+     13000,
+     5500
+    ]
+   ]
+  },
+  {
+   "name": "Tablet Full Body Combos",
+   "rows": [
+    [
+     "Clear + Matte",
+     10500,
+     13000,
+     4500
+    ],
+    [
+     "Clear + Tuff",
+     12000,
+     14500,
+     6250
+    ],
+    [
+     "Clear + Tuff Matte",
+     12500,
+     15000,
+     6250
+    ],
+    [
+     "Clear + Privacy",
+     12500,
+     15000,
+     6250
+    ],
+    [
+     "Clear + Tuff Privacy",
+     13000,
+     15500,
+     6750
+    ],
+    [
+     "Matte + Tuff",
+     12500,
+     15000,
+     6250
+    ],
+    [
+     "Matte + Tuff Matte",
+     13000,
+     15500,
+     6250
+    ],
+    [
+     "Matte + Privacy",
+     13000,
+     15500,
+     6250
+    ],
+    [
+     "Matte + Tuff Privacy",
+     13500,
+     16000,
+     6750
+    ],
+    [
+     "Privacy + Tuff",
+     14000,
+     16500,
+     8000
+    ],
+    [
+     "Privacy + Tuff Matte",
+     14500,
+     17000,
+     8000
+    ],
+    [
+     "Tuff + Tuff Matte",
+     15500,
+     18500,
+     8000
+    ],
+    [
+     "Tuff + Tuff Privacy",
+     16000,
+     19000,
+     8500
+    ],
+    [
+     "Tuff Matte + Tuff Privacy",
+     16500,
+     19500,
+     8500
+    ]
+   ]
+  },
+  {
+   "name": "Laptop Full Body Combos",
+   "rows": [
+    [
+     "Clear + Matte",
+     12500,
+     15500,
+     6000
+    ],
+    [
+     "Clear + Tuff",
+     14500,
+     17500,
+     7500
+    ],
+    [
+     "Clear + Tuff Matte",
+     15000,
+     18000,
+     7500
+    ],
+    [
+     "Matte + Tuff",
+     15000,
+     18000,
+     7500
+    ],
+    [
+     "Matte + Tuff Matte",
+     15500,
+     18500,
+     7500
+    ],
+    [
+     "Tuff + Tuff Matte",
+     17500,
+     20500,
+     9000
+    ]
+   ]
+  }
+ ]
+}

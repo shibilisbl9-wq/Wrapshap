@@ -1,0 +1,12 @@
+# fonts are free (Google Fonts) and fetched for builds; build intermediates are regenerated
+fonts/
+source/raw/
+source/html/
+source/placed/
+source/print/
+source/preview/
+source/tex/
+source/jobs*.json
+source/slots*.json
+source/tokens.json
+__pycache__/

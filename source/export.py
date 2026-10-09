@@ -215,8 +215,37 @@ def export_stationery(root):
     return made
 
 
+def export_retail(root):
+    """Retail (Pakistan): acrylic displays, tri-fold flyers, roll-up standee."""
+    made = []
+    sets = [
+        ('02-acrylic-display-1-pricing', 'wrapshap-acrylic-1-pricing-A4', ['r-acrylic1-front', 'r-acrylic1-back'],
+         ['Front: smartphone prices', 'Back: tablet, laptop, watch, camera & more'], 'Acrylic display 1, pricing (A4)', 200),
+        ('03-acrylic-display-2-education', 'wrapshap-acrylic-2-education-A4', ['r-acrylic2-front', 'r-acrylic2-back'],
+         ['Front: choose your protection', 'Back: Lifetime Care & terms'], 'Acrylic display 2, product education (A4)', 200),
+        ('04-tri-fold-flyer-1-price-list', 'wrapshap-flyer-1-price-list-A4-trifold', ['r-flyer1-outside', 'r-flyer1-inside'],
+         ['Outside: flap | back | cover', 'Inside: 3 panels'], 'Tri-fold flyer 1, price list (A4)', 200),
+        ('05-tri-fold-flyer-2-product-info', 'wrapshap-flyer-2-product-info-A4-trifold', ['r-flyer2-outside', 'r-flyer2-inside'],
+         ['Outside: flap | back | cover', 'Inside: 3 panels'], 'Tri-fold flyer 2, product info & terms (A4)', 200),
+        ('06-roll-up-standee', 'wrapshap-roll-up-standee-850x2000mm', ['r-standee'], ['Roll-up standee 850 x 2000 mm'],
+         'Roll-up standee 850 x 2000 mm', 40),
+    ]
+    for folder, base, names, caps, title, dpi in sets:
+        o = lambda *p: out(root, folder, *p)
+        save_pdf(names, o(base + '-print.pdf'), 'Wrapshap — ' + title)
+        save_ai([(n, c + ' — trim + 3 mm bleed') for n, c in zip(names, caps)], o(base + '.ai'), 'Wrapshap — ' + title,
+                gap=24 if dpi > 100 else 120, margin=18 if dpi > 100 else 80)
+        for n in names:
+            side = n.split('-')[-1] if len(names) > 1 else 'preview'
+            made.append(jpg(n, o(f'{base}-{side}.jpg'), dpi))
+    return made
+
+
 if __name__ == '__main__':
     opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
+    if opt == 'retail':
+        print(export_retail('retail'))
+        sys.exit()
     if opt == 'tee':
         print(export_tee('option-b-graffiti'))
         sys.exit()
