@@ -101,8 +101,12 @@ Each folder has a `-print.pdf` (CMYK, 3 mm bleed, fonts embedded), a `.ai` (all 
   your mockup's terms, shortened but with the same meaning. Terms 2 and 4 say nearly the same thing; you can drop one.
   "Cut for your exact model in under 60 seconds" comes from the launch plan. Contact details are the Lahore office's
   from the stationery. No phone number is shown because none was supplied.
-- **The phone visual is a vector illustration**, not a photo, so it prints sharp at any size. A real product photo of
-  a wrapped phone would be stronger on the standee and the flyer covers.
+- **Photos are AI-generated (Higgsfield).** The hero phone (standee, flyer 1 cover), the device group (flyer 2 cover) and
+  the six film close-ups (acrylic 2, flyer 2, standee) are in `source/images/`. They contain no text or logos; all type
+  and the logo are vector on top. They are converted to CMYK (SWOP) at prepress. Check before printing: the phones look
+  like real models (no maker's logo is visible), and the film close-ups are illustrative, not photos of your actual films.
+  On the standee the hero photo prints at about 90 dpi, which is normal for a roll-up seen from a metre or more.
+  To swap a photo, replace the file in `source/images/` with the same name and rebuild.
 - **Tri-fold folding.** Roll fold. Outside, left to right: flap 97 mm (folds in), back 100 mm, cover 100 mm. Inside: 100,
   100 and 97 mm. Folds are at 97 and 197 mm from the left on the outside. Ask the printer to score before folding,
   because the solid black will crack on the fold otherwise.

@@ -22,6 +22,12 @@ for (const j of jobs) {
     const r = e.getBoundingClientRect();
     return { id: e.id, x: r.x, y: r.y, w: r.width, h: r.height };
   }));
+  const imgs = await page.$$eval('.img-slot', els => els.map(e => {
+    const r = e.getBoundingClientRect();
+    return { src: e.dataset.src, pos: e.dataset.pos || '50% 50%', radius: +(e.dataset.radius || 0),
+             feather: +(e.dataset.feather || 0), layer: e.dataset.layer || 'under', x: r.x, y: r.y, w: r.width, h: r.height };
+  }));
+  if (imgs.length) slots['img:' + j.name] = imgs; else delete slots['img:' + j.name];
   await page.pdf({
     path: path.join(here, 'raw', j.name + '.pdf'),
     width: j.w + 'mm', height: j.h + 'mm', printBackground: true, preferCSSPageSize: true,

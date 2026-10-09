@@ -304,7 +304,23 @@ FEATURES = [('diamond', 'Crystal-clear<br>look'), ('sun', 'Anti-glare &amp;<br>a
             ('shield', 'Extra impact<br>strength'), ('eyeoff', 'Privacy from<br>the side')]
 
 
+FILM_IMG = {'Clear': 'film-clear', 'Matte': 'film-matte', 'Tuff': 'film-tuff', 'Tuff Matte': 'film-tuff-matte',
+            'Privacy': 'film-privacy', 'Tuff Privacy': 'film-tuff-privacy'}
+
+
+def img_slot(src, style, pos='50% 50%', radius=0, feather=0, layer='under'):
+    """Placeholder the photo is placed into at prepress (post.py): under the vector artwork, or on top of it
+    (layer='top', for photos that sit on a card background)."""
+    return (f'<div class="img-slot" data-src="images/{src}.jpg" data-pos="{pos}" data-radius="{radius}" '
+            f'data-feather="{feather}" data-layer="{layer}" style="{style}"></div>')
+
+
 def swatch(kind, size_mm, uid):
+    """Photo of the film being peeled back (Higgsfield), with rounded corners."""
+    return img_slot(FILM_IMG[kind], f'width:{size_mm}mm;height:{size_mm}mm;flex:none', radius=size_mm * 0.14, layer='top')
+
+
+def swatch_vector(kind, size_mm, uid):
     """A phone corner under the film, with the film peeling back. The film shows the finish:
     gloss streak (clear), frosted (matte), thick edge (tuff), louvres (privacy)."""
     matte = 'Matte' in kind
@@ -543,7 +559,7 @@ def legend_stack(fs):
 def flyer1_outside():
     P = Paint(FW, FH, 0.14, 801)
     (fx, fw), (bx, bw), (cx_, cw) = OUT_PANELS
-    flyer_grunge(P, 801, cover=(cx_ + cw / 2, BL + 128, 40))
+    flyer_grunge(P, 801)
     flap = panel(fx, fw, f"""
   <div class="col" style="gap:2mm;margin-bottom:-6mm">{tab_title('Full body combos', 'swap', 11)}
     <div style="font-size:7.2pt;line-height:1.3;color:{GREY}">A different film on the front and the back. Prices are for both sides.</div></div>
@@ -556,8 +572,8 @@ def flyer1_outside():
     title = f'<div class="an" style="font-size:30pt;color:{WHITE}">Official<br><span style="color:{YEL}">price list</span></div>'
     sub = (f'<div class="col" style="gap:3mm;align-items:center"><div class="mk" style="font-size:11pt;color:{WHITE};transform:rotate(-3deg)">'
            f'Stay wrapped. Stay protected.</div>{device_row(4.6, 5)}</div>')
-    svg = hero_phone(cx_ + cw / 2, BL + 128, 34, -12, 'f1')
-    html = flap + back + flyer_cover(cx_, cw, 'Premium device protection&nbsp;&nbsp;·&nbsp;&nbsp;Pakistan', title, sub)
+    svg = ''
+    html = img_slot('hero-phone', f'position:absolute;left:{cx_ + 2}mm;top:{BL + 70}mm;width:{cw + BL - 2}mm;height:{108}mm', '50% 52%', feather=7) + flap + back + flyer_cover(cx_, cw, 'Premium device protection&nbsp;&nbsp;·&nbsp;&nbsp;Pakistan', title, sub)
     return FW, FH, page(FW, FH, svg, html), save_tex('r-flyer1-outside', P), 0.14
 
 
@@ -606,7 +622,7 @@ def device_grid(size, fs):
 def flyer2_outside():
     P = Paint(FW, FH, 0.14, 821)
     (fx, fw), (bx, bw), (cx_, cw) = OUT_PANELS
-    flyer_grunge(P, 821, cover=(cx_ + cw / 2, BL + 128, 40))
+    flyer_grunge(P, 821)
     flap = panel(fx, fw, f"""
   <div>{tab_title('Why WrapShap', 'shield', 12)}</div>
   {''.join(why_item(*x) for x in WHY)}
@@ -620,8 +636,8 @@ def flyer2_outside():
     title = f'<div class="an" style="font-size:24pt;color:{WHITE}">Complete protection<br><span style="color:{YEL}">for all your devices</span></div>'
     names = f'<span style="color:{YEL}">&nbsp;/&nbsp;</span>'.join(n for n, _, _ in TYPES)
     sub = f'<div class="an" style="text-align:center;font-size:9pt;color:{WHITE};line-height:1.4">{names}</div>'
-    svg = hero_phone(cx_ + cw / 2, BL + 128, 33, 10, 'f2')
-    html = flap + back + flyer_cover(cx_, cw, 'Premium device protection&nbsp;&nbsp;·&nbsp;&nbsp;Pakistan', title, sub)
+    svg = ''
+    html = img_slot('devices', f'position:absolute;left:{cx_ + 2}mm;top:{BL + 66}mm;width:{cw + BL - 2}mm;height:{112}mm', '50% 60%', feather=7) + flap + back + flyer_cover(cx_, cw, 'Premium device protection&nbsp;&nbsp;·&nbsp;&nbsp;Pakistan', title, sub)
     return FW, FH, page(FW, FH, svg, html), save_tex('r-flyer2-outside', P), 0.14
 
 
@@ -645,19 +661,17 @@ def standee():
     W, H = TW + 2 * BL, TH + 2 * BL
     cell = 0.6
     P = Paint(W, H, cell, 901, k=5)
-    P.dry_brush('yellow', (-20, 1240), (W + 20, 760), 330, bristles=260, dryness=0.5, solid=0.55, bend=40)
-    P.spatter('yellow', W * 0.72, 820, 240, 180, 0.6, 5)
-    P.spatter('yellow', W * 0.2, 1260, 200, 120, 0.6, 4)
     P.dry_brush('yellow', (-30, 1885), (W + 30, 1860), 150, bristles=260, dryness=0.35, solid=0.85, bend=-8)
     P.stroke('yellow', [(-40, 1925), (W * 0.5, 1905), (W + 40, 1915)], 110, pressure=1)
     P.stroke('yellow', [(-40, 1960), (W + 40, 1960)], 160, pressure=1)
     cx = W / 2
-    svg = hero_phone(cx + 130, 1075, 300, -11, 'st')
+    svg = ''
     types = ''.join(f"""<div class="col" style="align-items:center;gap:9mm;flex:1">{swatch(n, 104, 's%d' % k)}
       <div class="an" style="font-size:50pt;color:{WHITE};text-align:center">{n}</div></div>""" for k, (n, d, f) in enumerate(TYPES))
     html = A.logo_slot(cx, BL + 205, 640) + f"""
 <div class="abs mono" style="left:0;width:{W}mm;top:{BL + 360}mm;text-align:center;font-size:42pt;letter-spacing:.32em;color:{YEL}">Premium device protection</div>
-<div class="abs an" style="left:{BL + 60}mm;top:{BL + 430}mm;font-size:250pt;line-height:.92;color:{WHITE}">Stay<br>wrapped.<br><span style="color:{YEL}">Stay<br>protected.</span></div>
+<div class="abs an" style="left:0;width:{W}mm;top:{BL + 415}mm;text-align:center;font-size:185pt;line-height:.95;color:{WHITE}">Stay wrapped.<br><span style="color:{YEL}">Stay protected.</span></div>
+{img_slot('hero-phone', f'position:absolute;left:0;top:{BL + 560}mm;width:{W}mm;height:870mm', '50% 52%', feather=30)}
 <div class="abs" style="left:{BL + 40}mm;width:{TW - 80}mm;top:{BL + 1430}mm"><div class="flex" style="gap:12mm">{types}</div></div>
 <div class="abs" style="left:{BL + 40}mm;width:{TW - 80}mm;top:{BL + 1610}mm">{device_row(78, 40)}</div>
 <div class="abs" style="left:0;width:{W}mm;top:{BL + 1828}mm;text-align:center">

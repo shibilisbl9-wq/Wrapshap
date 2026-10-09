@@ -142,8 +142,51 @@ def compose(j, fg, cmyk):
     out.update_stream(cx, '\n'.join(ops).encode())
     out.xref_set_key(pg.xref, 'Contents', f'{cx} 0 R')
     out.xref_set_key(pg.xref, 'Resources', f'<< /XObject << {" ".join(xo)} >> >>')
+    place_images(pg, j['name'], cmyk)
     pg.show_pdf_page(pg.rect, fg, 0)
+    place_images(pg, j['name'], cmyk, 'top')
     return out
+
+
+def place_images(pg, name, cmyk, layer='under'):
+    """Photos from .img-slot elements: cover-fit crop, optional rounded corners and feathered edges
+    (alpha soft mask), at most 300 dpi, CMYK JPEG for print. Drawn under the vector foreground."""
+    import io
+    import numpy as np
+    from PIL import Image, ImageDraw, ImageFilter
+    for s in slots.get('img:' + name, []):
+        if s.get('layer', 'under') != layer:
+            continue
+        r = fitz.Rect(s['x'] * PX, s['y'] * PX, (s['x'] + s['w']) * PX, (s['y'] + s['h']) * PX)
+        im = Image.open(os.path.join(HERE, s['src'])).convert('RGB')
+        ar = r.width / r.height
+        fx, fy = (float(v.strip('%')) / 100 for v in s['pos'].split())
+        if im.width / im.height > ar:                      # crop width
+            cw = round(im.height * ar)
+            x0 = round((im.width - cw) * fx)
+            im = im.crop((x0, 0, x0 + cw, im.height))
+        else:
+            ch = round(im.width / ar)
+            y0 = round((im.height - ch) * fy)
+            im = im.crop((0, y0, im.width, y0 + ch))
+        px_w = min(im.width, round(r.width / 72 * 300))
+        im = im.resize((px_w, round(px_w / ar)), Image.LANCZOS)
+        w, h = im.size
+        mask = None
+        if s['radius'] or s['feather']:
+            k = w / (r.width / MM)                         # px per mm
+            m = Image.new('L', (w, h), 0)
+            f = s['feather'] * k
+            ImageDraw.Draw(m).rounded_rectangle((f, f, w - 1 - f, h - 1 - f), radius=s['radius'] * k, fill=255)
+            if f:
+                m = m.filter(ImageFilter.GaussianBlur(f / 2))
+            mask = io.BytesIO(); m.save(mask, 'PNG'); mask = mask.getvalue()
+        buf = io.BytesIO()
+        if cmyk:
+            ImageCms.applyTransform(im, _ICC).save(buf, 'JPEG', quality=92)
+        else:
+            im.save(buf, 'JPEG', quality=92)
+        pg.insert_image(r, stream=buf.getvalue(), mask=mask)
 
 
 def place_logos(pg, name):
