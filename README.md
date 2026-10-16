@@ -34,6 +34,7 @@ Both options share the same core palette. Option B adds one paint colour, Chalk.
 |---|---|---|
 | `00-design-system/` | One-page system sheet (A3), plus the logo on its own as a vector file | `.ai` `.pdf` `.jpg`, `wrapshap-logo-vector.ai/.pdf` |
 | `01-envelope/` | 163 × 205 mm, front and back, 3 mm bleed | `.ai` (both sides on one canvas, with crop marks), `-print.pdf` (page 1 front, page 2 back), `.jpg` per side |
+| `01-envelope/250x370/` (Option A only) | Large envelope, 250 × 370 mm, front and back, 3 mm bleed. Same layout as the 163 × 205 mm one, scaled up by the width (×1.53); the extra height goes into the space around the logo and headline, so the ownership card stays at the foot | `.ai` (both sides, crop marks), `-print.pdf` (page 1 front, page 2 back), `.jpg` per side |
 | `02-mat-pad/1x1/` | 250 × 250 mm and 350 × 350 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `02-mat-pad/16x9/` | 400 × 225 mm and 800 × 450 mm, 3 mm bleed | `.ai` `-print.pdf` `.jpg` per size |
 | `03-polo-shirt/` (Option A only) | Black polo with orange collar and cuffs. Front: logo only, 85 mm, left chest. Back: Wrap Halo, logo and tagline, 282 × 236 mm | `.ai`, `-print.pdf` (page 1 back, page 2 front), transparent 300 dpi `.png` per print, `wrapshap-polo-mockup.jpg` |
@@ -117,7 +118,7 @@ then the original logo is placed and the colour is converted to CMYK. Option B's
 `spray.py` and placed under the vector artwork as 1-bit masks. You need Python 3 (PyMuPDF, Pillow, NumPy, SciPy),
 Node with Playwright, and the font TTFs in a `fonts/` folder next to `source/`.
 
-- Option A: `design.py` → `render.mjs` → `post.py` → `export.py <repo> a`
+- Option A: `design.py` → `render.mjs` → `post.py` → `export.py <repo> a` (the 250 × 370 mm envelope: `export.py <repo> envelope-l`)
 - Option B: `design_b.py` → `JOBS=jobs_b.json SLOTS=slots_b.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> b`
 - Stationery: `stationery.py` → `JOBS=jobs_stat.json SLOTS=slots_stat.json node render.mjs` → the same env vars with `post.py` → `export.py <repo> stationery`
 - Graffiti tee: `tee.py` → `JOBS=jobs_tee.json SLOTS=slots_tee.json node render.mjs` → the same env vars with `post.py` → `tee_mockup.py` → `export.py <repo> tee` (needs Kalam 700 and Geist 600 TTFs)

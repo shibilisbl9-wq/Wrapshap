@@ -183,6 +183,17 @@ def export_tee(root):
     return made
 
 
+def export_envelope_large(root):
+    """Option A envelope at 250 x 370 mm, next to the 163 x 205 mm one."""
+    o = lambda *p: out(root, '01-envelope', '250x370', *p)
+    title = 'Wrapshap — Envelope 250 x 370 mm (Option A: Wrap Halo)'
+    save_pdf(['envelope-l-front', 'envelope-l-back'], o('wrapshap-envelope-250x370mm-print.pdf'), title)
+    save_ai([('envelope-l-front', 'Front — 250 x 370 mm trim + 3 mm bleed'), ('envelope-l-back', 'Back — 250 x 370 mm trim + 3 mm bleed')],
+            o('wrapshap-envelope-250x370mm.ai'), title)
+    return [jpg('envelope-l-front', o('wrapshap-envelope-250x370mm-front.jpg'), 300),
+            jpg('envelope-l-back', o('wrapshap-envelope-250x370mm-back.jpg'), 300)]
+
+
 def export_voucher(root):
     made = []
     for key, label in (('pakistan', 'Pakistan'), ('uae', 'UAE')):
@@ -219,6 +230,9 @@ if __name__ == '__main__':
     opt = sys.argv[2] if len(sys.argv) > 2 else 'a'
     if opt == 'tee':
         print(export_tee('option-b-graffiti'))
+        sys.exit()
+    if opt == 'envelope-l':
+        print(export_envelope_large('option-a-wrap-halo'))
         sys.exit()
     if opt == 'voucher':
         print(export_voucher('option-a-wrap-halo'))

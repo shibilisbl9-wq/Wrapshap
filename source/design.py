@@ -170,40 +170,50 @@ def framed(W, H, u):
 
 # ---- ENVELOPE (163 x 205 mm) ----------------------------------------------
 ENV = (163, 205)
+ENV_L = (250, 370)                    # large envelope
 
 
-def envelope_front():
-    tw, th = ENV
+def envelope_front(tw=ENV[0], th=ENV[1]):
+    """Front panel. Designed at 163 x 205 mm; other sizes scale uniformly with the width (k)
+    and any extra height (dv) is shared out between the gaps, so the card stays at the foot."""
     W, H = tw + 2 * BLEED, th + 2 * BLEED
     b = BLEED
-    cx, cy, lw = W / 2, b + 66, 88
-    svg = glow(cx, cy, 70, 46, gid='gf') + halo(cx, cy, lw, n=24, step=3.1, stroke=0.3, growth=0.035,
-                                               fade=(b + 80, b + 120, 0.2), gid='rf')
-    m = 14
-    card_top, card_h, cw = b + 152, 39, tw - 2 * m
-    rule = f"position:absolute;left:21mm;right:6mm;border-bottom:.28mm solid {C['Card Rule']}"
-    lab = f"position:absolute;left:6mm;font-size:7.6pt;color:{C['Card Text']};line-height:1"
+    k = tw / ENV[0]
+    dv = th - ENV[1] * k
+    cx, cy, lw = W / 2, b + 66 * k + dv * 0.45, 88 * k
+    n = 24 + round(dv / (3.1 * k * 2.2))
+    svg = glow(cx, cy, 70 * k, 46 * k, gid='gf') + halo(cx, cy, lw, n=n, step=3.1 * k, stroke=round(0.3 * k, 3), growth=0.035,
+                                                       fade=(b + 80 * k + dv * 0.6, b + 120 * k + dv * 0.9, 0.2), gid='rf')
+    m = 14 * k
+    card_top, card_h, cw = b + 152 * k + dv, 39 * k, tw - 2 * m
+    rule = f"position:absolute;left:{21 * k:g}mm;right:{6 * k:g}mm;border-bottom:{0.28 * k:.3g}mm solid {C['Card Rule']}"
+    lab = f"position:absolute;left:{6 * k:g}mm;font-size:{7.6 * k:.3g}pt;color:{C['Card Text']};line-height:1"
+    pt = lambda v: f'{v * k:.3g}pt'
+    mm = lambda v: f'{v * k:.4g}mm'
     html = logo_slot(cx, cy, lw) + f"""
-<div class="abs" style="left:{b}mm;width:{tw}mm;top:{b + 106}mm;text-align:center">
-  <div style="font-weight:600;font-size:23pt;line-height:1.04;letter-spacing:-.025em;color:{WHITE}">Stay wrapped.</div>
-  <div style="font-weight:600;font-size:23pt;line-height:1.04;letter-spacing:-.025em;color:{SIGNAL}">Stay protected.</div>
-  <div style="margin-top:4.2mm;font-weight:400;font-size:8.6pt;letter-spacing:.005em;color:{C['Smoke']}">Invisible protection. Made for your device.</div>
+<div class="abs" style="left:{b}mm;width:{tw}mm;top:{b + 106 * k + dv * 0.72}mm;text-align:center">
+  <div style="font-weight:600;font-size:{pt(23)};line-height:1.04;letter-spacing:-.025em;color:{WHITE}">Stay wrapped.</div>
+  <div style="font-weight:600;font-size:{pt(23)};line-height:1.04;letter-spacing:-.025em;color:{SIGNAL}">Stay protected.</div>
+  <div style="margin-top:{mm(4.2)};font-weight:400;font-size:{pt(8.6)};letter-spacing:.005em;color:{C['Smoke']}">Invisible protection. Made for your device.</div>
 </div>
-<div class="abs" style="left:{b + m}mm;top:{card_top}mm;width:{cw}mm;height:{card_h}mm;background:{C['Paper']};border-radius:3.2mm">
-  <div class="mono" style="position:absolute;left:6mm;top:5.6mm;font-size:6.4pt;line-height:1;color:{C['Ink Text']};display:flex;align-items:center;gap:2.2mm">
-    <svg width="2.1mm" height="2.1mm" viewBox="0 0 21 21"><rect width="21" height="21" rx="5" fill="{ORANGE}"/></svg>This device belongs to</div>
-  <div class="mono" style="position:absolute;right:6mm;top:5.9mm;font-size:5.6pt;line-height:1;color:{C['Card Muted']};letter-spacing:.14em">Wrapshap</div>
-  <div style="{lab};top:17.2mm">Name</div><div style="{rule};top:19.6mm"></div>
-  <div style="{lab};top:29.2mm">Number</div><div style="{rule};top:31.6mm"></div>
+<div class="abs" style="left:{b + m}mm;top:{card_top}mm;width:{cw}mm;height:{card_h}mm;background:{C['Paper']};border-radius:{mm(3.2)}">
+  <div class="mono" style="position:absolute;left:{mm(6)};top:{mm(5.6)};font-size:{pt(6.4)};line-height:1;color:{C['Ink Text']};display:flex;align-items:center;gap:{mm(2.2)}">
+    <svg width="{mm(2.1)}" height="{mm(2.1)}" viewBox="0 0 21 21"><rect width="21" height="21" rx="5" fill="{ORANGE}"/></svg>This device belongs to</div>
+  <div class="mono" style="position:absolute;right:{mm(6)};top:{mm(5.9)};font-size:{pt(5.6)};line-height:1;color:{C['Card Muted']};letter-spacing:.14em">Wrapshap</div>
+  <div style="{lab};top:{mm(17.2)}">Name</div><div style="{rule};top:{mm(19.6)}"></div>
+  <div style="{lab};top:{mm(29.2)}">Number</div><div style="{rule};top:{mm(31.6)}"></div>
 </div>"""
     return W, H, page(W, H, INK, svg, html)
 
 
-def envelope_back():
-    tw, th = ENV
+def envelope_back(tw=ENV[0], th=ENV[1]):
     W, H = tw + 2 * BLEED, th + 2 * BLEED
-    cx, cy, lw = W / 2, H / 2, 92
-    svg = glow(cx, cy, 78, 52, gid='gb') + halo(cx, cy, lw, n=30, step=3.1, stroke=0.3, growth=0.03, a1=0.035)
+    k = tw / ENV[0]
+    dv = th - ENV[1] * k
+    cx, cy, lw = W / 2, H / 2, 92 * k
+    n = 30 + round(dv / (3.1 * k * 2.2))
+    svg = glow(cx, cy, 78 * k, 52 * k, gid='gb') + halo(cx, cy, lw, n=n, step=3.1 * k, stroke=round(0.3 * k, 3),
+                                                       growth=0.03, a1=0.035)
     fsvg, fhtml = framed(W, H, tw)
     return W, H, page(W, H, INK, svg + fsvg, logo_slot(cx, cy, lw) + fhtml)
 
@@ -325,6 +335,8 @@ def build():
 
     add('envelope-front', envelope_front(), ENV)
     add('envelope-back', envelope_back(), ENV)
+    add('envelope-l-front', envelope_front(*ENV_L), ENV_L)
+    add('envelope-l-back', envelope_back(*ENV_L), ENV_L)
     for tw, th in ((250, 250), (350, 350), (400, 225), (800, 450)):
         add(f'matpad-{tw}x{th}', matpad(tw, th), (tw, th))
     add('design-system', system_sheet())
