@@ -12,7 +12,7 @@ import os
 import numpy as np, segno
 from PIL import Image, ImageDraw
 
-INSTAGRAM_URL = "https://www.instagram.com/wrapshap/"   # <-- CONFIRM HANDLE
+INSTAGRAM_URL = "https://www.instagram.com/wrapshappk/"
 S = 4                                                   # upscale factor
 HERE = os.path.dirname(os.path.abspath(__file__))
 
