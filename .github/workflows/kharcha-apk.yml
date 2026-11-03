@@ -1,0 +1,69 @@
+name: Build Kharcha APK
+
+on:
+  push:
+    paths:
+      - 'expense-tracker/**'
+      - '.github/workflows/kharcha-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: expense-tracker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Restore signing key (from repo secrets, if set)
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KHARCHA_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/kharcha.jks"
+            echo "KHARCHA_KEYSTORE=$RUNNER_TEMP/kharcha.jks" >> "$GITHUB_ENV"
+            echo "Using release key from secrets"
+          else
+            echo "::warning::KHARCHA_KEYSTORE_BASE64 secret not set - APK is signed with a throwaway debug key, so future builds cannot update it in place."
+          fi
+
+      - name: Build release APK
+        env:
+          KHARCHA_STORE_PASSWORD: ${{ secrets.KHARCHA_STORE_PASSWORD }}
+          KHARCHA_KEY_ALIAS: ${{ secrets.KHARCHA_KEY_ALIAS }}
+          KHARCHA_KEY_PASSWORD: ${{ secrets.KHARCHA_KEY_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/release/app-release.apk "Kharcha-1.0-build${{ github.run_number }}.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Kharcha-apk
+          path: expense-tracker/Kharcha-*.apk
+
+      - name: Publish release with APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: kharcha-build-${{ github.run_number }}
+          name: Kharcha (build ${{ github.run_number }})
+          target_commitish: ${{ github.sha }}
+          prerelease: true
+          body: |
+            Expense & income tracker for Android 8.0+.
+            Download the APK below on your phone and open it to install
+            (allow "Install unknown apps" for your browser/files app when asked).
+          files: expense-tracker/Kharcha-*.apk

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Kharcha</string>
+    <string name="widget_name">Kharcha balance</string>
+    <string name="widget_description">This month\'s balance with one-tap add buttons</string>
+</resources>
