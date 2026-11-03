@@ -81,7 +81,7 @@ def build(mode):
 <text class="h" x="248" y="675">scan and checkout</text>
 <text class="h" x="248" y="712">your life time</text>
 <text class="h" x="248" y="749">screen protector</text>
-<text class="u" x="248" y="800">WRAPSHAP.AE</text>
+<text class="u" x="248" y="800">WRAPSHAP.PR</text>
 <text class="t" x="248" y="838">STAY WRAPPED. STAY PROTECTED.</text>
 </svg>'''
 
