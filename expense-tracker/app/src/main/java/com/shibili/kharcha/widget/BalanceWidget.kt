@@ -91,7 +91,12 @@ private fun WidgetBody(context: Context, state: AppState) {
             .background(ImageProvider(R.drawable.widget_bg))
             .cornerRadius(24.dp)
             .padding(horizontal = 16.dp, vertical = 12.dp)
-            .clickable(actionStartActivity<MainActivity>()),
+            .clickable(
+                actionStartActivity(
+                    Intent(context, MainActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                )
+            ),
     ) {
         Row(modifier = GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
